@@ -26,7 +26,7 @@ Ziel des Projekts war es, die erlernten KI-Methoden praktisch anzuwenden und ein
 
 Installiere aller relevanten Pakete. (Werden angezeigt, wenn Du versuchst app.py auszuführen.)
 
-Ve## rwendung:
+## Verwendung:
 
 Nach der Installation aller relevanten Pakete führe app.py aus. 
 
