@@ -40,4 +40,4 @@ Führen Sie app.py aus.
 Dieses Projekt dient ausschließlich zur Dokumentation und dient nicht kommerziellen Zwecken.
 
 ## Auor: 
-    AFL
+    AFL et al.
