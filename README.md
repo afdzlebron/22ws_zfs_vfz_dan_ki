@@ -24,11 +24,11 @@ Ziel des Projekts war es, die erlernten KI-Methoden praktisch anzuwenden und ein
 
 ## Installation:
 
-Installiere aller relevanten Pakete. (Werden angezeigt, wenn Du versuchst app.py auszuführen.)
+Installieren Sie alle relevanten libraries (s. oben Technologien).
 
 ## Verwendung:
 
-Nach der Installation aller relevanten libraries (s. oben Technologien), führe app.py aus. 
+Führen Sie app.py aus. 
 
 ## Lernpunkte:
 
