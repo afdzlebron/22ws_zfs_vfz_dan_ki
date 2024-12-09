@@ -28,7 +28,7 @@ Installiere aller relevanten Pakete. (Werden angezeigt, wenn Du versuchst app.py
 
 ## Verwendung:
 
-Nach der Installation aller relevanten Pakete führe app.py aus. 
+Nach der Installation aller relevanten libraries (s. oben Technologien), führe app.py aus. 
 
 ## Lernpunkte:
 
