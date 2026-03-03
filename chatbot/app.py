@@ -1,17 +1,21 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 
 import json
 import logging
 import os
 import pickle
 import random
+import threading
 from pathlib import Path
 
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem.snowball import GermanStemmer
 import numpy as np
+import tensorflow as tf
 import tflearn
+
+tf.compat.v1.disable_eager_execution()
 
 stemmer = GermanStemmer()
 
@@ -28,6 +32,7 @@ DEFAULT_RESPONSE = (
     "Entschuldigung, ich habe das nicht verstanden. "
     "Kannst du deine Frage bitte anders formulieren?"
 )
+MAX_MESSAGE_LENGTH = 500
 
 
 def ensure_nltk_data():
@@ -75,6 +80,7 @@ net = tflearn.regression(net)
 
 # Definiere das Modell und konfiguriere tensorboard
 model = tflearn.DNN(net, tensorboard_dir=str(BASE_DIR / "train_logs"))
+MODEL_READY = False
 
 
 
@@ -85,6 +91,15 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
+@app.route("/health")
+def health():
+    return jsonify(
+        {
+            "status": "ok",
+            "model_loaded": MODEL_READY,
+            "nltk_data_dir": str(NLTK_DATA_DIR),
+        }
+    )
 
 @app.route("/get", methods=["POST"])
 def chatbot_response():
@@ -95,8 +110,13 @@ def chatbot_response():
     msg = msg.strip()
     if not msg:
         return ""
+    if len(msg) > MAX_MESSAGE_LENGTH:
+        return "Bitte formuliere deine Nachricht etwas kürzer."
+    logger.info("Incoming message: %s", msg[:120])
     res = antwort(msg)
-    return res or DEFAULT_RESPONSE
+    final_response = res or DEFAULT_RESPONSE
+    logger.info("Outgoing response: %s", final_response[:120])
+    return final_response
 
 
 # chat functionalities
@@ -133,19 +153,29 @@ def bow(frage, words, show_details=False):
 
 
 # lade unsre gespeicherte Modell
-model.load(str(MODEL_PATH))
+try:
+    model.load(str(MODEL_PATH))
+    MODEL_READY = True
+except Exception as exc:
+    logger.exception("Failed to load model: %s", exc)
 
 # Aufbau unseres Antwortprozessors.
 # Erstellen einer Datenstruktur, die den Benutzerkontext enthält
 context = {}
+MODEL_LOCK = threading.Lock()
 
 ERROR_THRESHOLD = 0.10
 
 
 def klassifizieren(frage):
+    if not MODEL_READY:
+        logger.error("Model is not ready yet.")
+        return []
     # generiere Wahrscheinlichkeiten von dem Modell
     try:
-        results = model.predict([bow(frage, words)])[0]
+        # tflearn/tf1 inference is sensitive to threaded access under gunicorn.
+        with MODEL_LOCK:
+            results = model.predict([bow(frage, words)])[0]
     except Exception as exc:
         logger.exception("Model prediction failed: %s", exc)
         return []

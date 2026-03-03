@@ -1,79 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 
 <head>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}" />
     <!-- <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css.css')}}" /> -->
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ChatBot</title>
 </head>
 
-<body>
-    <div class="row">
-        <div class="col-md-10 mr-auto ml-auto">
-    <h1>ChatBot</h1>
-    <h2>Gruppe: Alwin, Andres, Donya, Luisa</h2>
-    <form>
-        <div id="chatbox">
-            <div class="col-md-8 ml-auto mr-auto">
-                <p class="botText"><span>Hi!</span></p>
+<body data-endpoint="{{ url_for('chatbot_response') }}">
+    <main class="page">
+        <header class="hero">
+            <div class="hero__text">
+                <p class="eyebrow">KI-gestützter Kundenservice</p>
+                <h1>ChatBot</h1>
+                <p class="lead">
+                    Stelle konkrete Fragen zu Produkten, Lieferung oder Rückgabe. Der Bot antwortet in wenigen Sekunden.
+                </p>
             </div>
-        </div>
-        <div id="userInput" class="row">
-            <div class="col-md-10">
-                <input id="text" type="text" name="msg" placeholder="Nachricht hier eingeben" class="form-control">
-                <button type="submit" id="send" class="btn btn-warning">Absenden</button>
+            <div class="hero__card">
+                <p class="hero__label">Gruppe</p>
+                <p class="hero__names">Alwin, Andres, Donya, Luisa</p>
             </div>
-        </div>
-    </form>
-</div>
-</div>
+        </header>
+
+        <section class="chat-panel">
+            <div id="chatbox" class="chatbox" role="log" aria-live="polite" aria-relevant="additions">
+                <div class="message bot">
+                    <span>Hi! Wie kann ich helfen?</span>
+                </div>
+            </div>
+            <form id="chat-form" class="chat-form" autocomplete="off">
+                <input id="text" type="text" name="msg" placeholder="Nachricht hier eingeben"
+                    class="form-control" maxlength="500" aria-label="Nachricht eingeben" required>
+                <button type="submit" id="send" class="btn btn-warning">Senden</button>
+            </form>
+            <p class="hint">Tipp: Kurze, klare Fragen führen zu besseren Antworten.</p>
+        </section>
+    </main>
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        var form = document.querySelector("form");
+        var form = document.getElementById("chat-form");
         var textInput = document.getElementById("text");
         var chatbox = document.getElementById("chatbox");
+        var endpoint = document.body.dataset.endpoint || "/get";
+        var pending = false;
 
-        function appendMessage(cls, text) {
-            var p = document.createElement("p");
-            p.className = cls;
+        function appendMessage(kind, text) {
+            var wrapper = document.createElement("div");
+            wrapper.className = "message " + kind;
             var span = document.createElement("span");
             span.textContent = text;
-            p.appendChild(span);
-            chatbox.appendChild(p);
+            wrapper.appendChild(span);
+            chatbox.appendChild(wrapper);
+            chatbox.scrollTop = chatbox.scrollHeight;
+            return wrapper;
+        }
+
+        function setPending(state) {
+            pending = state;
+            textInput.disabled = state;
+            document.getElementById("send").disabled = state;
+            if (!state) {
+                textInput.focus();
+            }
         }
 
         form.addEventListener("submit", async function(event) {
             event.preventDefault();
             var rawText = textInput.value.trim();
-            if (!rawText) {
+            if (!rawText || pending) {
                 return;
             }
-            appendMessage("userText", rawText);
+            appendMessage("user", rawText);
             textInput.value = "";
-            document.getElementById("userInput").scrollIntoView({
-                block: "start",
-                behavior: "smooth",
-            });
+            var typingIndicator = appendMessage("bot typing", "Schreibt ...");
+            setPending(true);
 
             try {
-                var response = await fetch("/get", {
+                var response = await fetch(endpoint, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
                     },
                     body: new URLSearchParams({ msg: rawText }),
                 });
+                if (!response.ok) {
+                    typingIndicator.remove();
+                    appendMessage("bot error", "HTTP-Fehler " + response.status + " beim Antworten.");
+                    return;
+                }
                 var data = await response.text();
-                appendMessage("botText", data || "Keine Antwort vom Server.");
+                typingIndicator.remove();
+                appendMessage("bot", data || "Keine Antwort vom Server.");
             } catch (err) {
-                appendMessage("botText", "Serverfehler. Bitte später erneut versuchen.");
+                typingIndicator.remove();
+                appendMessage("bot error", "Serverfehler. Bitte später erneut versuchen.");
+            } finally {
+                setPending(false);
             }
-
-            document.getElementById("userInput").scrollIntoView({
-                block: "start",
-                behavior: "smooth",
-            });
         });
     });
 </script>

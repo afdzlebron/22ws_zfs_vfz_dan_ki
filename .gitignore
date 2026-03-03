@@ -1,0 +1,7 @@
+.venv/
+.venv-smoke/
+__pycache__/
+chatbot/__pycache__/
+chatbot/nltk_data/
+*.pyc
+*.pyo

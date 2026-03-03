@@ -40,7 +40,7 @@ Empfohlen: Deployment über `render.yaml`.
 1. Render Web Service erstellen und Repo verbinden.
 2. Render erkennt `render.yaml` automatisch und nutzt:
    - Build Command: `pip install -r requirements.txt && python -m nltk.downloader punkt stopwords -d chatbot/nltk_data`
-   - Start Command: `gunicorn chatbot.wsgi:app --workers 1 --threads 4 --timeout 120`
+   - Start Command: `gunicorn chatbot.wsgi:app --bind 0.0.0.0:$PORT --workers 1 --threads 1 --timeout 120 --access-logfile - --error-logfile -`
 3. Deploy starten.
 
 Falls du manuell konfigurierst, verwende exakt die Build- und Start-Commands aus `render.yaml`.
@@ -49,6 +49,7 @@ Falls du manuell konfigurierst, verwende exakt die Build- und Start-Commands aus
 - NLTK-Daten werden beim Build nach `chatbot/nltk_data` geladen.
 - Render nutzt Python 3.10.13 über `.python-version` bzw. `PYTHON_VERSION` in `render.yaml`.
 - `tflearn` benötigt aktuell `pillow<10`, daher ist `pillow==9.5.0` gepinnt.
+- Für stabile Inferenz läuft Gunicorn mit `--threads 1` und Modellvorhersage ist im Code serialisiert.
 - Falls die Installation von TensorFlow/TFLearn fehlschlägt, prüfe die Python-Version und die Versions-Pins in `requirements.txt`.
 
 ## Autor
