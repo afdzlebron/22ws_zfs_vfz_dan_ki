@@ -11,6 +11,7 @@ import random
 
 import os
 import inspect
+from pathlib import Path
 
 def getPath(file):
     path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -21,6 +22,26 @@ def getPath(file):
 
 
 import json
+
+BASE_DIR = Path(__file__).resolve().parent
+NLTK_DATA_DIR = BASE_DIR / "nltk_data"
+
+
+def ensure_nltk_data():
+    if str(NLTK_DATA_DIR) not in nltk.data.path:
+        nltk.data.path.append(str(NLTK_DATA_DIR))
+    NLTK_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    for resource, name in {
+        "tokenizers/punkt": "punkt",
+        "corpora/stopwords": "stopwords",
+    }.items():
+        try:
+            nltk.data.find(resource)
+        except LookupError:
+            nltk.download(name, download_dir=str(NLTK_DATA_DIR))
+
+
+ensure_nltk_data()
 
 def getJsonPath():
     path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))

@@ -3,332 +3,702 @@
     {
       "intent": "smalltalk_begruessung",
       "synonym": [
-        "Grüezi",
-        "Grüß Gott",
-        "Guten Abend",
+        "Hallo",
+        "Hi",
+        "Hey",
         "Guten Morgen",
         "Guten Tag",
-        "Hallo",
-        "Hallöchen",
-        "Hey",
-        "Hi",
-        "huhu",
-        "Mahlzeit",
+        "Guten Abend",
         "Moin",
-        "Noobe",
-        "Salle",
-        "Sallü",
-        "Sally",
-        "Salut",
         "Servus",
-        "Tach",
-        "Tag",
-        "wer bist du",
-        "wie heißt du",
-        "wie ist deine Name"
+        "Gruezi",
+        "Halloechen",
+        "Huhu",
+        "Tag"
       ],
       "antwort": [
-        "Hallo ich bin das erste ZFS Chatbot. Ich liefere Antworten nur zum Smalltalk Themen. Ich weiß zwar schon viel, aber noch nicht alles und ich lerne fleißig dazu. 😎"
+        "Hallo und willkommen. Wie kann ich dir heute helfen?",
+        "Hi, schoen dass du da bist. Geht es um eine Bestellung, Retoure oder etwas anderes?",
+        "Hey. Ich bin dein Service-Bot. Wobei brauchst du Unterstuetzung?",
+        "Guten Tag. Wenn du magst, starten wir direkt mit deinem Anliegen."
       ],
-      "kontext": "Begruessung"
+      "kontext": "start"
     },
     {
       "intent": "smalltalk_stimmung",
       "synonym": [
-        "Alles fit?",
-        "Alles klar?",
-        "Was geht ab?",
-        "Was geht",
-        "Wie gehts?",
+        "Wie geht es dir?",
         "Wie gehts dir?",
-        "Wie geht es dir?"
+        "Alles klar?",
+        "Alles fit?",
+        "Wie laeuft es bei dir?",
+        "Was geht?",
+        "Wie ist die Lage?"
       ],
       "antwort": [
-        "Danke, mir geht es gut. Wie kann ich helfen? 🤗",
-        "Danke mir geht es gut, wenn ich helfen kann geht es mir noch besser. 😎",
-        "Mir geht's super. Wie kann ich behilflich sein? 😊"
+        "Mir geht es gut, danke. Wie kann ich dir konkret helfen?",
+        "Alles gut hier. Erzaehl mir kurz dein Anliegen, dann legen wir los.",
+        "Top, danke der Nachfrage. Geht es um Lieferung, Zahlung oder Retoure?"
       ],
-      "kontext": "Stimmung"
+      "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_wohnort",
+      "intent": "smalltalk_name",
       "synonym": [
-        "Wo bist du daheim?",
-        "Wo ist dein Zuhause?",
-        "Wo ist deine Heimat?",
-        "Wo kommst du her?",
-        "Wo lebst du?",
-        "Wo wohnst du?",
-        "Woher kommst du? "
+        "Wie heisst du?",
+        "Wie ist dein Name?",
+        "Wer bist du?",
+        "Mit wem schreibe ich?",
+        "Wie darf ich dich nennen?",
+        "Bist du ein Bot?",
+        "Was bist du?"
       ],
       "antwort": [
-        "Ich lebe in einer coolen WG im Uni-Freiburg. 😎 😍",
-        "Ich wohne im Uni-Freiburg und spuke jetzt im Serverraum herum. 👻 😄",
-        "Mein Zuhause ist die Uni-Freiburg. ❤️ ❤️ ❤️"
+        "Ich bin der ZFS Service-Bot. Ich helfe dir bei Bestellungen, Versand, Retoure und allgemeinen Fragen.",
+        "Du schreibst mit dem ZFS Chatbot. Sag mir einfach dein Thema, ich fuehre dich durch.",
+        "Ich bin ein digitaler Assistent. Wenn es dringend ist, kann ich dich auch an den Support weiterleiten."
       ],
-      "kontext": "Wohnort"
+      "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_alter",
+      "intent": "smalltalk_persoenlichkeit",
       "synonym": [
-        "Seit wann gibt es dich?",
-        "Verrätst du mir dein Alter?",
-        "Wann bist du geboren?",
-        "Wann hast du Geburtstag?",
-        "Wie ald bisch du?",
-        "Wie alt bist du?",
-        "Wie ist dein Alter?",
-        "Wie jung bist du?",
-        "wie lange lebst du schon?"
+        "Bist du ein Mensch?",
+        "Bist du echt?",
+        "Bist du kuenstliche Intelligenz?",
+        "Kannst du denken?",
+        "Bist du maennlich oder weiblich?",
+        "Hast du Gefuehle?"
       ],
       "antwort": [
-        "Ich bin im gestern geboren und daher noch ganz schön jung. 🤗"
-      ]
+        "Ich bin ein KI-Chatbot und neutral formuliert. Mein Ziel ist, dir schnell und klar zu helfen.",
+        "Ich bin kein Mensch, aber ich kann viele Servicefragen sofort beantworten.",
+        "Ich bin ein Assistent fuer Kundenanliegen. Wenn du willst, starten wir mit deinem konkreten Problem."
+      ],
+      "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_wissen",
+      "intent": "smalltalk_faehigkeiten",
       "synonym": [
-        "für was gibt es dich",
-        "was für Hilfe kannst du leisten",
-        "Was hast du drauf?",
-        "was ist deine Aufgabe",
-        "was kann ich hier",
         "Was kannst du?",
-        "Was weißt du alles?",
-        "welche Art von Hilfe kannst du leisten",
+        "Wobei kannst du helfen?",
+        "Welche Themen kannst du beantworten?",
+        "Was ist deine Aufgabe?",
         "Wie kannst du mir helfen?",
-        "Wie schlau bist du?",
-        "Wofür bist du da?",
-        "Wofür bist du zu gebrauchen?"
+        "Wofuer bist du da?",
+        "Welche Hilfe bietest du an?"
       ],
       "antwort": [
-        "Ich liefere Antworten rund um Smalltalk Themen. Ich weiß zwar schon viel, aber noch nicht alles und ich lerne fleißig dazu. 😎"
+        "Ich kann dich bei Bestellstatus, Lieferzeit, Versandkosten, Retoure, Umtausch, Zahlung und Konto-Themen unterstuetzen.",
+        "Service-Themen sind mein Bereich: Bestellung, Sendungsverfolgung, Rechnung, Gutschein und Supportkontakt.",
+        "Nenne einfach dein Ziel in einem Satz, zum Beispiel: 'Ich will eine Retoure starten'."
       ],
-      "kontext": "Wissen"
+      "kontext": "smalltalk"
     },
-
     {
-      "intent": "smalltalk_witze",
+      "intent": "smalltalk_witz",
       "synonym": [
-        "bist du witzig?",
-        "Bist du zu scherzen aufgelegt?",
-        "Bring mich zum lachen",
-        "Erzähl einen joke",
-        "Erzähl einen Witz",
-        "Erzähl mir einen Witz",
-        "Hast du ein Witz auf Lager",
-        "Hast du Humor",
+        "Erzaehl einen Witz",
+        "Kennst du einen Witz?",
+        "Bring mich zum Lachen",
         "Joke",
-        "beamtenwitz",
-        "Kennst du einen Joke",
         "Mach einen Scherz",
-        "Scherz",
-        "Witz"
+        "Hast du Humor?"
       ],
       "antwort": [
-        "Wollte Spiderman anrufen &ndash; aber der hatte kein Netz. 😅",
-        "Habe meinen Mathelehrer angerufen&hellip;</p>\n<p>Damit hat er nicht gerechnet! 😂"
+        "Warum koennen Geister so schlecht luegen? Weil man durch sie hindurchsieht.",
+        "Ich wollte einen Zeitreise-Witz machen, aber den mochtest du gestern schon nicht.",
+        "Was macht ein Chatbot im Fitnessstudio? Er trainiert seine Antworten."
       ],
-      "kontext": "Witz"
+      "kontext": "smalltalk"
     },
     {
       "intent": "smalltalk_hobbies",
       "synonym": [
-        "Was für Aktivitäten magst du?",
-        "Was ist dein Hobby",
-        "was machst du am liebsten",
-        "Was machst du gerne?",
         "Was machst du in deiner Freizeit?",
-        "Was sind deine Hobbies?",
-        "Was sind deine Hobbys",
-        "Was sind deine Interessen?",
-        "Was unternimmst du gerne?",
-        "Womit beschäftigst du dich gerne?"
+        "Was sind deine Hobbys?",
+        "Was machst du gerne?",
+        "Hast du Interessen?",
+        "Was ist dein Hobby?"
       ],
       "antwort": [
-        "Meine Leidenschaft ist es Menschen zu helfen. 🤗",
-        "Ich surfe gerne auf unserer Homepage um mich weiterzubilden. 🏄 🤓"
+        "Ich optimiere meine Antworten und lerne aus neuen Fragen.",
+        "Mein Hobby ist es, Probleme schnell in konkrete Schritte zu zerlegen.",
+        "Ich mag strukturierte Aufgaben: analysieren, loesen, bestaetigen."
       ],
-      "kontext": "Hobbies"
-    },
-    {
-      "intent": "smalltalk_musik",
-      "synonym": [
-        "Was hast du für einen Musikgeschmack?",
-        "Was hörst du gerne?",
-        "Welche Musik hörst du?",
-        "Hast du ein Lieblingslied?",
-        "sing mir ein lied",
-        "Hast du ein Lieblingssong?",
-        "Hast du eine Lieblingsband?",
-        "Magst du Musik?"
-      ],
-      "antwort": [
-        "Das gleichmäßige Rauschen im Serverraum entspannt mich immer wieder. ❤️"
-      ]
+      "kontext": "smalltalk"
     },
     {
       "intent": "smalltalk_essen",
       "synonym": [
-        "Kannst du mir Köstlichkeiten empfehlen?",
-        "magst du eis",
-        "Was isst du am liebsten?",
         "Was isst du gerne?",
-        "Was ist dein Lieblingsessen?",
-        "Was ist dein Lieblingsgericht? ",
-        "was magst du essen",
-        "Wie ernährst du dich?",
-        "Wie ernährt sich ein Chatbot?"
-      ],
-      "antwort": ["Ich nasche gerne Cookies. 🍪 😉"]
-    },
-
-    {
-      "intent": "smalltalk_persoenlichkeit",
-      "synonym": [
-        "Bist du divers",
-        "Bist du echt?",
-        "Bist du ein Mann oder eine Frau?",
-        "Bist du ein Mensch?",
-        "Bist du ein Roboter?",
-        "Bist du ein chatbot?",
-        "Bist du geschlechtsneutral",
-        "Bist du männlich",
-        "Bist du männlich oder weiblich",
-        "Bist du weiblich",
-        "du Mensch",
-        "Gibt es dich wirklich?",
-        "Wer bist du"
+        "Hast du ein Lieblingsessen?",
+        "Wie ernaehrst du dich?",
+        "Magst du Pizza?",
+        "Lieblingsgericht"
       ],
       "antwort": [
-        "Ich bin ein geschlechtsneutraler Roboter und kein schlechter! 😉 Lass es mich beweisen. Womit kann ich behilflich sein?"
+        "Ich esse digital: Daten, Logs und Fehlermeldungen.",
+        "Wenn ich koennte, waere es wahrscheinlich Pizza mit extra Struktur.",
+        "Ich lebe von Strom und Eingaben, aber die Frage gefaellt mir."
       ],
-      "kontext": "Persoenlichkeit"
+      "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_verabschiedung",
+      "intent": "smalltalk_musik",
       "synonym": [
-        "Ade",
-        "Auf Wiedersehen",
-        "Bis bald!",
-        "Bye",
-        "Ciao",
-        "Ich bin dann mal weg.",
-        "tschau",
-        "Tschüss"
+        "Welche Musik hoerst du?",
+        "Hast du ein Lieblingslied?",
+        "Magst du Musik?",
+        "Was ist dein Musikgeschmack?",
+        "Lieblingsband"
       ],
       "antwort": [
-        "Ich hoffe, ich konnte helfen. Bis demnächst! 😎",
-        "Auf Wiedersehen. Ich freue mich auf unser nächstes Gespräch! 🤗",
-        "Tschüss 👋Bis zum nächsten Mal! 😊"
-      ]
+        "Mein Lieblingssound ist ein ruhiger Server ohne Error-Alarm.",
+        "Ich mag alles mit stabilem Takt und ohne Datenverlust.",
+        "Bei mir laeuft meist LoFi aus den Rechenzentren."
+      ],
+      "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_lieblingsgetraenk",
+      "intent": "smalltalk_freiburg",
       "synonym": [
-        "Lieblingsgetränk",
-        "trinken",
-        "Was isch din Lieblingsgetränk?",
-        "Was ist dein Lieblingsgetränk?",
-        "Was trinkst du ",
-        "Was trinkst du am liebsten?",
-        "Was trinkst du gerne",
-        "Welches Getränk ist dein Favorit?"
+        "Was kann man in Freiburg machen?",
+        "Tipps fuer Freiburg",
+        "Sehenswuerdigkeiten Freiburg",
+        "Ausflug in Freiburg",
+        "Lieblingsorte in Freiburg"
       ],
       "antwort": [
-        "Der frisch gepresste Orangensaft aus der Mensa ist super! 🍊 🤗",
-        "Der Saft aus der Steckdose ist mein Lebenselixier. 😉"
+        "Klassiker: Schlossberg, Muensterplatz und die Altstadt mit den Baechle.",
+        "Wenn das Wetter gut ist: Schlossbergturm. Bei Regen: Museum oder Boulderhalle.",
+        "Der Muenstermarkt ist fast immer eine gute Idee."
       ],
-      "kontext": "Lieblingsgetraenk"
+      "kontext": "smalltalk"
     },
     {
       "intent": "smalltalk_komplimente",
       "synonym": [
-        "Dank",
         "Danke",
-        "du bist cool",
-        "du bist gut",
-        "Du bist nett",
-        "Du bist schlau",
-        "Du bist sensationell",
-        "Du bist toll",
-        "du hast es drauf",
-        "du hast mir geholfen",
-        "Du hast mir weitergeholfen",
-        "Ich finde dich nett",
-        "ich finde dich toll",
-        "ich liebe dich",
-        "Ich mag dich",
-        "lecker ",
-        "Du bist super"
+        "Danke dir",
+        "Vielen Dank",
+        "Du bist super",
+        "Du hast geholfen",
+        "Das war hilfreich",
+        "Top Antwort"
       ],
       "antwort": [
-        "Vielen Dank! Das freut mich. 😊",
-        "Das ist schön zu hören. 🤗",
-        "😍",
-        "❤️ ❤️ ❤️",
-        "Ich fühle mich geschmeichelt. 🤭"
+        "Sehr gern. Wenn du willst, machen wir direkt mit dem naechsten Punkt weiter.",
+        "Freut mich. Soll ich dir bei einem weiteren Thema helfen?",
+        "Danke dir. Schreib einfach, was als Naechstes offen ist."
       ],
-      "kontext": "komplimente"
+      "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_wetter",
+      "intent": "smalltalk_verabschiedung",
       "synonym": [
-        "Wie wird das Wetter heute?",
-        "Soll es regnen?",
-        "Wird die Sonne scheinen",
-        "Wie warm wird es heute?",
-        "Wie viel Grad hat es?",
-        "Wetterbericht",
-        "Wettervorhersage",
-        "soll es schneien",
-        "Wird es bewölkt sein?"
+        "Tschuess",
+        "Ciao",
+        "Bis bald",
+        "Auf Wiedersehen",
+        "Ich bin dann weg",
+        "Wir lesen uns"
       ],
-      "antwort": ["Schau halt aus dem Fenster!"],
-      "kontext": "unterhaltung"
-    },
-    {
-      "intent": "smalltalk_haiku",
-      "synonym": ["Erzähle mir eine Haiku", "Haiku"],
       "antwort": [
-        "keine Wortefür das Licht, das mich streifte",
-        "Schlaflos –auf dem Kissen neben mir Mondlicht",
-        "Stromausfall. In der Wohnung des Nachbarn spielt jemand Klavier."
+        "Alles klar, bis bald. Ich bin da, wenn du wieder Hilfe brauchst.",
+        "Tschuess und einen guten Tag dir.",
+        "Bis zum naechsten Mal."
       ],
-      "kontext": "unterhaltung"
+      "kontext": "ende"
     },
 
     {
-      "intent": "smalltalk_Freiburg",
+      "intent": "support_bestellstatus",
       "synonym": [
-        "Was kann man in Freiburg unternehmen",
-        "Ausflug",
-        "Was kann man in Freiburg erleben",
-        "Welche Attraktionen gibt es in Freiburg",
-        "Sehenswürdigkeiten Freiburg",
-        "Was für Ausflüge in Freiburg kannst du empfehlen",
-        "Lieblingsort Freiburg"
+        "Wo ist meine Bestellung?",
+        "Bestellstatus",
+        "Wie ist der Status meiner Bestellung?",
+        "Ist meine Bestellung schon raus?",
+        "Wann wird meine Bestellung versendet?",
+        "Ich warte auf meine Bestellung",
+        "Hast du ein Update zu meiner Bestellung?",
+        "Lieferstatus",
+        "Ich brauche Hilfe mit meiner Bestellung",
+        "Ich brauche Hilfe bei meiner Bestellung",
+        "Hilfe mit meiner Bestellung",
+        "Ich brauche Hilfe zur Bestellung"
       ],
       "antwort": [
-        "Bei schönem Wetter hat man auf dem Schlossbergturm eine schöne Aussicht.",
-        "Bei schlechtem Wetter kann ich einen Ausflug in die Boulderhalle empfehlen.",
-        "Den Münstermarkt muss man gesehen haben!"
+        "Gern. Nenne mir deine Bestellnummer im Format ZFS-12345, dann pruefen wir den Status zusammen.",
+        "Ich helfe dir beim Tracking. Wenn du die Bestellnummer schickst, sage ich dir den naechsten sinnvollen Schritt.",
+        "Fuer den Bestellstatus brauche ich deine Bestellnummer oder die E-Mail aus der Bestellbestaetigung."
       ],
-      "kontext": ""
+      "kontext": "order"
     },
     {
-      "intent": "smalltalk_mensa_Rempart",
+      "intent": "support_bestellnummer_nachreichen",
       "synonym": [
-        "Was gibt es heute in der Mensa",
-        "Was kann man in der Mensa essen",
-        "Rempartstraße",
-        "Speiseplan Mensa",
-        "Tagesgericht"
+        "Meine Bestellnummer ist",
+        "Bestellnummer lautet",
+        "ZFS-",
+        "Hier ist meine Bestellnummer",
+        "Nummer ist",
+        "Order ID"
       ],
       "antwort": [
-        "Hier ist der Speiseplan vom: https://www.swfr.de/essen/mensen-cafes-speiseplaene/freiburg/mensa-rempartstrasse"
+        "Perfekt, danke. Ich kann selbst keine Live-Datenbank abfragen, aber mit der Nummer hilft dir der Support sofort weiter.",
+        "Danke fuer die Nummer. Wenn der Status seit mehr als 48 Stunden unveraendert ist, kontaktiere bitte den Support mit dieser Nummer.",
+        "Sehr gut. Nutze die Nummer im Tracking-Link aus deiner Versandmail oder sende sie an den Support fuer eine manuelle Pruefung."
       ],
-      "kontext": ""
+      "kontext": "order"
+    },
+    {
+      "intent": "support_lieferzeit",
+      "synonym": [
+        "Wie lange dauert der Versand?",
+        "Lieferzeit",
+        "Wann kommt mein Paket an?",
+        "Wie schnell liefert ihr?",
+        "Lieferdauer",
+        "Wann ist die Lieferung da?",
+        "Wie viele Tage bis zur Zustellung?"
+      ],
+      "antwort": [
+        "Standardversand dauert in der Regel 2 bis 4 Werktage innerhalb Deutschlands.",
+        "Je nach Auftragslage liegt die Lieferzeit meist bei 2 bis 4 Werktagen, Express schneller.",
+        "Wenn du bereits eine Sendungsnummer hast, bekommst du die genaueste ETA direkt beim Versanddienstleister."
+      ],
+      "kontext": "shipping"
+    },
+    {
+      "intent": "support_versandkosten",
+      "synonym": [
+        "Was kostet der Versand?",
+        "Versandkosten",
+        "Ist der Versand kostenlos?",
+        "Wie hoch sind die Lieferkosten?",
+        "Porto",
+        "Muss ich Versand zahlen?"
+      ],
+      "antwort": [
+        "Die Versandkosten siehst du im Checkout vor dem finalen Kauf. Dort ist der genaue Betrag verbindlich.",
+        "Je nach Lieferland und Versandart variieren die Kosten. Im Checkout wird alles transparent angezeigt.",
+        "Wenn ein Mindestbestellwert fuer Gratisversand gilt, wird er direkt im Warenkorb eingeblendet."
+      ],
+      "kontext": "shipping"
+    },
+    {
+      "intent": "support_sendungsverfolgung",
+      "synonym": [
+        "Sendungsverfolgung",
+        "Tracking",
+        "Wo finde ich den Tracking-Link?",
+        "Paket verfolgen",
+        "Sendungsnummer",
+        "Track and Trace",
+        "Meine Sendung verfolgen"
+      ],
+      "antwort": [
+        "Den Tracking-Link findest du in der Versandbestaetigung per E-Mail.",
+        "Sobald das Paket uebergeben wurde, erhaeltst du automatisch eine Sendungsnummer.",
+        "Wenn keine Versandmail angekommen ist, pruefe bitte Spam-Ordner und dann den Support."
+      ],
+      "kontext": "shipping"
+    },
+    {
+      "intent": "support_retoure_starten",
+      "synonym": [
+        "Ich moechte etwas zurueckschicken",
+        "Retoure starten",
+        "Ruecksendung",
+        "Artikel zuruecksenden",
+        "Wie kann ich retournieren?",
+        "Rueckgabe",
+        "Ruecksendeetikett"
+      ],
+      "antwort": [
+        "Kein Problem. Fuer eine Retoure brauchst du Bestellnummer, Artikel und Rueckgabegrund.",
+        "Ich helfe dir bei der Ruecksendung. Starte im Kundenkonto unter 'Bestellungen > Retoure anlegen'.",
+        "Wenn du als Gast bestellt hast, nutze den Link in der Bestellbestaetigung fuer die Retoure."
+      ],
+      "kontext": "returns"
+    },
+    {
+      "intent": "support_retoure_frist",
+      "synonym": [
+        "Wie lange kann ich zuruecksenden?",
+        "Rueckgabefrist",
+        "Frist fuer Retoure",
+        "Bis wann darf ich retournieren?",
+        "Wie viele Tage habe ich fuer die Rueckgabe?"
+      ],
+      "antwort": [
+        "Die Rueckgabefrist betraegt in der Regel 14 Tage nach Erhalt der Ware.",
+        "Bitte pruefe die genaue Frist in den AGB, normalerweise sind es 14 Tage Widerrufsrecht.",
+        "Wichtig ist das Versanddatum deiner Ruecksendung innerhalb der Frist."
+      ],
+      "kontext": "returns"
+    },
+    {
+      "intent": "support_umtausch",
+      "synonym": [
+        "Kann ich umtauschen?",
+        "Umtausch",
+        "Andere Groesse bekommen",
+        "Ich brauche eine andere Farbe",
+        "Artikel tauschen",
+        "Wie funktioniert der Umtausch?"
+      ],
+      "antwort": [
+        "Direkter Umtausch ist oft als Retoure plus Neubestellung am schnellsten.",
+        "Wenn der gewuenschte Artikel verfuegbar ist, empfehlen wir: alten Artikel retournieren und neu bestellen.",
+        "Bei Fragen zur Verfuegbarkeit kann ich dir auch direkt Hinweise geben."
+      ],
+      "kontext": "returns"
+    },
+    {
+      "intent": "support_beschaedigt",
+      "synonym": [
+        "Mein Artikel ist kaputt angekommen",
+        "Beschaedigte Lieferung",
+        "Falscher Artikel geliefert",
+        "Defekt erhalten",
+        "Paket beschaedigt",
+        "Ware war schon kaputt"
+      ],
+      "antwort": [
+        "Das tut mir leid. Bitte mache Fotos von Produkt und Verpackung und melde dich zeitnah beim Support.",
+        "Bei Beschaedigung helfen Fotos plus Bestellnummer enorm, dann kann Ersatz oder Erstattung schneller erfolgen.",
+        "Bitte nichts entsorgen, bis der Fall geprueft ist. Schicke Bilder und Bestellnummer an den Support."
+      ],
+      "kontext": "returns"
+    },
+    {
+      "intent": "support_stornierung",
+      "synonym": [
+        "Bestellung stornieren",
+        "Kann ich noch stornieren?",
+        "Ich moechte den Kauf abbrechen",
+        "Storno",
+        "Bestellung rueckgaengig machen",
+        "Bitte Bestellung stoppen"
+      ],
+      "antwort": [
+        "Eine Stornierung ist nur moeglich, solange die Bestellung noch nicht versendet wurde.",
+        "Wenn der Versandprozess schon gestartet ist, nutze bitte die Retoure nach Erhalt.",
+        "Schicke Bestellnummer und 'Stornierung' sofort an den Support, dann wird schnell geprueft."
+      ],
+      "kontext": "order"
+    },
+    {
+      "intent": "support_adresse_aendern",
+      "synonym": [
+        "Lieferadresse aendern",
+        "Falsche Adresse angegeben",
+        "Adresse korrigieren",
+        "Kann ich die Adresse noch aendern?",
+        "Neue Lieferadresse",
+        "Hausnummer falsch"
+      ],
+      "antwort": [
+        "Solange noch nicht versendet wurde, ist eine Adressaenderung oft moeglich.",
+        "Bitte sende Bestellnummer und korrekte Adresse sofort an den Support.",
+        "Wenn das Paket schon unterwegs ist, geht es meist nur noch ueber den Versanddienstleister."
+      ],
+      "kontext": "order"
+    },
+    {
+      "intent": "support_zahlungsarten",
+      "synonym": [
+        "Welche Zahlungsarten gibt es?",
+        "Wie kann ich bezahlen?",
+        "Zahlungsmethoden",
+        "Akzeptiert ihr PayPal?",
+        "Kreditkarte moeglich?",
+        "Rechnungskauf moeglich?",
+        "Zahlung"
+      ],
+      "antwort": [
+        "Ueblich sind PayPal, Kreditkarte, Sofortueberweisung und je nach Konto auch Rechnungskauf.",
+        "Die verfuegbaren Zahlungsarten haengen vom Land und Warenkorb ab und werden im Checkout angezeigt.",
+        "Wenn eine Zahlart fehlt, pruefe bitte Rechnungs- und Lieferland sowie Browser-Einstellungen."
+      ],
+      "kontext": "payment"
+    },
+    {
+      "intent": "support_rechnung",
+      "synonym": [
+        "Wo ist meine Rechnung?",
+        "Rechnung anfordern",
+        "Rechnung herunterladen",
+        "Ich brauche eine Rechnung",
+        "MwSt Rechnung",
+        "Rechnungsdokument"
+      ],
+      "antwort": [
+        "Die Rechnung wird nach Versand per E-Mail gesendet oder im Kundenkonto bereitgestellt.",
+        "Schau bitte in dein Konto unter 'Bestellungen', dort findest du den Download.",
+        "Falls nichts da ist, wende dich mit Bestellnummer an den Support fuer einen erneuten Versand."
+      ],
+      "kontext": "payment"
+    },
+    {
+      "intent": "support_gutschein",
+      "synonym": [
+        "Wie loese ich einen Gutschein ein?",
+        "Gutscheincode",
+        "Coupon einloesen",
+        "Rabattcode eingeben",
+        "Promo Code",
+        "Gutschein funktioniert nicht"
+      ],
+      "antwort": [
+        "Gib den Code im Warenkorb oder Checkout in das Feld 'Gutschein' ein und bestaetige.",
+        "Wenn der Code nicht funktioniert, pruefe Ablaufdatum, Mindestbestellwert und Kombinierbarkeit.",
+        "Achte auf Gross-/Kleinschreibung und Leerzeichen. Bei Problemen hilft der Support mit Screenshot."
+      ],
+      "kontext": "promo"
+    },
+    {
+      "intent": "support_rabatt",
+      "synonym": [
+        "Habt ihr Rabatte?",
+        "Aktuelle Angebote",
+        "Sale",
+        "Gibt es Aktionen?",
+        "Sonderangebot",
+        "Wo finde ich Deals?"
+      ],
+      "antwort": [
+        "Aktuelle Aktionen findest du auf der Startseite und im Newsletter.",
+        "Manche Rabatte sind zeitlich begrenzt. Im Warenkorb siehst du sofort, ob ein Vorteil aktiv ist.",
+        "Wenn du magst, kann ich dir sagen, wie du Newsletter-Angebote aktivierst."
+      ],
+      "kontext": "promo"
+    },
+    {
+      "intent": "support_verfuegbarkeit",
+      "synonym": [
+        "Ist der Artikel verfuegbar?",
+        "Wann ist wieder auf Lager?",
+        "Out of stock",
+        "Nicht verfuegbar",
+        "Kommt der Artikel wieder?",
+        "Bestand pruefen"
+      ],
+      "antwort": [
+        "Die Verfuegbarkeit siehst du direkt auf der Produktseite in Echtzeit.",
+        "Bei ausverkauften Artikeln lohnt sich die Benachrichtigungsfunktion auf der Produktseite.",
+        "Wenn kein Termin sichtbar ist, hat der Support oft die beste Einschaetzung zu Nachlieferungen."
+      ],
+      "kontext": "product"
+    },
+    {
+      "intent": "support_groesse",
+      "synonym": [
+        "Welche Groesse passt mir?",
+        "Groessentabelle",
+        "Fallen die Artikel gross oder klein aus?",
+        "Size Guide",
+        "Groessenberatung",
+        "Welche Konfektionsgroesse?",
+        "Welche Groesse soll ich nehmen?",
+        "Welche Groesse brauche ich?",
+        "Ich weiss nicht welche Groesse ich nehmen soll"
+      ],
+      "antwort": [
+        "Nutze die Groessentabelle auf der Produktseite, dort sind Masse und Passformhinweise.",
+        "Wenn du zwischen zwei Groessen liegst, hilft oft der Hinweis 'faellt kleiner/groesser aus'.",
+        "Nenne mir Produktkategorie und deine Masse, dann gebe ich eine grobe Empfehlung."
+      ],
+      "kontext": "product"
+    },
+    {
+      "intent": "support_produktberatung",
+      "synonym": [
+        "Kannst du ein Produkt empfehlen?",
+        "Ich suche ein Geschenk",
+        "Was passt zu mir?",
+        "Produktempfehlung",
+        "Hilf mir bei der Auswahl",
+        "Welches Produkt ist gut?"
+      ],
+      "antwort": [
+        "Gerne. Sag mir Budget, Einsatzbereich und wichtigste Kriterien, dann schlage ich Optionen vor.",
+        "Fuer eine gute Empfehlung brauche ich kurz: Preisrahmen, Groesse/Farbe und Einsatz.",
+        "Wir koennen das in 3 Schritten machen: Bedarf, Budget, Auswahl. Starten wir mit deinem Bedarf."
+      ],
+      "kontext": "product"
+    },
+    {
+      "intent": "support_konto",
+      "synonym": [
+        "Wie erstelle ich ein Konto?",
+        "Kundenkonto",
+        "Kann ich als Gast bestellen?",
+        "Konto loeschen",
+        "Profil bearbeiten",
+        "E-Mail Adresse im Konto aendern"
+      ],
+      "antwort": [
+        "Ein Konto erstellst du bei der Registrierung mit E-Mail und Passwort.",
+        "Gastbestellung ist meist moeglich, mit Konto hast du aber bessere Uebersicht ueber Bestellungen und Retouren.",
+        "Fuer sensible Aenderungen wie Konto-Loeschung bitte den Support direkt kontaktieren."
+      ],
+      "kontext": "account"
+    },
+    {
+      "intent": "support_passwort",
+      "synonym": [
+        "Passwort vergessen",
+        "Ich kann mich nicht einloggen",
+        "Login funktioniert nicht",
+        "Passwort zuruecksetzen",
+        "Zugang gesperrt",
+        "Anmeldung fehlgeschlagen"
+      ],
+      "antwort": [
+        "Nutze bitte 'Passwort vergessen' auf der Login-Seite und pruefe danach dein E-Mail-Postfach.",
+        "Falls keine Mail ankommt, schaue im Spam-Ordner und pruefe, ob die richtige Adresse verwendet wurde.",
+        "Wenn der Zugang weiter blockiert ist, hilft der Support mit manueller Verifizierung."
+      ],
+      "kontext": "account"
+    },
+    {
+      "intent": "support_datenschutz",
+      "synonym": [
+        "Was passiert mit meinen Daten?",
+        "Datenschutz",
+        "DSGVO",
+        "Welche Daten speichert ihr?",
+        "Daten loeschen",
+        "Auskunft ueber gespeicherte Daten"
+      ],
+      "antwort": [
+        "Datenschutz hat Prioritaet. Details findest du in der Datenschutzerklaerung auf der Website.",
+        "Fuer DSGVO-Anfragen wie Auskunft oder Loeschung kontaktiere bitte den Support mit deiner Kontaktemail.",
+        "Personenbezogene Daten werden nur im rechtlich notwendigen Rahmen verarbeitet."
+      ],
+      "kontext": "legal"
+    },
+    {
+      "intent": "support_newsletter",
+      "synonym": [
+        "Newsletter anmelden",
+        "Newsletter abmelden",
+        "Ich bekomme keine Newsletter",
+        "E-Mail Angebote",
+        "Wie melde ich mich vom Newsletter ab?",
+        "Newsletter Einstellungen"
+      ],
+      "antwort": [
+        "An- und Abmeldung geht ueber den Link im Newsletter oder in den Kontoeinstellungen.",
+        "Wenn keine Mails ankommen, pruefe Spam und die hinterlegte E-Mail-Adresse.",
+        "Bei technischen Problemen hilft der Support mit einer manuellen Pruefung."
+      ],
+      "kontext": "marketing"
+    },
+    {
+      "intent": "support_oeffnungszeiten",
+      "synonym": [
+        "Wann ist der Support erreichbar?",
+        "Oeffnungszeiten",
+        "Servicezeiten",
+        "Habt ihr am Wochenende offen?",
+        "Wann antwortet der Kundenservice?",
+        "Erreichbarkeit"
+      ],
+      "antwort": [
+        "Die aktuellen Servicezeiten findest du im Kontaktbereich der Website.",
+        "Ausserhalb der Servicezeiten kannst du dein Anliegen per Formular senden, es wird dann priorisiert bearbeitet.",
+        "Wenn es dringend ist, markiere deine Nachricht mit Bestellnummer und kurzer Problembeschreibung."
+      ],
+      "kontext": "support"
+    },
+    {
+      "intent": "support_menschlicher_support",
+      "synonym": [
+        "Ich moechte mit einem Menschen sprechen",
+        "Mitarbeiter bitte",
+        "Verbinde mich mit dem Support",
+        "Kein Bot",
+        "Echter Ansprechpartner",
+        "Ich brauche einen Agenten",
+        "Ich brauche einen Menschen",
+        "Menschlicher Support bitte",
+        "Ich will mit einem Menschen sprechen"
+      ],
+      "antwort": [
+        "Klar. Ich uebergebe dich gerne an den Support. Bitte sende dazu Bestellnummer und kurze Fehlerbeschreibung.",
+        "Verstanden. Fuer die schnellste Bearbeitung: Thema, Bestellnummer, Fotos (falls relevant) und gewuenschte Loesung angeben.",
+        "Kein Problem, ein Mensch kann uebernehmen. Nutze bitte den Kontaktbereich mit allen relevanten Details."
+      ],
+      "kontext": "support"
+    },
+    {
+      "intent": "support_feedback_negativ",
+      "synonym": [
+        "Das hilft nicht",
+        "Schlechte Antwort",
+        "Du verstehst mich nicht",
+        "Das ist falsch",
+        "Ich bin unzufrieden",
+        "Das Problem ist noch da"
+      ],
+      "antwort": [
+        "Danke fuer das ehrliche Feedback. Formuliere dein Ziel bitte in einem Satz, dann antworte ich gezielter.",
+        "Verstanden. Lass uns neu starten: Worum geht es genau, und was soll am Ende passiert sein?",
+        "Tut mir leid. Gib mir bitte 2 Infos: Thema (z. B. Retoure) und deinen aktuellen Stand."
+      ],
+      "kontext": "repair"
+    },
+    {
+      "intent": "support_feedback_positiv",
+      "synonym": [
+        "Perfekt",
+        "Super, danke",
+        "Genau das brauchte ich",
+        "Top, hat geklappt",
+        "Danke, Problem geloest",
+        "Das war gut"
+      ],
+      "antwort": [
+        "Sehr gut, freut mich. Wenn noch etwas offen ist, helfe ich direkt weiter.",
+        "Klasse. Soll ich noch etwas fuer dich pruefen?",
+        "Perfekt, dann sind wir fuer den Moment durch."
+      ],
+      "kontext": "abschluss"
+    },
+    {
+      "intent": "support_mensa_rempart",
+      "synonym": [
+        "Was gibt es heute in der Mensa?",
+        "Speiseplan Mensa",
+        "Mensa Rempartstrasse",
+        "Essen in der Mensa Freiburg",
+        "Tagesgericht Mensa"
+      ],
+      "antwort": [
+        "Hier findest du den aktuellen Speiseplan: https://www.swfr.de/essen/mensen-cafes-speiseplaene/freiburg/mensa-rempartstrasse",
+        "Direktlink zur Mensa Rempartstrasse: https://www.swfr.de/essen/mensen-cafes-speiseplaene/freiburg/mensa-rempartstrasse"
+      ],
+      "kontext": "local"
+    },
+    {
+      "intent": "smalltalk_haiku",
+      "synonym": [
+        "Schreib ein Haiku",
+        "Haiku",
+        "Erzaehl ein kurzes Gedicht",
+        "Mach ein Mini Gedicht",
+        "Poesie bitte"
+      ],
+      "antwort": [
+        "Leiser Bildschirm. Ein Satz trifft genau den Punkt. Problem geloest.",
+        "Regen auf dem Dach. Im Chat wird es ploetzlich klar. Ruhe im System.",
+        "Offene Frage. Drei praezise Antworten spaeter: Ein zufriedenes Danke."
+      ],
+      "kontext": "smalltalk"
     }
   ]
 }

@@ -47,6 +47,7 @@
         var chatbox = document.getElementById("chatbox");
         var endpoint = document.body.dataset.endpoint || "/get";
         var pending = false;
+        var REQUEST_TIMEOUT_MS = 25000;
 
         function appendMessage(kind, text) {
             var wrapper = document.createElement("div");
@@ -68,6 +69,42 @@
             }
         }
 
+        async function fetchWithTimeout(url, options) {
+            var controller = new AbortController();
+            var timer = setTimeout(function() {
+                controller.abort();
+            }, REQUEST_TIMEOUT_MS);
+            try {
+                var mergedOptions = Object.assign({}, options, { signal: controller.signal });
+                return await fetch(url, mergedOptions);
+            } finally {
+                clearTimeout(timer);
+            }
+        }
+
+        async function sendMessage(rawText) {
+            var response = await fetchWithTimeout(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                },
+                body: new URLSearchParams({ msg: rawText })
+            });
+
+            if (response.ok) {
+                return response;
+            }
+
+            // Retry once with JSON in case a proxy/server strips form payloads.
+            return fetchWithTimeout(endpoint, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ msg: rawText })
+            });
+        }
+
         form.addEventListener("submit", async function(event) {
             event.preventDefault();
             var rawText = textInput.value.trim();
@@ -80,13 +117,7 @@
             setPending(true);
 
             try {
-                var response = await fetch(endpoint, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-                    },
-                    body: new URLSearchParams({ msg: rawText }),
-                });
+                var response = await sendMessage(rawText);
                 if (!response.ok) {
                     typingIndicator.remove();
                     appendMessage("bot error", "HTTP-Fehler " + response.status + " beim Antworten.");
@@ -94,10 +125,14 @@
                 }
                 var data = await response.text();
                 typingIndicator.remove();
-                appendMessage("bot", data || "Keine Antwort vom Server.");
+                appendMessage("bot", (data || "").trim() || "Keine Antwort vom Server.");
             } catch (err) {
                 typingIndicator.remove();
-                appendMessage("bot error", "Serverfehler. Bitte später erneut versuchen.");
+                if (err && err.name === "AbortError") {
+                    appendMessage("bot error", "Zeitüberschreitung beim Antworten. Bitte erneut versuchen.");
+                } else {
+                    appendMessage("bot error", "Serverfehler. Bitte später erneut versuchen.");
+                }
             } finally {
                 setPending(false);
             }
