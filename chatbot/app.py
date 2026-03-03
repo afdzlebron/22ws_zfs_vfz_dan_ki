@@ -1,42 +1,58 @@
 from flask import Flask, render_template, request
 
-import nltk
-from nltk.stem.snowball import GermanStemmer
-stemmer = GermanStemmer()
-from nltk.corpus import stopwords
+import json
+import os
+import pickle
+import random
+from pathlib import Path
 
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem.snowball import GermanStemmer
 import numpy as np
 import tflearn
-import random
-import os
-import inspect
 
-def getPath(file):
-    path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    path = os.path.join(path, file).replace("\\", "/")
-    return path
+stemmer = GermanStemmer()
+
+BASE_DIR = Path(__file__).resolve().parent
+MODEL_PATH = BASE_DIR / "model.tflearn"
+TRAINED_DATA_PATH = BASE_DIR / "trained_data"
+CHAT_JSON_PATH = BASE_DIR / "chat.json"
+NLTK_DATA_DIR = BASE_DIR / "nltk_data"
+
+DEFAULT_RESPONSE = (
+    "Entschuldigung, ich habe das nicht verstanden. "
+    "Kannst du deine Frage bitte anders formulieren?"
+)
 
 
-import pickle
-import json
+def ensure_nltk_data():
+    if str(NLTK_DATA_DIR) not in nltk.data.path:
+        nltk.data.path.append(str(NLTK_DATA_DIR))
+    NLTK_DATA_DIR.mkdir(parents=True, exist_ok=True)
+    resources = {
+        "tokenizers/punkt": "punkt",
+        "corpora/stopwords": "stopwords",
+    }
+    for resource, name in resources.items():
+        try:
+            nltk.data.find(resource)
+        except LookupError:
+            nltk.download(name, download_dir=str(NLTK_DATA_DIR))
 
-
-
-def getJsonPath():
-    path = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    path = os.path.join(path, 'chat.json').replace("\\", "/")
-    return path
+ensure_nltk_data()
+STOPWORDS = set(stopwords.words("german"))
+IGNORE_WORDS = {"?", ".", ","}.union(STOPWORDS)
 
 # wiederherstelle alle unsere Datenstrukturen
-#data = pickle.load(open("./chatbot/trained_data", "rb"))
-data = pickle.load(open("./trained_data", "rb"))
+data = pickle.load(open(TRAINED_DATA_PATH, "rb"))
 words = data['words']
 classes = data['classes']
 train_x = data['train_x']
 train_y = data['train_y']
 
 # importiere die Dialogdesign-Datei
-with open(getJsonPath(), encoding="utf8") as json_data:
+with open(CHAT_JSON_PATH, encoding="utf8") as json_data:
     dialogflow = json.load(json_data)
 
 # Aufbau des neuronalen Netzes
@@ -47,7 +63,7 @@ net = tflearn.fully_connected(net, len(train_y[0]), activation='softmax')
 net = tflearn.regression(net)
 
 # Definiere das Modell und konfiguriere tensorboard
-model = tflearn.DNN(net, tensorboard_dir='train_logs')
+model = tflearn.DNN(net, tensorboard_dir=str(BASE_DIR / "train_logs"))
 
 
 
@@ -61,23 +77,22 @@ def home():
 
 @app.route("/get", methods=["POST"])
 def chatbot_response():
-    msg = request.form["msg"]
+    msg = request.form.get("msg", "").strip()
+    if not msg:
+        return ""
     res = antwort(msg)
-    return res
+    return res or DEFAULT_RESPONSE
 
 
 # chat functionalities
 # Bearbeitung der Benutzereingaben, um einen bag-of-words zu erzeugen
 def frageBearbeitung(frage):
     # tokenisiere die synonymen
-    sentence_word = nltk.word_tokenize(frage)
-    # generiere die Stopwörter
-    stop = stopwords.words('german')
-    ignore_words = ['?', '.', ','] + stop
+    sentence_word = nltk.word_tokenize(frage, language="german")
     ######Korrektur Schreibfehler
     sentence_words = []
     for word in sentence_word:
-        if word not in ignore_words or word == 'weiter' or word == 'andere' or word == 'nicht':
+        if word not in IGNORE_WORDS or word == 'weiter' or word == 'andere' or word == 'nicht':
             sentence_words.append(word)
     # stemme jedes Wort
     sentence_words = [stemmer.stem(word.lower()) for word in sentence_words]
@@ -99,7 +114,7 @@ def bow(frage, words, show_details=False):
 
 
 # lade unsre gespeicherte Modell
-model.load('./model.tflearn')
+model.load(str(MODEL_PATH))
 
 # Aufbau unseres Antwortprozessors.
 # Erstellen einer Datenstruktur, die den Benutzerkontext enthält
@@ -133,8 +148,8 @@ def antwort(frage):
                 if i['intent'] == results[0][0]:
                     return random.choice(i['antwort'])
             results.pop(0)
+    return DEFAULT_RESPONSE
 
 
 if __name__ == "__main__":
-    app.run()
-
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))

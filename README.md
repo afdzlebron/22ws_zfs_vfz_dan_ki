@@ -1,43 +1,53 @@
-# Datenanalyse auf Basis von KI-Methoden - Wintersemester 2022/2023
+# Datenanalyse auf Basis von KI-Methoden – Wintersemester 2022/2023
 
-## Projektübersicht:
+## Projektübersicht
+Dieses Repository enthält das finale Projekt für den Kurs "Datenanalyse auf Basis von KI-Methoden" im Wintersemester 2022/2023. Der Fokus liegt auf einem einfachen Chatbot zur Beantwortung von Kundenanfragen (Deutsch).
 
-Dieses Repository enthält das finale Projekt für den Kurs "Datenanalyse auf Basis von KI-Methoden" im Wintersemester 2022/2023. Im Rahmen dieses Projekts wurden verschiedene KI-Methoden angewendet, um aussagekräftige Erkenntnisse aus Daten zu gewinnen.
+## Technologien
+- Python, Flask
+- TensorFlow (CPU), TFLearn, NLTK, NumPy
 
-## Ziel:
+## Projektstruktur
+- `chatbot/`: Anwendungscode, Modellartefakte, Templates und Static-Files
+- `render.yaml`: Render-Deployment-Konfiguration
+- `requirements.txt`: Python-Abhängigkeiten
+- `runtime.txt`: Python-Version für Render
 
-Ziel des Projekts war es, die erlernten KI-Methoden praktisch anzuwenden und ein Verständnis für die Funktionsweise und Anwendungsmöglichkeiten von KI-Algorithmen zu entwickeln.
+## Lokal ausführen
+1. Abhängigkeiten installieren:
+   ```bash
+   python -m venv .venv
+   source .venv/bin/activate
+   pip install -r requirements.txt
+   python -m nltk.downloader punkt stopwords -d chatbot/nltk_data
+   ```
+2. App starten:
+   ```bash
+   python chatbot/app.py
+   ```
+3. Browser öffnen: `http://localhost:5000`
 
-## Technologien:
+## Modell neu trainieren (optional)
+Wenn du `chat.json` änderst, kannst du das Modell neu trainieren:
+```bash
+python chatbot/train.py
+```
+Das erzeugt neue Dateien `chatbot/model.tflearn*` und `chatbot/trained_data`.
 
-    Programmiersprachen: Python, R
-    Bibliotheken: TensorFlow, scikit-learn, dash, deepnet, shiny 
-    Tools: Jupyter Notebook, RStudio 
-    
-## Projektstruktur:
+## Deployment auf Render
+Empfohlen: Deployment über `render.yaml`.
 
-    chatbot: Enthält die Dateien für den entwickelten Chatbot.
+1. Render Web Service erstellen und Repo verbinden.
+2. Render erkennt `render.yaml` automatisch und nutzt:
+   - Build Command: `pip install -r requirements.txt && python -m nltk.downloader punkt stopwords -d chatbot/nltk_data`
+   - Start Command: `gunicorn chatbot.wsgi:app --workers 1 --threads 4 --timeout 120`
+3. Deploy starten.
 
-## Projektbestandteile:
+Falls du manuell konfigurierst, verwende exakt die Build- und Start-Commands aus `render.yaml`.
 
-    Entwicklung eines Chatbots zur Beantwortung von Kundenanfragen
+## Hinweise
+- NLTK-Daten werden beim Build nach `chatbot/nltk_data` geladen.
+- Falls die Installation von TensorFlow/TFLearn fehlschlägt, prüfe die Python-Version (siehe `runtime.txt`) und die Versions-Pins in `requirements.txt`.
 
-## Installation:
-
-Installieren Sie alle relevanten libraries (s. oben Technologien).
-
-## Verwendung:
-
-Führen Sie app.py aus. 
-
-## Lernpunkte:
-
-    Anwendung von Deep Learning für die Textklassifizierung
-    Entwicklung von interaktiven Dashboards mit Dash
-
-## Disclaimer:
-
-Dieses Projekt dient ausschließlich zur Dokumentation und dient nicht kommerziellen Zwecken.
-
-## Auor: 
-    AFL et al.
+## Autor
+AFL et al.
