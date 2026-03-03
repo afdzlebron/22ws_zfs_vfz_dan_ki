@@ -47,7 +47,8 @@ Falls du manuell konfigurierst, verwende exakt die Build- und Start-Commands aus
 
 ## Hinweise
 - NLTK-Daten werden beim Build nach `chatbot/nltk_data` geladen.
-- Falls die Installation von TensorFlow/TFLearn fehlschlägt, prüfe die Python-Version (siehe `runtime.txt`) und die Versions-Pins in `requirements.txt`.
+- Render nutzt Python 3.10.13 über `.python-version` bzw. `PYTHON_VERSION` in `render.yaml`.
+- Falls die Installation von TensorFlow/TFLearn fehlschlägt, prüfe die Python-Version und die Versions-Pins in `requirements.txt`.
 
 ## Autor
 AFL et al.
