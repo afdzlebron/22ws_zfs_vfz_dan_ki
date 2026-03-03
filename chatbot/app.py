@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 
 import json
+import logging
 import os
 import pickle
 import random
@@ -20,6 +21,9 @@ TRAINED_DATA_PATH = BASE_DIR / "trained_data"
 CHAT_JSON_PATH = BASE_DIR / "chat.json"
 NLTK_DATA_DIR = BASE_DIR / "nltk_data"
 
+logging.basicConfig(level=os.environ.get("LOG_LEVEL", "INFO"))
+logger = logging.getLogger(__name__)
+
 DEFAULT_RESPONSE = (
     "Entschuldigung, ich habe das nicht verstanden. "
     "Kannst du deine Frage bitte anders formulieren?"
@@ -38,10 +42,17 @@ def ensure_nltk_data():
         try:
             nltk.data.find(resource)
         except LookupError:
-            nltk.download(name, download_dir=str(NLTK_DATA_DIR))
+            try:
+                nltk.download(name, download_dir=str(NLTK_DATA_DIR))
+            except Exception as exc:
+                logger.warning("Failed to download NLTK resource %s: %s", name, exc)
 
 ensure_nltk_data()
-STOPWORDS = set(stopwords.words("german"))
+try:
+    STOPWORDS = set(stopwords.words("german"))
+except LookupError as exc:
+    logger.warning("NLTK stopwords not available yet: %s", exc)
+    STOPWORDS = set()
 IGNORE_WORDS = {"?", ".", ","}.union(STOPWORDS)
 
 # wiederherstelle alle unsere Datenstrukturen
@@ -77,7 +88,11 @@ def home():
 
 @app.route("/get", methods=["POST"])
 def chatbot_response():
-    msg = request.form.get("msg", "").strip()
+    if request.is_json:
+        msg = (request.json or {}).get("msg", "")
+    else:
+        msg = request.form.get("msg", "")
+    msg = msg.strip()
     if not msg:
         return ""
     res = antwort(msg)
@@ -88,7 +103,11 @@ def chatbot_response():
 # Bearbeitung der Benutzereingaben, um einen bag-of-words zu erzeugen
 def frageBearbeitung(frage):
     # tokenisiere die synonymen
-    sentence_word = nltk.word_tokenize(frage, language="german")
+    try:
+        sentence_word = nltk.word_tokenize(frage, language="german")
+    except LookupError as exc:
+        logger.warning("NLTK punkt not available, falling back to split: %s", exc)
+        sentence_word = frage.split()
     ######Korrektur Schreibfehler
     sentence_words = []
     for word in sentence_word:
@@ -125,7 +144,11 @@ ERROR_THRESHOLD = 0.10
 
 def klassifizieren(frage):
     # generiere Wahrscheinlichkeiten von dem Modell
-    results = model.predict([bow(frage, words)])[0]
+    try:
+        results = model.predict([bow(frage, words)])[0]
+    except Exception as exc:
+        logger.exception("Model prediction failed: %s", exc)
+        return []
     # herausfiltern Vorhersagen unterhalb eines Schwellenwerts
     results = [[i, r] for i, r in enumerate(results) if r > ERROR_THRESHOLD]
     # nach Stärke der Wahrscheinlichkeit sortieren
