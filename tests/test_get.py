@@ -40,6 +40,27 @@ class ChatbotGetEndpointTest(unittest.TestCase):
                 break
         self.assertIn(body, stimmung_answers)
 
+    def test_follow_up_reuses_context(self):
+        first = self.client.post("/get", data={"msg": "Erzaehl einen Witz"})
+        self.assertEqual(first.status_code, 200)
+        second = self.client.post("/get", data={"msg": "noch einen"})
+        self.assertEqual(second.status_code, 200)
+        self.assertNotEqual(second.data.decode("utf-8"), DEFAULT_RESPONSE)
+
+    def test_follow_up_detail_request_after_philosophy_prompt(self):
+        first = self.client.post("/get", data={"msg": "Stoiker"})
+        self.assertEqual(first.status_code, 200)
+        second = self.client.post("/get", data={"msg": "erklaer genauer"})
+        self.assertEqual(second.status_code, 200)
+        body = second.data.decode("utf-8")
+        self.assertNotEqual(body, DEFAULT_RESPONSE)
+        feedback_positive_answers = []
+        for item in dialogflow["dialogflow"]:
+            if item["intent"] == "feedback_positiv":
+                feedback_positive_answers = item["antwort"]
+                break
+        self.assertNotIn(body, feedback_positive_answers)
+
 
 if __name__ == "__main__":
     unittest.main()

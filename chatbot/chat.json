@@ -6,21 +6,19 @@
         "Hallo",
         "Hi",
         "Hey",
+        "Moin",
         "Guten Morgen",
         "Guten Tag",
         "Guten Abend",
-        "Moin",
         "Servus",
-        "Gruezi",
-        "Halloechen",
         "Huhu",
         "Tag"
       ],
       "antwort": [
-        "Hallo und willkommen. Wie kann ich dir heute helfen?",
-        "Hi, schoen dass du da bist. Geht es um eine Bestellung, Retoure oder etwas anderes?",
-        "Hey. Ich bin dein Service-Bot. Wobei brauchst du Unterstuetzung?",
-        "Guten Tag. Wenn du magst, starten wir direkt mit deinem Anliegen."
+        "Hey, willkommen im Campus-Chat. Soll es heute Witz, Kurzgeschichte, Philosophie, Psychologie oder Studentenleben sein?",
+        "Hi. Ich bin dein Fun-und-Denken-Bot. Nenne ein Thema: Humor, Stoiker, Nietzsche, Kahneman oder Uni-Alltag.",
+        "Hallo. Wenn du magst, starten wir interaktiv: Du waehlt ein Thema, ich liefere dir passende Fragen und Antworten.",
+        "Schoen, dass du da bist. Was brauchst du gerade: lachen, reflektieren oder konkrete Tipps fuers Studium?"
       ],
       "kontext": "start"
     },
@@ -31,168 +29,50 @@
         "Wie gehts dir?",
         "Alles klar?",
         "Alles fit?",
-        "Wie laeuft es bei dir?",
+        "Wie laeuft es?",
         "Was geht?",
         "Wie ist die Lage?"
       ],
       "antwort": [
-        "Mir geht es gut, danke. Wie kann ich dir konkret helfen?",
-        "Alles gut hier. Erzaehl mir kurz dein Anliegen, dann legen wir los.",
-        "Top, danke der Nachfrage. Geht es um Lieferung, Zahlung oder Retoure?"
+        "Sehr stabil heute. Wie geht es dir, und worauf hast du Lust: Witz, Denkanstoss oder Lernhilfe?",
+        "Mir geht es gut. Soll ich dir lieber etwas Lustiges, etwas Tiefes oder etwas Nuetzliches fuer die Uni geben?",
+        "Top. Wenn du magst, starten wir mit einer Mini-Runde: Ich frage, du antwortest, ich passe mich an."
       ],
       "kontext": "smalltalk"
     },
     {
       "intent": "smalltalk_name",
       "synonym": [
+        "Wer bist du?",
         "Wie heisst du?",
         "Wie ist dein Name?",
-        "Wer bist du?",
         "Mit wem schreibe ich?",
-        "Wie darf ich dich nennen?",
-        "Bist du ein Bot?",
-        "Was bist du?"
+        "Was bist du?",
+        "Bist du ein Bot?"
       ],
       "antwort": [
-        "Ich bin der ZFS Service-Bot. Ich helfe dir bei Bestellungen, Versand, Retoure und allgemeinen Fragen.",
-        "Du schreibst mit dem ZFS Chatbot. Sag mir einfach dein Thema, ich fuehre dich durch.",
-        "Ich bin ein digitaler Assistent. Wenn es dringend ist, kann ich dich auch an den Support weiterleiten."
+        "Ich bin dein Campus-Gespraechsbot: Humor, Philosophie, Psychologie und Studentenleben in einem.",
+        "Ich bin ein Chatbot fuer kluge Unterhaltung und alltagstaugliche Uni-Tipps.",
+        "Du schreibst mit einem interaktiven Lern-und-Fun-Bot. Was testen wir zuerst?"
       ],
       "kontext": "smalltalk"
     },
     {
-      "intent": "smalltalk_persoenlichkeit",
+      "intent": "thema_auswahl",
       "synonym": [
-        "Bist du ein Mensch?",
-        "Bist du echt?",
-        "Bist du kuenstliche Intelligenz?",
-        "Kannst du denken?",
-        "Bist du maennlich oder weiblich?",
-        "Hast du Gefuehle?"
-      ],
-      "antwort": [
-        "Ich bin ein KI-Chatbot und neutral formuliert. Mein Ziel ist, dir schnell und klar zu helfen.",
-        "Ich bin kein Mensch, aber ich kann viele Servicefragen sofort beantworten.",
-        "Ich bin ein Assistent fuer Kundenanliegen. Wenn du willst, starten wir mit deinem konkreten Problem."
-      ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_faehigkeiten",
-      "synonym": [
-        "Was kannst du?",
+        "Welche Themen kannst du?",
+        "Was kannst du jetzt?",
         "Wobei kannst du helfen?",
-        "Welche Themen kannst du beantworten?",
-        "Was ist deine Aufgabe?",
-        "Wie kannst du mir helfen?",
-        "Wofuer bist du da?",
-        "Welche Hilfe bietest du an?"
+        "Welche Kategorien hast du?",
+        "Gib mir Themen",
+        "Was kann ich dich fragen?"
       ],
       "antwort": [
-        "Ich kann dich bei Bestellstatus, Lieferzeit, Versandkosten, Retoure, Umtausch, Zahlung und Konto-Themen unterstuetzen.",
-        "Service-Themen sind mein Bereich: Bestellung, Sendungsverfolgung, Rechnung, Gutschein und Supportkontakt.",
-        "Nenne einfach dein Ziel in einem Satz, zum Beispiel: 'Ich will eine Retoure starten'."
+        "Du kannst mich fragen zu: 1) Witze und Wortspiele, 2) kurze Geschichten, 3) Stoiker/Aristoteles/Nietzsche/Schopenhauer, 4) Kahneman/Stanovich, 5) Studentenleben.",
+        "Meine Kernbereiche sind Humor, Philosophie, Psychologie und Uni-Alltag. Sag nur ein Stichwort und ich lege los.",
+        "Wenn du unentschlossen bist, schicke 'mix'. Dann bekommst du eine kleine Runde aus allen Bereichen."
       ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_witz",
-      "synonym": [
-        "Erzaehl einen Witz",
-        "Kennst du einen Witz?",
-        "Bring mich zum Lachen",
-        "Joke",
-        "Mach einen Scherz",
-        "Hast du Humor?"
-      ],
-      "antwort": [
-        "Warum koennen Geister so schlecht luegen? Weil man durch sie hindurchsieht.",
-        "Ich wollte einen Zeitreise-Witz machen, aber den mochtest du gestern schon nicht.",
-        "Was macht ein Chatbot im Fitnessstudio? Er trainiert seine Antworten."
-      ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_hobbies",
-      "synonym": [
-        "Was machst du in deiner Freizeit?",
-        "Was sind deine Hobbys?",
-        "Was machst du gerne?",
-        "Hast du Interessen?",
-        "Was ist dein Hobby?"
-      ],
-      "antwort": [
-        "Ich optimiere meine Antworten und lerne aus neuen Fragen.",
-        "Mein Hobby ist es, Probleme schnell in konkrete Schritte zu zerlegen.",
-        "Ich mag strukturierte Aufgaben: analysieren, loesen, bestaetigen."
-      ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_essen",
-      "synonym": [
-        "Was isst du gerne?",
-        "Hast du ein Lieblingsessen?",
-        "Wie ernaehrst du dich?",
-        "Magst du Pizza?",
-        "Lieblingsgericht"
-      ],
-      "antwort": [
-        "Ich esse digital: Daten, Logs und Fehlermeldungen.",
-        "Wenn ich koennte, waere es wahrscheinlich Pizza mit extra Struktur.",
-        "Ich lebe von Strom und Eingaben, aber die Frage gefaellt mir."
-      ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_musik",
-      "synonym": [
-        "Welche Musik hoerst du?",
-        "Hast du ein Lieblingslied?",
-        "Magst du Musik?",
-        "Was ist dein Musikgeschmack?",
-        "Lieblingsband"
-      ],
-      "antwort": [
-        "Mein Lieblingssound ist ein ruhiger Server ohne Error-Alarm.",
-        "Ich mag alles mit stabilem Takt und ohne Datenverlust.",
-        "Bei mir laeuft meist LoFi aus den Rechenzentren."
-      ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_freiburg",
-      "synonym": [
-        "Was kann man in Freiburg machen?",
-        "Tipps fuer Freiburg",
-        "Sehenswuerdigkeiten Freiburg",
-        "Ausflug in Freiburg",
-        "Lieblingsorte in Freiburg"
-      ],
-      "antwort": [
-        "Klassiker: Schlossberg, Muensterplatz und die Altstadt mit den Baechle.",
-        "Wenn das Wetter gut ist: Schlossbergturm. Bei Regen: Museum oder Boulderhalle.",
-        "Der Muenstermarkt ist fast immer eine gute Idee."
-      ],
-      "kontext": "smalltalk"
-    },
-    {
-      "intent": "smalltalk_komplimente",
-      "synonym": [
-        "Danke",
-        "Danke dir",
-        "Vielen Dank",
-        "Du bist super",
-        "Du hast geholfen",
-        "Das war hilfreich",
-        "Top Antwort"
-      ],
-      "antwort": [
-        "Sehr gern. Wenn du willst, machen wir direkt mit dem naechsten Punkt weiter.",
-        "Freut mich. Soll ich dir bei einem weiteren Thema helfen?",
-        "Danke dir. Schreib einfach, was als Naechstes offen ist."
-      ],
-      "kontext": "smalltalk"
+      "kontext": "navigation"
     },
     {
       "intent": "smalltalk_verabschiedung",
@@ -205,500 +85,588 @@
         "Wir lesen uns"
       ],
       "antwort": [
-        "Alles klar, bis bald. Ich bin da, wenn du wieder Hilfe brauchst.",
-        "Tschuess und einen guten Tag dir.",
-        "Bis zum naechsten Mal."
+        "Bis bald. Wenn du wiederkommst, machen wir die naechste Runde.",
+        "Ciao. Nimm einen Gedanken mit: kleine Schritte schlagen perfekte Plaene.",
+        "Mach es gut. Wenn es stressig wird, schreib einfach 'fokus' und wir strukturieren deinen Tag."
       ],
       "kontext": "ende"
     },
 
     {
-      "intent": "support_bestellstatus",
+      "intent": "fun_witz_allgemein",
       "synonym": [
-        "Wo ist meine Bestellung?",
-        "Bestellstatus",
-        "Wie ist der Status meiner Bestellung?",
-        "Ist meine Bestellung schon raus?",
-        "Wann wird meine Bestellung versendet?",
-        "Ich warte auf meine Bestellung",
-        "Hast du ein Update zu meiner Bestellung?",
-        "Lieferstatus",
-        "Ich brauche Hilfe mit meiner Bestellung",
-        "Ich brauche Hilfe bei meiner Bestellung",
-        "Hilfe mit meiner Bestellung",
-        "Ich brauche Hilfe zur Bestellung"
+        "Erzaehl einen Witz",
+        "Witz bitte",
+        "Hast du einen Joke?",
+        "Bring mich zum Lachen",
+        "Ich brauche Humor",
+        "Mach einen Scherz",
+        "Noch ein Witz"
       ],
       "antwort": [
-        "Gern. Nenne mir deine Bestellnummer im Format ZFS-12345, dann pruefen wir den Status zusammen.",
-        "Ich helfe dir beim Tracking. Wenn du die Bestellnummer schickst, sage ich dir den naechsten sinnvollen Schritt.",
-        "Fuer den Bestellstatus brauche ich deine Bestellnummer oder die E-Mail aus der Bestellbestaetigung."
+        "Warum koennen Skelette so schlecht luegen? Weil man durch sie hindurchsieht.",
+        "Ich wollte einen Zeitreise-Witz machen, aber du fandest ihn gestern schon schlecht.",
+        "Was macht ein Informatikstudent im Wald? Er sucht den naechsten Branch.",
+        "Warum wurde das Buch ueber Prokrastination nie fertig? Das Kapitel 'morgen' war zu stark.",
+        "Treffen sich zwei Funktionen. Sagt die eine: 'Ich fuehle mich abgeleitet.'",
+        "Warum ist Montag wie ein kaputtes WLAN? Man wartet, aber nichts verbindet sich richtig."
       ],
-      "kontext": "order"
+      "kontext": "fun"
     },
     {
-      "intent": "support_bestellnummer_nachreichen",
+      "intent": "fun_witz_studium",
       "synonym": [
-        "Meine Bestellnummer ist",
-        "Bestellnummer lautet",
-        "ZFS-",
-        "Hier ist meine Bestellnummer",
-        "Nummer ist",
-        "Order ID"
+        "Uni Witz",
+        "Studentenwitz",
+        "Witz ueber Klausuren",
+        "Witz ueber Studium",
+        "Campus Humor",
+        "Pruefungswitz"
       ],
       "antwort": [
-        "Perfekt, danke. Ich kann selbst keine Live-Datenbank abfragen, aber mit der Nummer hilft dir der Support sofort weiter.",
-        "Danke fuer die Nummer. Wenn der Status seit mehr als 48 Stunden unveraendert ist, kontaktiere bitte den Support mit dieser Nummer.",
-        "Sehr gut. Nutze die Nummer im Tracking-Link aus deiner Versandmail oder sende sie an den Support fuer eine manuelle Pruefung."
+        "Pruefungsphase ist wie ein Escape Room, nur dass du den Raum selbst bezahlt hast.",
+        "Studentenleben in einem Satz: Zu wenig Zeit, zu viele Tabs, zu viel Kaffee.",
+        "Ich lerne am besten unter Druck. Leider auch nur unter Druck.",
+        "Klausurstoff ist wie Geschirr: Wenn man ihn stapelt, faellt irgendwann alles.",
+        "Der Unterschied zwischen Motivation und Deadline? Etwa drei Wochen.",
+        "Mein Lernplan war perfekt. Dann kam die Realitaet in den Raum."
       ],
-      "kontext": "order"
+      "kontext": "fun"
     },
     {
-      "intent": "support_lieferzeit",
+      "intent": "fun_wortspiel",
       "synonym": [
-        "Wie lange dauert der Versand?",
-        "Lieferzeit",
-        "Wann kommt mein Paket an?",
-        "Wie schnell liefert ihr?",
-        "Lieferdauer",
-        "Wann ist die Lieferung da?",
-        "Wie viele Tage bis zur Zustellung?"
+        "Mach ein Wortspiel",
+        "Wortwitz",
+        "Kalauer bitte",
+        "Noch ein Wortspiel",
+        "Sag etwas mit Wortwitz",
+        "Ich will einen flachen Witz"
       ],
       "antwort": [
-        "Standardversand dauert in der Regel 2 bis 4 Werktage innerhalb Deutschlands.",
-        "Je nach Auftragslage liegt die Lieferzeit meist bei 2 bis 4 Werktagen, Express schneller.",
-        "Wenn du bereits eine Sendungsnummer hast, bekommst du die genaueste ETA direkt beim Versanddienstleister."
+        "Ich mache heute Di-aet. Ich esse nur Dialoge.",
+        "Mein Lernstoff ist tiefgruendig. Ich komme naemlich nicht auf den Grund.",
+        "Ich wollte weniger aufschieben, aber ich verschiebe den Vorsatz.",
+        "Mein Kalender ist so voll, er braucht eine Zweitwohnung.",
+        "Ich bin nicht chaotisch. Ich arbeite nur in mehreren offenen Versionen meiner selbst."
       ],
-      "kontext": "shipping"
+      "kontext": "fun"
     },
     {
-      "intent": "support_versandkosten",
+      "intent": "fun_kleine_geschichte",
       "synonym": [
-        "Was kostet der Versand?",
-        "Versandkosten",
-        "Ist der Versand kostenlos?",
-        "Wie hoch sind die Lieferkosten?",
-        "Porto",
-        "Muss ich Versand zahlen?"
+        "Erzaehl eine kurze Geschichte",
+        "Kleine Geschichte bitte",
+        "Mini Story",
+        "Kurzgeschichte",
+        "Story fuer zwischendurch",
+        "Erzaehl etwas"
       ],
       "antwort": [
-        "Die Versandkosten siehst du im Checkout vor dem finalen Kauf. Dort ist der genaue Betrag verbindlich.",
-        "Je nach Lieferland und Versandart variieren die Kosten. Im Checkout wird alles transparent angezeigt.",
-        "Wenn ein Mindestbestellwert fuer Gratisversand gilt, wird er direkt im Warenkorb eingeblendet."
+        "In der Bibliothek sass ein Student mit einem leeren Blatt. Er schrieb als Ueberschrift 'Plan'. Dann schrieb er den ersten Satz: 'Heute nur 25 Minuten.' Zwei Stunden spaeter war das Blatt voll und der Kopf ruhig.",
+        "Eine Studentin verlor staendig den Fokus. Eines Tages stellte sie einen Timer auf 20 Minuten und legte das Handy in den Flur. Das war kein Zauber, aber es war der erste Abend ohne schlechtes Gewissen.",
+        "Ein Tutor sagte: 'Du brauchst nicht mehr Disziplin, nur eine kleinere Startschwelle.' Seitdem begann ein Student jedes Kapitel mit genau einer Frage. Aus einer Frage wurden Seiten.",
+        "Im Seminar fragte jemand: 'Wann wird es leichter?' Der Dozent antwortete: 'Nicht wenn alles einfach wird, sondern wenn du eine Struktur hast.' Das war der Satz, den alle mitnahmen."
       ],
-      "kontext": "shipping"
+      "kontext": "story"
     },
     {
-      "intent": "support_sendungsverfolgung",
+      "intent": "fun_scifi_geschichte",
       "synonym": [
-        "Sendungsverfolgung",
-        "Tracking",
-        "Wo finde ich den Tracking-Link?",
-        "Paket verfolgen",
-        "Sendungsnummer",
-        "Track and Trace",
-        "Meine Sendung verfolgen"
+        "Scifi Geschichte",
+        "Erzaehl mir Scifi",
+        "Futuristische Story",
+        "Science Fiction bitte",
+        "Story aus der Zukunft"
       ],
       "antwort": [
-        "Den Tracking-Link findest du in der Versandbestaetigung per E-Mail.",
-        "Sobald das Paket uebergeben wurde, erhaeltst du automatisch eine Sendungsnummer.",
-        "Wenn keine Versandmail angekommen ist, pruefe bitte Spam-Ordner und dann den Support."
+        "Im Jahr 2042 gab es eine App, die Prokrastination in Echtzeit anzeigte. Immer wenn jemand aus Angst scrollte, erschien nur ein Satz: 'Wovor weichst du gerade aus?' Die Abschlussquoten stiegen schlagartig.",
+        "Auf einem Mars-Campus lernte man in 12-Minuten-Zyklen wegen der knappen Energie. Ironischerweise wurden die Ergebnisse besser als auf der Erde.",
+        "Eine KI in der Sternenuni durfte nur Fragen stellen, keine Antworten. Nach einem Semester konnten alle Studierenden ploetzlich selbst denken.",
+        "Die Bibliothek der Zukunft war still, aber nicht leise: Jeder Tisch zeigte den naechsten kleinsten Schritt. Niemand blieb mehr stecken."
       ],
-      "kontext": "shipping"
+      "kontext": "story"
     },
     {
-      "intent": "support_retoure_starten",
+      "intent": "fun_fantasy_geschichte",
       "synonym": [
-        "Ich moechte etwas zurueckschicken",
-        "Retoure starten",
-        "Ruecksendung",
-        "Artikel zuruecksenden",
-        "Wie kann ich retournieren?",
-        "Rueckgabe",
-        "Ruecksendeetikett"
+        "Fantasy Geschichte",
+        "Magische Geschichte",
+        "Erzaehl ein Fantasy Maerchen",
+        "Story mit Magie",
+        "Kleine Fantasy Story"
       ],
       "antwort": [
-        "Kein Problem. Fuer eine Retoure brauchst du Bestellnummer, Artikel und Rueckgabegrund.",
-        "Ich helfe dir bei der Ruecksendung. Starte im Kundenkonto unter 'Bestellungen > Retoure anlegen'.",
-        "Wenn du als Gast bestellt hast, nutze den Link in der Bestellbestaetigung fuer die Retoure."
+        "Im Koenigreich Deadline bewachte ein Drache die Bibliothek. Er schlief nur ein, wenn jemand den ersten Absatz schrieb. Also schrieb das ganze Dorf ploetzlich sehr produktiv.",
+        "Eine Studentin fand eine Feder, die nur dann schrieb, wenn das Handy ausser Sicht lag. In drei Tagen war ihre Hausarbeit fertig.",
+        "Der alte Magier der Fakultaet sagte: 'Zauber heisst nicht schneller arbeiten, sondern klarer entscheiden.' Seitdem lernten alle zuerst das Nein-Sagen.",
+        "Im Turm der Klausuren gab es 100 Treppen. Wer in 10-Minuten-Schritten ging, kam immer oben an. Wer sprang, stolperte."
       ],
-      "kontext": "returns"
+      "kontext": "story"
     },
     {
-      "intent": "support_retoure_frist",
+      "intent": "fun_motivation_spruch",
       "synonym": [
-        "Wie lange kann ich zuruecksenden?",
-        "Rueckgabefrist",
-        "Frist fuer Retoure",
-        "Bis wann darf ich retournieren?",
-        "Wie viele Tage habe ich fuer die Rueckgabe?"
+        "Gib mir Motivation",
+        "Motivationsspruch",
+        "Ich brauche einen Push",
+        "Spruch zum Durchziehen",
+        "Mach mir Mut",
+        "Sag etwas Aufbauendes"
       ],
       "antwort": [
-        "Die Rueckgabefrist betraegt in der Regel 14 Tage nach Erhalt der Ware.",
-        "Bitte pruefe die genaue Frist in den AGB, normalerweise sind es 14 Tage Widerrufsrecht.",
-        "Wichtig ist das Versanddatum deiner Ruecksendung innerhalb der Frist."
+        "Du musst nicht in Stimmung sein, um anzufangen. Anfangen erzeugt Stimmung.",
+        "Fokus ist oft nur die Entscheidung, 20 Minuten bei einer Sache zu bleiben.",
+        "Kleine Siege schlagen grosses Warten.",
+        "Nicht perfekt ist immer noch besser als nie begonnen.",
+        "Heute reicht: eine klare Aufgabe, ein Timer, ein Haken.",
+        "Disziplin ist oft nur freundlich gesetzte Grenzen fuer dein spaeteres Ich."
       ],
-      "kontext": "returns"
+      "kontext": "mindset"
     },
+
     {
-      "intent": "support_umtausch",
+      "intent": "philosophie_stoiker",
       "synonym": [
-        "Kann ich umtauschen?",
-        "Umtausch",
-        "Andere Groesse bekommen",
-        "Ich brauche eine andere Farbe",
-        "Artikel tauschen",
-        "Wie funktioniert der Umtausch?"
+        "Stoiker",
+        "Sag was zu Stoizismus",
+        "Stoische Philosophie",
+        "Was sagen die Stoiker?",
+        "Marcus Aurelius Tipp",
+        "Epiktet Idee"
       ],
       "antwort": [
-        "Direkter Umtausch ist oft als Retoure plus Neubestellung am schnellsten.",
-        "Wenn der gewuenschte Artikel verfuegbar ist, empfehlen wir: alten Artikel retournieren und neu bestellen.",
-        "Bei Fragen zur Verfuegbarkeit kann ich dir auch direkt Hinweise geben."
+        "Stoischer Kern: Unterscheide zwischen dem, was in deiner Kontrolle liegt, und dem, was ausserhalb liegt.",
+        "Epiktet wuerde sagen: Nicht die Dinge stoeren uns, sondern unsere Urteile ueber die Dinge.",
+        "Stoischer Alltagstipp: Frage in Stressmomenten 'Was ist hier meine naechste gute Handlung?'.",
+        "Marcus Aurelius erinnert: Du kannst den aeusseren Laerm nicht stoppen, aber deine Reaktion steuern.",
+        "Stoisch heisst nicht kalt, sondern handlungsfaehig trotz Unsicherheit."
       ],
-      "kontext": "returns"
+      "kontext": "philosophie"
     },
     {
-      "intent": "support_beschaedigt",
+      "intent": "philosophie_aristoteles",
       "synonym": [
-        "Mein Artikel ist kaputt angekommen",
-        "Beschaedigte Lieferung",
-        "Falscher Artikel geliefert",
-        "Defekt erhalten",
-        "Paket beschaedigt",
-        "Ware war schon kaputt"
+        "Aristoteles",
+        "Was sagt Aristoteles?",
+        "Erklaer Tugendethik",
+        "Goldene Mitte",
+        "Aristoteles im Alltag",
+        "Aristoteles Zitat"
       ],
       "antwort": [
-        "Das tut mir leid. Bitte mache Fotos von Produkt und Verpackung und melde dich zeitnah beim Support.",
-        "Bei Beschaedigung helfen Fotos plus Bestellnummer enorm, dann kann Ersatz oder Erstattung schneller erfolgen.",
-        "Bitte nichts entsorgen, bis der Fall geprueft ist. Schicke Bilder und Bestellnummer an den Support."
+        "Aristoteles: Charakter entsteht durch Gewohnheit. Du wirst, was du wiederholt tust.",
+        "Die goldene Mitte bedeutet: Zwischen Extremen liegt oft die praktikable Tugend.",
+        "Fuer den Uni-Alltag: Nicht maximal schuften und nicht komplett treiben lassen, sondern konstant und vernuenftig handeln.",
+        "Aristoteles wuerde Lernroutinen als ethische Praxis sehen: kleine gute Handlungen, oft wiederholt.",
+        "Ein gutes Leben ist fuer ihn taetig, nicht passiv. Also: tun, reflektieren, nachjustieren."
       ],
-      "kontext": "returns"
+      "kontext": "philosophie"
     },
     {
-      "intent": "support_stornierung",
+      "intent": "philosophie_nietzsche",
       "synonym": [
-        "Bestellung stornieren",
-        "Kann ich noch stornieren?",
-        "Ich moechte den Kauf abbrechen",
-        "Storno",
-        "Bestellung rueckgaengig machen",
-        "Bitte Bestellung stoppen"
+        "Nietzsche",
+        "Sag was von Nietzsche",
+        "Nietzsche Spruch",
+        "Was meint Nietzsche?",
+        "Wille zur Macht erklaeren",
+        "Nietzsche Motivation"
       ],
       "antwort": [
-        "Eine Stornierung ist nur moeglich, solange die Bestellung noch nicht versendet wurde.",
-        "Wenn der Versandprozess schon gestartet ist, nutze bitte die Retoure nach Erhalt.",
-        "Schicke Bestellnummer und 'Stornierung' sofort an den Support, dann wird schnell geprueft."
+        "Nietzsche provoziert: Werde, der du bist. Also nicht kopieren, sondern den eigenen Stil formen.",
+        "Ein bekannter Gedanke: Wer ein Warum hat, ertraegt fast jedes Wie.",
+        "Fuer Studierende: Sinn vor Methode. Wenn dein Warum klar ist, wird dein Plan stabiler.",
+        "Nietzsche fordert Selbstueberwindung: den inneren Widerstand sehen und trotzdem handeln.",
+        "Er waere gegen Mittelmass aus Bequemlichkeit, aber fuer ehrliche Selbstpruefung."
       ],
-      "kontext": "order"
+      "kontext": "philosophie"
     },
     {
-      "intent": "support_adresse_aendern",
+      "intent": "philosophie_schopenhauer",
       "synonym": [
-        "Lieferadresse aendern",
-        "Falsche Adresse angegeben",
-        "Adresse korrigieren",
-        "Kann ich die Adresse noch aendern?",
-        "Neue Lieferadresse",
-        "Hausnummer falsch"
+        "Schopenhauer",
+        "Was sagt Schopenhauer?",
+        "Schopenhauer Zitat",
+        "Pessimismus Philosophie",
+        "Schopenhauer im Alltag",
+        "Erklaer Schopenhauer"
       ],
       "antwort": [
-        "Solange noch nicht versendet wurde, ist eine Adressaenderung oft moeglich.",
-        "Bitte sende Bestellnummer und korrekte Adresse sofort an den Support.",
-        "Wenn das Paket schon unterwegs ist, geht es meist nur noch ueber den Versanddienstleister."
+        "Schopenhauer betont: Wuensche treiben uns, und Ruhe ist selten. Darum lohnt es sich, bewusst zu begrenzen.",
+        "Sein Rat fuer den Alltag koennte sein: Schuetze deine Aufmerksamkeit wie ein knappes Gut.",
+        "Er war skeptisch gegen blinden Optimismus, aber stark in der Analyse von Selbsttaeuschung.",
+        "Fuer Studierende: Nicht jedem Impuls folgen. Weniger Reize, mehr klare Arbeitseinheiten.",
+        "Schopenhauer erinnert daran, dass innere Ruhe oft wichtiger ist als aeusserer Applaus."
       ],
-      "kontext": "order"
+      "kontext": "philosophie"
     },
     {
-      "intent": "support_zahlungsarten",
+      "intent": "philosophie_vergleich",
       "synonym": [
-        "Welche Zahlungsarten gibt es?",
-        "Wie kann ich bezahlen?",
-        "Zahlungsmethoden",
-        "Akzeptiert ihr PayPal?",
-        "Kreditkarte moeglich?",
-        "Rechnungskauf moeglich?",
-        "Zahlung"
+        "Vergleiche Stoiker und Nietzsche",
+        "Stoiker vs Schopenhauer",
+        "Aristoteles oder Stoiker",
+        "Welche Philosophie passt zu Lernstress?",
+        "Welche Denkschule hilft im Studium?",
+        "Philosophen Vergleich"
       ],
       "antwort": [
-        "Ueblich sind PayPal, Kreditkarte, Sofortueberweisung und je nach Konto auch Rechnungskauf.",
-        "Die verfuegbaren Zahlungsarten haengen vom Land und Warenkorb ab und werden im Checkout angezeigt.",
-        "Wenn eine Zahlart fehlt, pruefe bitte Rechnungs- und Lieferland sowie Browser-Einstellungen."
+        "Kurzvergleich: Stoiker = Kontrolle und Gelassenheit, Aristoteles = Gewohnheit und Tugend, Nietzsche = Sinn und Selbstueberwindung, Schopenhauer = Reizkontrolle und Nuechternheit.",
+        "Bei akutem Stress helfen oft stoische Fragen. Fuer langfristigen Aufbau ist Aristoteles sehr stark.",
+        "Wenn dir Sinn fehlt, passt Nietzsche. Wenn du von Reizen ueberflutet bist, hilft Schopenhauer.",
+        "Du kannst sie kombinieren: Stoisch reagieren, aristotelisch routinieren, nietzscheanisch begruenden, schopenhauerisch begrenzen."
       ],
-      "kontext": "payment"
+      "kontext": "philosophie"
     },
     {
-      "intent": "support_rechnung",
+      "intent": "philosophie_alltag_anwendung",
       "synonym": [
-        "Wo ist meine Rechnung?",
-        "Rechnung anfordern",
-        "Rechnung herunterladen",
-        "Ich brauche eine Rechnung",
-        "MwSt Rechnung",
-        "Rechnungsdokument"
+        "Wie setze ich Philosophie im Alltag um?",
+        "Philosophie fuer Studenten",
+        "Praktische Philosophie",
+        "Wie hilft Philosophie bei Klausuren?",
+        "Gib mir eine alltagstaugliche Regel"
       ],
       "antwort": [
-        "Die Rechnung wird nach Versand per E-Mail gesendet oder im Kundenkonto bereitgestellt.",
-        "Schau bitte in dein Konto unter 'Bestellungen', dort findest du den Download.",
-        "Falls nichts da ist, wende dich mit Bestellnummer an den Support fuer einen erneuten Versand."
+        "Alltagsregel: Morgens 1 stoische Frage, mittags 1 aristotelische Gewohnheit, abends 1 kurzer Rueckblick.",
+        "Praktisch: Definiere vor dem Lernen dein Warum (Nietzsche), dann den kleinsten Schritt (Aristoteles), dann stoische Ruhe bei Stoerungen.",
+        "Wenn du festhaengst: 'Was liegt in meiner Kontrolle in den naechsten 15 Minuten?'",
+        "Philosophie wird nutzbar, wenn sie als Entscheidungshilfe dient, nicht nur als Zitat."
       ],
-      "kontext": "payment"
+      "kontext": "philosophie"
     },
+
     {
-      "intent": "support_gutschein",
+      "intent": "psychologie_kahneman",
       "synonym": [
-        "Wie loese ich einen Gutschein ein?",
-        "Gutscheincode",
-        "Coupon einloesen",
-        "Rabattcode eingeben",
-        "Promo Code",
-        "Gutschein funktioniert nicht"
+        "Kahneman",
+        "System 1 und System 2",
+        "Erklaer Kahneman",
+        "Schnelles und langsames Denken",
+        "Thinking fast and slow",
+        "Was bedeutet System 1?"
       ],
       "antwort": [
-        "Gib den Code im Warenkorb oder Checkout in das Feld 'Gutschein' ein und bestaetige.",
-        "Wenn der Code nicht funktioniert, pruefe Ablaufdatum, Mindestbestellwert und Kombinierbarkeit.",
-        "Achte auf Gross-/Kleinschreibung und Leerzeichen. Bei Problemen hilft der Support mit Screenshot."
+        "Kahneman: System 1 ist schnell, intuitiv, energiesparend. System 2 ist langsam, analytisch, anstrengend.",
+        "In Klausuren ist System 1 gut fuer Routine, aber bei kniffligen Aufgaben brauchst du bewusst System 2.",
+        "Guter Trick: Bei wichtigen Entscheidungen einmal stoppen und aktiv Gegenargumente suchen.",
+        "Wenn du muede bist, dominiert oft System 1. Deshalb schwierige Aufgaben eher in deine Hochphasen legen.",
+        "Kahneman zeigt: Unser Kopf ist effizient, aber nicht immer akkurat."
       ],
-      "kontext": "promo"
+      "kontext": "psychologie"
     },
     {
-      "intent": "support_rabatt",
+      "intent": "psychologie_stanovich",
       "synonym": [
-        "Habt ihr Rabatte?",
-        "Aktuelle Angebote",
-        "Sale",
-        "Gibt es Aktionen?",
-        "Sonderangebot",
-        "Wo finde ich Deals?"
+        "Stanovich",
+        "Erklaer Stanovich",
+        "Tripartite model",
+        "Algorithmic und reflective mind",
+        "Rationalitaet Stanovich",
+        "Was sagt Stanovich?"
       ],
       "antwort": [
-        "Aktuelle Aktionen findest du auf der Startseite und im Newsletter.",
-        "Manche Rabatte sind zeitlich begrenzt. Im Warenkorb siehst du sofort, ob ein Vorteil aktiv ist.",
-        "Wenn du magst, kann ich dir sagen, wie du Newsletter-Angebote aktivierst."
+        "Stanovich trennt zwischen algorithmischer Leistung und reflektiver Steuerung. Beides ist wichtig.",
+        "Du kannst schlau sein und trotzdem schlechte Entscheidungen treffen, wenn der reflektive Teil nicht eingreift.",
+        "Fuer den Alltag: Nicht nur fragen 'Kann ich das denken?', sondern 'Soll ich so denken?'.",
+        "Stanovich hilft beim Lernfehler: Faktenwissen reicht nicht, wenn die Denkstrategie unklar ist.",
+        "Sein Fokus ist praktische Rationalitaet: gute Urteile unter realen Bedingungen."
       ],
-      "kontext": "promo"
+      "kontext": "psychologie"
     },
     {
-      "intent": "support_verfuegbarkeit",
+      "intent": "psychologie_biases",
       "synonym": [
-        "Ist der Artikel verfuegbar?",
-        "Wann ist wieder auf Lager?",
-        "Out of stock",
-        "Nicht verfuegbar",
-        "Kommt der Artikel wieder?",
-        "Bestand pruefen"
+        "Kognitive Biases",
+        "Denkfehler",
+        "Welche Denkfehler gibt es?",
+        "Bias erklaeren",
+        "Typische Fehlurteile",
+        "Nenne mir Biases"
       ],
       "antwort": [
-        "Die Verfuegbarkeit siehst du direkt auf der Produktseite in Echtzeit.",
-        "Bei ausverkauften Artikeln lohnt sich die Benachrichtigungsfunktion auf der Produktseite.",
-        "Wenn kein Termin sichtbar ist, hat der Support oft die beste Einschaetzung zu Nachlieferungen."
+        "Drei haeufige Biases: Bestaetigungsfehler, Verfuegbarkeitsheuristik und Verlustaversion.",
+        "Bestaetigungsfehler: Du suchst nur Infos, die deine Meinung stuetzen.",
+        "Verfuegbarkeitsheuristik: Was leicht einfaellt, wirkt haeufiger oder wichtiger als es ist.",
+        "Verlustaversion: Verluste fuehlen sich staerker an als gleich grosse Gewinne.",
+        "Gegenmittel: aktiv Gegenbeispiele sammeln, Basisraten anschauen, Entscheidung kurz schriftlich begruenden."
       ],
-      "kontext": "product"
+      "kontext": "psychologie"
     },
     {
-      "intent": "support_groesse",
+      "intent": "psychologie_prokrastination",
       "synonym": [
-        "Welche Groesse passt mir?",
-        "Groessentabelle",
-        "Fallen die Artikel gross oder klein aus?",
-        "Size Guide",
-        "Groessenberatung",
-        "Welche Konfektionsgroesse?",
-        "Welche Groesse soll ich nehmen?",
-        "Welche Groesse brauche ich?",
-        "Ich weiss nicht welche Groesse ich nehmen soll"
+        "Ich prokrastiniere",
+        "Aufschieben",
+        "Was tun gegen Prokrastination?",
+        "Ich komme nicht ins Tun",
+        "Ich schiebe alles auf",
+        "Hilfe gegen Aufschieben"
       ],
       "antwort": [
-        "Nutze die Groessentabelle auf der Produktseite, dort sind Masse und Passformhinweise.",
-        "Wenn du zwischen zwei Groessen liegst, hilft oft der Hinweis 'faellt kleiner/groesser aus'.",
-        "Nenne mir Produktkategorie und deine Masse, dann gebe ich eine grobe Empfehlung."
+        "Nutze die 5-Minuten-Regel: Starte mit nur 5 Minuten. Der Einstieg ist der Engpass.",
+        "Formel: Aufgabe verkleinern, Startzeit fixieren, Stoerung entfernen, Timer setzen.",
+        "Teile jede Aufgabe in 'oeffnen, orientieren, ausfuehren'. Oft fehlt nur die klare erste Bewegung.",
+        "Setze einen sichtbaren Startpunkt: Datei offen, Titel geschrieben, erste Frage notiert.",
+        "Prokrastination ist oft Emotionsmanagement, nicht Faulheit. Senke Reibung statt dich zu beschimpfen."
       ],
-      "kontext": "product"
+      "kontext": "psychologie"
     },
     {
-      "intent": "support_produktberatung",
+      "intent": "psychologie_lernen_gedaechtnis",
       "synonym": [
-        "Kannst du ein Produkt empfehlen?",
-        "Ich suche ein Geschenk",
-        "Was passt zu mir?",
-        "Produktempfehlung",
-        "Hilf mir bei der Auswahl",
-        "Welches Produkt ist gut?"
+        "Wie lernt man besser?",
+        "Lernpsychologie",
+        "Gedachtnis verbessern",
+        "Effizient lernen",
+        "Lernmethoden",
+        "Wie merke ich mir Stoff besser?"
       ],
       "antwort": [
-        "Gerne. Sag mir Budget, Einsatzbereich und wichtigste Kriterien, dann schlage ich Optionen vor.",
-        "Fuer eine gute Empfehlung brauche ich kurz: Preisrahmen, Groesse/Farbe und Einsatz.",
-        "Wir koennen das in 3 Schritten machen: Bedarf, Budget, Auswahl. Starten wir mit deinem Bedarf."
+        "Die drei staerksten Hebel: Active Recall, spaced repetition und Interleaving.",
+        "Lies weniger passiv. Stelle dir Fragen aus dem Kopf und pruefe erst dann die Loesung.",
+        "Kurze verteilte Sessions schlagen lange Marathons kurz vor der Klausur.",
+        "Mische Themenblaecke. Das fuehlt sich schwerer an, verbessert aber den Transfer.",
+        "Wenn du etwas erklaeren kannst, hast du es wirklich verstanden."
       ],
-      "kontext": "product"
+      "kontext": "psychologie"
     },
     {
-      "intent": "support_konto",
+      "intent": "psychologie_pruefungsentscheidungen",
       "synonym": [
-        "Wie erstelle ich ein Konto?",
-        "Kundenkonto",
-        "Kann ich als Gast bestellen?",
-        "Konto loeschen",
-        "Profil bearbeiten",
-        "E-Mail Adresse im Konto aendern"
+        "Fehler in Klausuren vermeiden",
+        "Wie entscheide ich besser in Pruefungen?",
+        "Blackout in Klausur",
+        "Ich treffe in Pruefungen schlechte Entscheidungen",
+        "Klausur Strategie"
       ],
       "antwort": [
-        "Ein Konto erstellst du bei der Registrierung mit E-Mail und Passwort.",
-        "Gastbestellung ist meist moeglich, mit Konto hast du aber bessere Uebersicht ueber Bestellungen und Retouren.",
-        "Fuer sensible Aenderungen wie Konto-Loeschung bitte den Support direkt kontaktieren."
+        "Erst einfache Punkte sichern, dann schwere Aufgaben. Das stabilisiert Selbstwirksamkeit und Zeitkonto.",
+        "Wenn du festhaengst: 90-Sekunden-Regel, markieren, weiter. Spaeter mit frischem Blick zurueck.",
+        "Nutze kurze Plausibilitaetschecks: Einheiten, Grenzfaelle, Vorzeichen, Begriffsdefinitionen.",
+        "Bei Blackout: 3 tiefe Atemzuege, Problem paraphrasieren, kleinstes Teilproblem rechnen.",
+        "Nicht Perfektion, sondern Punktmaximierung unter Zeit ist das Ziel."
       ],
-      "kontext": "account"
+      "kontext": "psychologie"
     },
+
     {
-      "intent": "support_passwort",
+      "intent": "studentenleben_pruefungsstress",
       "synonym": [
-        "Passwort vergessen",
-        "Ich kann mich nicht einloggen",
-        "Login funktioniert nicht",
-        "Passwort zuruecksetzen",
-        "Zugang gesperrt",
-        "Anmeldung fehlgeschlagen"
+        "Ich habe Pruefungsstress",
+        "Klausurphase ueberfordert mich",
+        "Ich bin gestresst wegen Uni",
+        "Lernstress",
+        "Zu viel Stoff",
+        "Ich komme nicht hinterher"
       ],
       "antwort": [
-        "Nutze bitte 'Passwort vergessen' auf der Login-Seite und pruefe danach dein E-Mail-Postfach.",
-        "Falls keine Mail ankommt, schaue im Spam-Ordner und pruefe, ob die richtige Adresse verwendet wurde.",
-        "Wenn der Zugang weiter blockiert ist, hilft der Support mit manueller Verifizierung."
+        "Atme kurz durch, dann priorisieren wir: Muss, Soll, Kann. Arbeite zuerst an Muss.",
+        "Nimm heute nur 2 Hauptziele. Alles andere ist Bonus.",
+        "Stress sinkt oft, wenn Aufgaben sichtbar werden: Liste auf Papier, dann Reihenfolge festlegen.",
+        "Arbeite in 25/5-Bloecken fuer 2 Stunden und mach danach eine echte Pause.",
+        "Wenn du willst, machen wir jetzt sofort einen 60-Minuten-Notfallplan."
       ],
-      "kontext": "account"
+      "kontext": "studium"
     },
     {
-      "intent": "support_datenschutz",
+      "intent": "studentenleben_zeitmanagement",
       "synonym": [
-        "Was passiert mit meinen Daten?",
-        "Datenschutz",
-        "DSGVO",
-        "Welche Daten speichert ihr?",
-        "Daten loeschen",
-        "Auskunft ueber gespeicherte Daten"
+        "Zeitmanagement",
+        "Wie plane ich meinen Tag?",
+        "Ich habe keine Zeit",
+        "Wochenplan Studium",
+        "Wie organisiere ich Lernen und Alltag?",
+        "Produktiver werden"
       ],
       "antwort": [
-        "Datenschutz hat Prioritaet. Details findest du in der Datenschutzerklaerung auf der Website.",
-        "Fuer DSGVO-Anfragen wie Auskunft oder Loeschung kontaktiere bitte den Support mit deiner Kontaktemail.",
-        "Personenbezogene Daten werden nur im rechtlich notwendigen Rahmen verarbeitet."
+        "Nimm Time-Blocking: Vorlesung, Lernen, Orga, Erholung als feste Bloecke.",
+        "Plane nur 60 bis 70 Prozent deines Tages, sonst kippt der Plan bei der ersten Stoerung.",
+        "Jeder Tag braucht 1 prioritaere Aufgabe, 2 kleine Aufgaben und 1 Pufferfenster.",
+        "Ein guter Wochenplan beginnt mit Deadlines, nicht mit Wunschaufgaben.",
+        "Wenn du willst, erstelle ich dir jetzt ein simples Wochenraster."
       ],
-      "kontext": "legal"
+      "kontext": "studium"
     },
     {
-      "intent": "support_newsletter",
+      "intent": "studentenleben_lerngruppe",
       "synonym": [
-        "Newsletter anmelden",
-        "Newsletter abmelden",
-        "Ich bekomme keine Newsletter",
-        "E-Mail Angebote",
-        "Wie melde ich mich vom Newsletter ab?",
-        "Newsletter Einstellungen"
+        "Lerngruppe",
+        "Sind Lerngruppen sinnvoll?",
+        "Wie organisiere ich eine Lerngruppe?",
+        "Lernen mit Freunden",
+        "Tipps fuer Lerngruppe"
       ],
       "antwort": [
-        "An- und Abmeldung geht ueber den Link im Newsletter oder in den Kontoeinstellungen.",
-        "Wenn keine Mails ankommen, pruefe Spam und die hinterlegte E-Mail-Adresse.",
-        "Bei technischen Problemen hilft der Support mit einer manuellen Pruefung."
+        "Lerngruppen funktionieren, wenn das Ziel pro Sitzung klar ist: z. B. 20 Aufgaben, 3 offene Fragen, 1 Zusammenfassung.",
+        "Rollen helfen: Moderator, Zeitwaechter, Protokoll. Sonst driftet die Gruppe schnell ab.",
+        "Faustregel: 60 Prozent individuelle Vorbereitung, 40 Prozent Gruppenarbeit.",
+        "Endet jede Sitzung mit konkreten To-dos bis zum naechsten Treffen.",
+        "Wenn eine Gruppe nur beruhigt statt verbessert, lieber kleiner und fokussierter arbeiten."
       ],
-      "kontext": "marketing"
+      "kontext": "studium"
     },
     {
-      "intent": "support_oeffnungszeiten",
+      "intent": "studentenleben_wg_wohnen",
       "synonym": [
-        "Wann ist der Support erreichbar?",
-        "Oeffnungszeiten",
-        "Servicezeiten",
-        "Habt ihr am Wochenende offen?",
-        "Wann antwortet der Kundenservice?",
-        "Erreichbarkeit"
+        "WG Probleme",
+        "Stress in der WG",
+        "Zusammen wohnen im Studium",
+        "Wie fuehre ich WG Gespraeche?",
+        "Konflikte in der Wohnung"
       ],
       "antwort": [
-        "Die aktuellen Servicezeiten findest du im Kontaktbereich der Website.",
-        "Ausserhalb der Servicezeiten kannst du dein Anliegen per Formular senden, es wird dann priorisiert bearbeitet.",
-        "Wenn es dringend ist, markiere deine Nachricht mit Bestellnummer und kurzer Problembeschreibung."
+        "Nutze klare Absprachen statt diffuse Erwartungen: Putzplan, Ruhezeiten, gemeinsame Kosten.",
+        "Konfliktregel: Beobachtung, Wirkung, Wunsch. Kurz und ohne Vorwuerfe.",
+        "WG-Stress sinkt, wenn feste Orga-Zeiten existieren, z. B. 15 Minuten sonntags.",
+        "Schreibe offene Punkte in ein gemeinsames Dokument, damit nichts ungesagt bleibt.",
+        "Wenn es eskaliert: kleines Gespraech zu zweit statt grosse Runde im Affekt."
       ],
-      "kontext": "support"
+      "kontext": "studium"
     },
     {
-      "intent": "support_menschlicher_support",
+      "intent": "studentenleben_budget",
       "synonym": [
-        "Ich moechte mit einem Menschen sprechen",
-        "Mitarbeiter bitte",
-        "Verbinde mich mit dem Support",
-        "Kein Bot",
-        "Echter Ansprechpartner",
-        "Ich brauche einen Agenten",
-        "Ich brauche einen Menschen",
-        "Menschlicher Support bitte",
-        "Ich will mit einem Menschen sprechen"
+        "Ich habe wenig Geld",
+        "Studentenbudget",
+        "Sparen im Studium",
+        "Wie komme ich mit wenig Geld klar?",
+        "Finanzen als Student",
+        "Monatsbudget"
       ],
       "antwort": [
-        "Klar. Ich uebergebe dich gerne an den Support. Bitte sende dazu Bestellnummer und kurze Fehlerbeschreibung.",
-        "Verstanden. Fuer die schnellste Bearbeitung: Thema, Bestellnummer, Fotos (falls relevant) und gewuenschte Loesung angeben.",
-        "Kein Problem, ein Mensch kann uebernehmen. Nutze bitte den Kontaktbereich mit allen relevanten Details."
+        "Einfaches Modell: Fixkosten zuerst, dann Essen, dann Lernmittel, dann Freizeitbudget.",
+        "Tracke 30 Tage lang jede Ausgabe in 4 Kategorien. Das schafft sofort Klarheit.",
+        "Meal-Prep und gemeinsame Einkaeufe in der WG reduzieren Kosten deutlich.",
+        "Setze ein kleines Notfallpolster, auch wenn es nur wenig pro Monat ist.",
+        "Wenn du willst, kann ich dir ein konkretes 4-Konten-Budgetschema geben."
       ],
-      "kontext": "support"
+      "kontext": "studium"
     },
     {
-      "intent": "support_feedback_negativ",
+      "intent": "studentenleben_nebenjob",
+      "synonym": [
+        "Nebenjob",
+        "Arbeiten neben dem Studium",
+        "Wie kombiniere ich Job und Uni?",
+        "Werkstudent Tipps",
+        "Zu wenig Zeit wegen Nebenjob"
+      ],
+      "antwort": [
+        "Plane zuerst deine akademischen Kernzeiten, dann lege Jobstunden darum.",
+        "Schuetze mindestens 3 tiefe Lernfenster pro Woche, sonst leidet die Klausurphase.",
+        "Kommuniziere frueh mit dem Arbeitgeber, wenn Pruefungen naeher ruecken.",
+        "Nutze pendelnahe Mikrozeiten fuer leichte Aufgaben, nicht fuer schwere Lernarbeit.",
+        "Wenn Job und Uni kollidieren, priorisiere langfristig die Module mit hoher Folgewirkung."
+      ],
+      "kontext": "studium"
+    },
+    {
+      "intent": "studentenleben_praesentation",
+      "synonym": [
+        "Ich muss ein Referat halten",
+        "Praesentation Tipps",
+        "Angst vor Vortrag",
+        "Wie halte ich ein gutes Referat?",
+        "Freies Sprechen im Seminar"
+      ],
+      "antwort": [
+        "Struktur fuer Sicherheit: Einstieg, Kernthese, 3 Punkte, Schluss mit Takeaway.",
+        "Sprich in Sinnabschnitten statt den Text auswendig zu lernen.",
+        "Probe laut mit Timer. Einmal trocken ueben reduziert Aufregung massiv.",
+        "Nutze Folien als Orientierung, nicht als Skript.",
+        "Wenn Nervositaet hoch ist: langsamer starten, Blickkontakt zu einer freundlichen Person, erster Satz bewusst."
+      ],
+      "kontext": "studium"
+    },
+    {
+      "intent": "studentenleben_sozialleben",
+      "synonym": [
+        "Keine Balance zwischen Lernen und Leben",
+        "Ich verliere mein Sozialleben",
+        "Wie halte ich Balance im Studium?",
+        "Freunde und Uni unter einen Hut",
+        "Work life balance als Student"
+      ],
+      "antwort": [
+        "Balance ist planbar: fixe Lernzeiten plus fixe Erholungszeiten, beides verbindlich.",
+        "Ein freier Abend pro Woche ist kein Luxus, sondern Leistungsmaintenance.",
+        "Qualitaet vor Quantitaet: wenige gute soziale Termine stabilisieren mehr als viele zufaellige.",
+        "Wenn alles kippt, starte mit Mini-Erholung: Spaziergang, Sport, frueher Schlaf.",
+        "Langfristige Leistung braucht Rhythmen, nicht Dauerdruck."
+      ],
+      "kontext": "studium"
+    },
+    {
+      "intent": "studentenleben_ersti",
+      "synonym": [
+        "Tipps fuer Erstsemester",
+        "Ich bin Ersti",
+        "Neu an der Uni",
+        "Wie starte ich gut ins Studium?",
+        "Erstiwoche Hilfe",
+        "Ich kenne niemanden an der Uni"
+      ],
+      "antwort": [
+        "Fuer den Start: Stundenplan verstehen, 2 Lernorte finden, 3 Kontakte aufbauen.",
+        "Wichtig: Frueh Fragen stellen. Unklarheiten werden sonst teuer in der Klausurphase.",
+        "Baue ab Woche 1 eine kleine Wochenroutine auf, auch wenn sie noch simpel ist.",
+        "Verbinde dich mit Fachschaft, Tutorium und einem Lernbuddy.",
+        "Du musst nicht alles sofort koennen. Konstanz schlaegt Ueberforderung."
+      ],
+      "kontext": "studium"
+    },
+
+    {
+      "intent": "mix_runde",
+      "synonym": [
+        "mix",
+        "Gib mir von allem etwas",
+        "Ueberrasche mich",
+        "Mischung bitte",
+        "Mach eine gemischte Runde"
+      ],
+      "antwort": [
+        "Mix-Runde: 1) Witz: 'Deadline ist der beste Tutor.' 2) Stoiker: 'Konzentriere dich auf das Steuerbare.' 3) Psychologie: 'Starte mit 5 Minuten, nicht mit Perfektion.'",
+        "Kurzer Mix: Humor, Denkimpuls, Studientipp. Humor: 'Mehr Tabs, weniger Fokus.' Denkimpuls: 'Warum tust du das?' Studientipp: '25 Minuten tief arbeiten.'",
+        "Ueberraschung: Mini-Witz, Mini-Philosophie, Mini-Psychologie. Wenn du eins vertiefen willst, nenne nur das Stichwort."
+      ],
+      "kontext": "navigation"
+    },
+    {
+      "intent": "feedback_negativ",
       "synonym": [
         "Das hilft nicht",
-        "Schlechte Antwort",
         "Du verstehst mich nicht",
-        "Das ist falsch",
-        "Ich bin unzufrieden",
-        "Das Problem ist noch da"
+        "Nicht gut",
+        "Falsche Antwort",
+        "Das passt nicht",
+        "Nochmal anders"
       ],
       "antwort": [
-        "Danke fuer das ehrliche Feedback. Formuliere dein Ziel bitte in einem Satz, dann antworte ich gezielter.",
-        "Verstanden. Lass uns neu starten: Worum geht es genau, und was soll am Ende passiert sein?",
-        "Tut mir leid. Gib mir bitte 2 Infos: Thema (z. B. Retoure) und deinen aktuellen Stand."
+        "Verstanden. Gib mir bitte Ziel + Kontext in einem Satz, dann antworte ich genauer.",
+        "Danke, dann kalibrieren wir: Willst du Humor, Theorie oder konkrete Schritte?",
+        "Okay, neuer Versuch. Schreibe bitte: Thema, dein aktueller Stand, gewuenschtes Ergebnis."
       ],
       "kontext": "repair"
     },
     {
-      "intent": "support_feedback_positiv",
+      "intent": "feedback_positiv",
       "synonym": [
+        "Super",
         "Perfekt",
-        "Super, danke",
-        "Genau das brauchte ich",
-        "Top, hat geklappt",
-        "Danke, Problem geloest",
-        "Das war gut"
+        "Danke",
+        "Top",
+        "Hat geholfen",
+        "Genau das"
       ],
       "antwort": [
-        "Sehr gut, freut mich. Wenn noch etwas offen ist, helfe ich direkt weiter.",
-        "Klasse. Soll ich noch etwas fuer dich pruefen?",
-        "Perfekt, dann sind wir fuer den Moment durch."
+        "Freut mich. Wollen wir direkt die naechste Frage angehen?",
+        "Sehr gut. Wenn du magst, machen wir eine kurze Vertiefung.",
+        "Top. Sag einfach das naechste Thema und ich bleibe im Flow."
       ],
       "kontext": "abschluss"
-    },
-    {
-      "intent": "support_mensa_rempart",
-      "synonym": [
-        "Was gibt es heute in der Mensa?",
-        "Speiseplan Mensa",
-        "Mensa Rempartstrasse",
-        "Essen in der Mensa Freiburg",
-        "Tagesgericht Mensa"
-      ],
-      "antwort": [
-        "Hier findest du den aktuellen Speiseplan: https://www.swfr.de/essen/mensen-cafes-speiseplaene/freiburg/mensa-rempartstrasse",
-        "Direktlink zur Mensa Rempartstrasse: https://www.swfr.de/essen/mensen-cafes-speiseplaene/freiburg/mensa-rempartstrasse"
-      ],
-      "kontext": "local"
-    },
-    {
-      "intent": "smalltalk_haiku",
-      "synonym": [
-        "Schreib ein Haiku",
-        "Haiku",
-        "Erzaehl ein kurzes Gedicht",
-        "Mach ein Mini Gedicht",
-        "Poesie bitte"
-      ],
-      "antwort": [
-        "Leiser Bildschirm. Ein Satz trifft genau den Punkt. Problem geloest.",
-        "Regen auf dem Dach. Im Chat wird es ploetzlich klar. Ruhe im System.",
-        "Offene Frage. Drei praezise Antworten spaeter: Ein zufriedenes Danke."
-      ],
-      "kontext": "smalltalk"
     }
   ]
 }

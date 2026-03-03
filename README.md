@@ -30,7 +30,7 @@ Dieses Repository enthält das finale Projekt für den Kurs "Datenanalyse auf Ba
 ## Modell neu trainieren (optional)
 Wenn du `chat.json` änderst, kannst du das Modell neu trainieren:
 ```bash
-python chatbot/train.py
+./train.sh
 ```
 Das erzeugt neue Dateien `chatbot/model.tflearn*` und `chatbot/trained_data`.
 

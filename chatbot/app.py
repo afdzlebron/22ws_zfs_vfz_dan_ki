@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, session
 
 import json
 import logging
@@ -38,6 +38,20 @@ GREETING_INTENT = "smalltalk_begruessung"
 ERROR_THRESHOLD = 0.10
 MIN_CONFIDENCE = 0.25
 GREETING_CONFIDENCE_THRESHOLD = 0.55
+FOLLOW_UP_MARKERS = (
+    "weiter",
+    "weitermachen",
+    "noch",
+    "nochmal",
+    "mehr",
+    "tiefer",
+    "genauer",
+    "erklaer",
+    "erklaeren",
+    "beispiel",
+    "vertief",
+    "ausfuehr",
+)
 
 
 def ensure_nltk_data():
@@ -86,10 +100,18 @@ INTENT_TO_RESPONSES = {
     entry.get("intent"): entry.get("antwort", [])
     for entry in dialogflow.get("dialogflow", [])
 }
+INTENT_TO_CONTEXT = {}
+CONTEXT_TO_INTENTS = {}
 
 PHRASE_TO_INTENTS = {}
 for entry in dialogflow.get("dialogflow", []):
     intent = entry.get("intent")
+    raw_context = (entry.get("kontext") or "").strip().lower()
+    if intent:
+        INTENT_TO_CONTEXT[intent] = raw_context
+        CONTEXT_TO_INTENTS.setdefault(raw_context, [])
+        if intent not in CONTEXT_TO_INTENTS[raw_context]:
+            CONTEXT_TO_INTENTS[raw_context].append(intent)
     for synonym in entry.get("synonym", []):
         key = normalize_phrase(synonym)
         if not key:
@@ -112,6 +134,7 @@ MODEL_READY = False
 
 
 app = Flask(__name__)
+app.config["SECRET_KEY"] = os.environ.get("FLASK_SECRET_KEY", "dev-secret-key-change-me")
 # run_with_ngrok(app) 
 
 @app.route("/")
@@ -141,8 +164,15 @@ def chatbot_response():
         return "Bitte formuliere deine Nachricht etwas kürzer."
     logger.info("Incoming message: %s", msg[:120])
     try:
-        res = antwort(msg)
+        state = session.get("chat_state", {})
+        res, intent = antwort(msg, state)
         final_response = res or DEFAULT_RESPONSE
+        if intent:
+            state["last_intent"] = intent
+            state["last_context"] = context_for_intent(intent)
+            state["last_response"] = final_response
+            state["turns"] = min(int(state.get("turns", 0)) + 1, 1000)
+            session["chat_state"] = state
     except Exception as exc:
         logger.exception("Failed to generate bot response: %s", exc)
         final_response = DEFAULT_RESPONSE
@@ -226,6 +256,95 @@ def looks_like_greeting(frage):
     return bool(frage_stems.intersection(GREETING_STEMS))
 
 
+def context_for_intent(intent):
+    if not intent:
+        return ""
+    context = (INTENT_TO_CONTEXT.get(intent) or "").strip().lower()
+    if context:
+        return context
+    if intent.startswith("fun_"):
+        return "fun"
+    if intent.startswith("philosophie_"):
+        return "philosophie"
+    if intent.startswith("psychologie_"):
+        return "psychologie"
+    if intent.startswith("studentenleben_"):
+        return "studium"
+    if intent.startswith("smalltalk_"):
+        return "smalltalk"
+    return ""
+
+
+def intents_for_context(context):
+    context = (context or "").strip().lower()
+    intents = CONTEXT_TO_INTENTS.get(context, [])
+    if intents:
+        return intents
+    dynamic = []
+    for intent in INTENT_TO_RESPONSES:
+        if context_for_intent(intent) == context:
+            dynamic.append(intent)
+    return dynamic
+
+
+def is_follow_up_message(frage):
+    normalized = normalize_phrase(frage)
+    if not normalized:
+        return False
+    return any(marker in normalized for marker in FOLLOW_UP_MARKERS)
+
+
+def requested_context(frage):
+    normalized = normalize_phrase(frage)
+    tokens = set(normalized.split())
+    if any(word in tokens for word in {"witz", "joke", "humor", "wortspiel", "kalauer"}):
+        return "fun"
+    if any(word in tokens for word in {"geschichte", "story", "scifi", "fantasy"}):
+        return "story"
+    if any(word in tokens for word in {"stoiker", "aristoteles", "nietzsche", "schopenhauer", "philosophie"}):
+        return "philosophie"
+    if any(word in tokens for word in {"kahneman", "stanovich", "psychologie", "bias", "prokrastination"}):
+        return "psychologie"
+    if any(word in tokens for word in {"studium", "studentenleben", "klausur", "ersti", "zeitmanagement"}):
+        return "studium"
+    return ""
+
+
+def is_meta_intent(intent):
+    if not intent:
+        return False
+    if intent.startswith("feedback_") or intent.startswith("smalltalk_") or intent == "thema_auswahl":
+        return True
+    return context_for_intent(intent) in {"start", "ende", "navigation", "repair", "abschluss", "smalltalk"}
+
+
+def pick_response(intent, previous_response=None):
+    responses = INTENT_TO_RESPONSES.get(intent, [])
+    if not responses:
+        return None
+    if previous_response and len(responses) > 1:
+        alternatives = [r for r in responses if r != previous_response]
+        if alternatives:
+            return random.choice(alternatives)
+    return random.choice(responses)
+
+
+def pick_follow_up_intent(state, preferred_context=""):
+    last_intent = state.get("last_intent")
+    last_context = preferred_context or state.get("last_context") or context_for_intent(last_intent)
+    if not last_context and last_intent:
+        return last_intent
+    intents = intents_for_context(last_context)
+    if not intents:
+        return last_intent
+    if last_intent in intents and len(intents) > 1 and last_context in {"fun", "story"}:
+        idx = intents.index(last_intent)
+        return intents[(idx + 1) % len(intents)]
+    if last_intent in intents:
+        return last_intent
+    return intents[0]
+
+
 def klassifizieren(frage):
     exact_match = get_exact_match_intent(frage)
     if exact_match:
@@ -266,8 +385,41 @@ def klassifizieren(frage):
     return filtered_results
 
 
-def antwort(frage):
+def antwort(frage, state=None):
+    state = state or {}
+    prior_response = state.get("last_response")
+    follow_up = is_follow_up_message(frage)
+    preferred_context = requested_context(frage)
+
     results = klassifizieren(frage)
+    if follow_up and state.get("last_intent"):
+        follow_up_intent = pick_follow_up_intent(
+            state,
+            preferred_context=preferred_context or state.get("last_context"),
+        )
+        top_intent = results[0][0] if results else ""
+        if follow_up_intent and (not top_intent or is_meta_intent(top_intent)):
+            response = pick_response(
+                follow_up_intent,
+                prior_response if follow_up_intent == state.get("last_intent") else None,
+            )
+            if response:
+                return response, follow_up_intent
+
+    if preferred_context and (follow_up or not results):
+        context_intents = intents_for_context(preferred_context)
+        if context_intents:
+            chosen_intent = pick_follow_up_intent(
+                {
+                    "last_intent": state.get("last_intent"),
+                    "last_context": preferred_context,
+                },
+                preferred_context=preferred_context,
+            )
+            response = pick_response(chosen_intent, prior_response if chosen_intent == state.get("last_intent") else None)
+            if response:
+                return response, chosen_intent
+
     # Wenn wir eine Klassifizierung haben, dann suchen wir das passende dialog-intent
     if results:
         # loop solange es Übereinstimmungen gibt, die verarbeitet werden sollen
@@ -275,9 +427,25 @@ def antwort(frage):
             intent = results[0][0]
             responses = INTENT_TO_RESPONSES.get(intent, [])
             if responses:
-                return random.choice(responses)
+                response = pick_response(
+                    intent,
+                    prior_response if intent == state.get("last_intent") else None,
+                )
+                if response:
+                    return response, intent
             results.pop(0)
-    return DEFAULT_RESPONSE
+
+    if follow_up:
+        follow_up_intent = pick_follow_up_intent(state, preferred_context=preferred_context)
+        if follow_up_intent:
+            response = pick_response(
+                follow_up_intent,
+                prior_response if follow_up_intent == state.get("last_intent") else None,
+            )
+            if response:
+                return response, follow_up_intent
+
+    return DEFAULT_RESPONSE, None
 
 
 if __name__ == "__main__":
