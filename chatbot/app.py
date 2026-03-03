@@ -52,6 +52,23 @@ FOLLOW_UP_MARKERS = (
     "vertief",
     "ausfuehr",
 )
+GENERIC_FOLLOW_UP_TOKENS = {
+    "weiter",
+    "weitermachen",
+    "noch",
+    "nochmal",
+    "mehr",
+    "tiefer",
+    "genauer",
+    "erklaer",
+    "erklaeren",
+    "beispiel",
+    "vertief",
+    "ausfuehrlich",
+    "ausfuehren",
+    "bitte",
+    "mal",
+}
 
 
 def ensure_nltk_data():
@@ -262,6 +279,10 @@ def context_for_intent(intent):
     context = (INTENT_TO_CONTEXT.get(intent) or "").strip().lower()
     if context:
         return context
+    if intent.startswith("sustainable_"):
+        return "sustainable"
+    if intent.startswith("mental_"):
+        return "mental"
     if intent.startswith("fun_"):
         return "fun"
     if intent.startswith("philosophie_"):
@@ -294,19 +315,56 @@ def is_follow_up_message(frage):
     return any(marker in normalized for marker in FOLLOW_UP_MARKERS)
 
 
+def is_generic_follow_up_message(frage):
+    tokens = set(normalize_phrase(frage).split())
+    if not tokens or len(tokens) > 5:
+        return False
+    return tokens.issubset(GENERIC_FOLLOW_UP_TOKENS)
+
+
 def requested_context(frage):
     normalized = normalize_phrase(frage)
+    if "http" in normalized or "www" in normalized:
+        return "sustainable"
     tokens = set(normalized.split())
-    if any(word in tokens for word in {"witz", "joke", "humor", "wortspiel", "kalauer"}):
-        return "fun"
-    if any(word in tokens for word in {"geschichte", "story", "scifi", "fantasy"}):
-        return "story"
-    if any(word in tokens for word in {"stoiker", "aristoteles", "nietzsche", "schopenhauer", "philosophie"}):
-        return "philosophie"
-    if any(word in tokens for word in {"kahneman", "stanovich", "psychologie", "bias", "prokrastination"}):
-        return "psychologie"
-    if any(word in tokens for word in {"studium", "studentenleben", "klausur", "ersti", "zeitmanagement"}):
-        return "studium"
+    if any(
+        word in tokens
+        for word in {
+            "nachhaltig",
+            "sustainable",
+            "eco",
+            "oekologisch",
+            "produkt",
+            "material",
+            "labels",
+            "label",
+            "greenwashing",
+            "co2",
+            "carbon",
+            "versand",
+            "verpackung",
+            "shoppen",
+        }
+    ):
+        return "sustainable"
+    if any(
+        word in tokens
+        for word in {
+            "mental",
+            "checkin",
+            "check-in",
+            "stress",
+            "angst",
+            "panik",
+            "schlaf",
+            "ueberfordert",
+            "erschoepft",
+            "atemuebung",
+            "grounding",
+            "krise",
+        }
+    ):
+        return "mental"
     return ""
 
 
@@ -398,7 +456,11 @@ def antwort(frage, state=None):
             state,
             preferred_context=preferred_context or state.get("last_context"),
         )
-        if follow_up_intent and (not top_intent or is_meta_intent(top_intent)):
+        if follow_up_intent and (
+            not top_intent
+            or is_meta_intent(top_intent)
+            or is_generic_follow_up_message(frage)
+        ):
             response = pick_response(
                 follow_up_intent,
                 prior_response if follow_up_intent == state.get("last_intent") else None,

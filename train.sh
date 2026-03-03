@@ -14,8 +14,7 @@ if [[ ! -f "${ROOT_DIR}/chatbot/train.py" ]]; then
   exit 1
 fi
 
-echo "Ensuring NLTK resources (punkt, stopwords)..."
-"${VENV_PY}" -m nltk.downloader punkt stopwords -d "${ROOT_DIR}/chatbot/nltk_data"
+echo "Using NLTK resources from chatbot/nltk_data (train.py handles missing resources)."
 
 echo "Starting model training..."
 exec "${VENV_PY}" "${ROOT_DIR}/chatbot/train.py"

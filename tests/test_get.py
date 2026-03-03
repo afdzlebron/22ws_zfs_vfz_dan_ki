@@ -41,14 +41,14 @@ class ChatbotGetEndpointTest(unittest.TestCase):
         self.assertIn(body, stimmung_answers)
 
     def test_follow_up_reuses_context(self):
-        first = self.client.post("/get", data={"msg": "Erzaehl einen Witz"})
+        first = self.client.post("/get", data={"msg": "Bewerte ein Produkt"})
         self.assertEqual(first.status_code, 200)
-        second = self.client.post("/get", data={"msg": "noch einen"})
+        second = self.client.post("/get", data={"msg": "noch genauer"})
         self.assertEqual(second.status_code, 200)
         self.assertNotEqual(second.data.decode("utf-8"), DEFAULT_RESPONSE)
 
-    def test_follow_up_detail_request_after_philosophy_prompt(self):
-        first = self.client.post("/get", data={"msg": "Stoiker"})
+    def test_follow_up_detail_request_after_mental_prompt(self):
+        first = self.client.post("/get", data={"msg": "Ich bin gestresst"})
         self.assertEqual(first.status_code, 200)
         second = self.client.post("/get", data={"msg": "erklaer genauer"})
         self.assertEqual(second.status_code, 200)
@@ -61,27 +61,27 @@ class ChatbotGetEndpointTest(unittest.TestCase):
                 break
         self.assertNotIn(body, feedback_positive_answers)
 
-    def test_explicit_schopenhauer_prompt_not_overridden_by_follow_up_marker(self):
-        response = self.client.post("/get", data={"msg": "Erklaer Schopenhauer"})
+    def test_explicit_ecoscore_prompt_not_overridden_by_follow_up_marker(self):
+        response = self.client.post("/get", data={"msg": "Erklaer Eco-Score"})
         self.assertEqual(response.status_code, 200)
         body = response.data.decode("utf-8")
-        schopenhauer_answers = []
+        eco_score_answers = []
         for item in dialogflow["dialogflow"]:
-            if item["intent"] == "philosophie_schopenhauer":
-                schopenhauer_answers = item["antwort"]
+            if item["intent"] == "sustainable_eco_score_explain":
+                eco_score_answers = item["antwort"]
                 break
-        self.assertIn(body, schopenhauer_answers)
+        self.assertIn(body, eco_score_answers)
 
-    def test_explicit_wortspiel_prompt_not_overridden_by_follow_up_marker(self):
-        response = self.client.post("/get", data={"msg": "Noch ein Wortspiel"})
+    def test_explicit_breathing_prompt_not_overridden_by_follow_up_marker(self):
+        response = self.client.post("/get", data={"msg": "Noch eine Atemuebung"})
         self.assertEqual(response.status_code, 200)
         body = response.data.decode("utf-8")
-        wortspiel_answers = []
+        breathing_answers = []
         for item in dialogflow["dialogflow"]:
-            if item["intent"] == "fun_wortspiel":
-                wortspiel_answers = item["antwort"]
+            if item["intent"] == "mental_breathing_exercise":
+                breathing_answers = item["antwort"]
                 break
-        self.assertIn(body, wortspiel_answers)
+        self.assertIn(body, breathing_answers)
 
 
 if __name__ == "__main__":

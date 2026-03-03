@@ -6,19 +6,15 @@
         "Hallo",
         "Hi",
         "Hey",
-        "Moin",
-        "Guten Morgen",
         "Guten Tag",
-        "Guten Abend",
+        "Moin",
         "Servus",
-        "Huhu",
-        "Tag"
+        "Huhu"
       ],
       "antwort": [
-        "Hey, willkommen im Campus-Chat. Soll es heute Witz, Kurzgeschichte, Philosophie, Psychologie oder Studentenleben sein?",
-        "Hi. Ich bin dein Fun-und-Denken-Bot. Nenne ein Thema: Humor, Stoiker, Nietzsche, Kahneman oder Uni-Alltag.",
-        "Hallo. Wenn du magst, starten wir interaktiv: Du waehlt ein Thema, ich liefere dir passende Fragen und Antworten.",
-        "Schoen, dass du da bist. Was brauchst du gerade: lachen, reflektieren oder konkrete Tipps fuers Studium?"
+        "Hi. Ich bin dein Sustainable Shopping und Mental Health Check-in Bot. Womit willst du starten?",
+        "Willkommen. Ich kann Produkte auf Nachhaltigkeit einschaetzen oder einen kurzen Mental-Health-Check-in mit dir machen.",
+        "Hallo. Thema 1: Eco-Score fuer Produkte. Thema 2: Stress- und Wohlbefinden-Check-in."
       ],
       "kontext": "start"
     },
@@ -28,15 +24,13 @@
         "Wie geht es dir?",
         "Wie gehts dir?",
         "Alles klar?",
-        "Alles fit?",
         "Wie laeuft es?",
-        "Was geht?",
-        "Wie ist die Lage?"
+        "Was geht?"
       ],
       "antwort": [
-        "Sehr stabil heute. Wie geht es dir, und worauf hast du Lust: Witz, Denkanstoss oder Lernhilfe?",
-        "Mir geht es gut. Soll ich dir lieber etwas Lustiges, etwas Tiefes oder etwas Nuetzliches fuer die Uni geben?",
-        "Top. Wenn du magst, starten wir mit einer Mini-Runde: Ich frage, du antwortest, ich passe mich an."
+        "Stabil und fokussiert. Soll ich ein Produkt bewerten oder einen kurzen Check-in mit dir machen?",
+        "Gut, danke. Magst du heute eher Nachhaltigkeitsberatung oder mentale Entlastung?",
+        "Mir geht es gut. Ich kann direkt mit Eco-Score oder Stress-Check-in starten."
       ],
       "kontext": "smalltalk"
     },
@@ -45,15 +39,14 @@
       "synonym": [
         "Wer bist du?",
         "Wie heisst du?",
-        "Wie ist dein Name?",
         "Mit wem schreibe ich?",
         "Was bist du?",
         "Bist du ein Bot?"
       ],
       "antwort": [
-        "Ich bin dein Campus-Gespraechsbot: Humor, Philosophie, Psychologie und Studentenleben in einem.",
-        "Ich bin ein Chatbot fuer kluge Unterhaltung und alltagstaugliche Uni-Tipps.",
-        "Du schreibst mit einem interaktiven Lern-und-Fun-Bot. Was testen wir zuerst?"
+        "Ich bin ein themenspezifischer Assistent fuer nachhaltiges Einkaufen und mentale Check-ins.",
+        "Du schreibst mit einem Bot, der Eco-Score-Heuristiken und Mental-Health-Mini-Tools kombiniert.",
+        "Ich bin dein Shopping-und-Wellbeing-Companion fuer schnelle, praktische Orientierung."
       ],
       "kontext": "smalltalk"
     },
@@ -62,15 +55,14 @@
       "synonym": [
         "Welche Themen kannst du?",
         "Was kannst du jetzt?",
-        "Wobei kannst du helfen?",
-        "Welche Kategorien hast du?",
         "Gib mir Themen",
+        "Wobei kannst du helfen?",
         "Was kann ich dich fragen?"
       ],
       "antwort": [
-        "Du kannst mich fragen zu: 1) Witze und Wortspiele, 2) kurze Geschichten, 3) Stoiker/Aristoteles/Nietzsche/Schopenhauer, 4) Kahneman/Stanovich, 5) Studentenleben.",
-        "Meine Kernbereiche sind Humor, Philosophie, Psychologie und Uni-Alltag. Sag nur ein Stichwort und ich lege los.",
-        "Wenn du unentschlossen bist, schicke 'mix'. Dann bekommst du eine kleine Runde aus allen Bereichen."
+        "Ich biete zwei Kernbereiche: 1) Sustainable Shopping mit Eco-Score, 2) Mental Health Check-in mit konkreten Uebungen.",
+        "Frag mich z. B. nach Eco-Score, Materialien, Labels, Versand oder nach Stress, Schlaf, Atemuebungen und Grounding.",
+        "Starte mit: 'Bewerte ein Produkt' oder 'Ich brauche einen Check-in'."
       ],
       "kontext": "navigation"
     },
@@ -81,592 +73,273 @@
         "Ciao",
         "Bis bald",
         "Auf Wiedersehen",
-        "Ich bin dann weg",
-        "Wir lesen uns"
+        "Ich bin dann weg"
       ],
       "antwort": [
-        "Bis bald. Wenn du wiederkommst, machen wir die naechste Runde.",
-        "Ciao. Nimm einen Gedanken mit: kleine Schritte schlagen perfekte Plaene.",
-        "Mach es gut. Wenn es stressig wird, schreib einfach 'fokus' und wir strukturieren deinen Tag."
+        "Bis bald. Wenn du willst, machen wir spaeter einen neuen Eco-Score oder Check-in.",
+        "Ciao. Kleine Schritte helfen sowohl der Umwelt als auch deinem Nervensystem.",
+        "Machs gut. Schreib einfach wieder, wenn du Orientierung brauchst."
       ],
       "kontext": "ende"
     },
 
     {
-      "intent": "fun_witz_allgemein",
+      "intent": "sustainable_intro",
       "synonym": [
-        "Erzaehl einen Witz",
-        "Witz bitte",
-        "Hast du einen Joke?",
-        "Bring mich zum Lachen",
-        "Ich brauche Humor",
-        "Mach einen Scherz",
-        "Noch ein Witz"
+        "Nachhaltig einkaufen",
+        "Sustainable Shopping",
+        "Ich will nachhaltiger kaufen",
+        "Hilf mir bei nachhaltigen Produkten",
+        "Tipps fuer nachhaltiges Shoppen"
       ],
       "antwort": [
-        "Warum koennen Skelette so schlecht luegen? Weil man durch sie hindurchsieht.",
-        "Ich wollte einen Zeitreise-Witz machen, aber du fandest ihn gestern schon schlecht.",
-        "Was macht ein Informatikstudent im Wald? Er sucht den naechsten Branch.",
-        "Warum wurde das Buch ueber Prokrastination nie fertig? Das Kapitel 'morgen' war zu stark.",
-        "Treffen sich zwei Funktionen. Sagt die eine: 'Ich fuehle mich abgeleitet.'",
-        "Warum ist Montag wie ein kaputtes WLAN? Man wartet, aber nichts verbindet sich richtig."
+        "Klar. Ich schaetze Produkte mit einem Eco-Score von 0 bis 100 ein: Material, Haltbarkeit, Reparierbarkeit, Verpackung und Transport.",
+        "Gerne. Nenne mir Produktname oder URL plus Material und Preisbereich, dann gebe ich dir einen schnellen Eco-Score.",
+        "Wir koennen direkt starten: Produkt schicken, ich bewerte mit einer transparenten Heuristik."
       ],
-      "kontext": "fun"
+      "kontext": "sustainable"
     },
     {
-      "intent": "fun_witz_studium",
+      "intent": "sustainable_product_eval",
       "synonym": [
-        "Uni Witz",
-        "Studentenwitz",
-        "Witz ueber Klausuren",
-        "Witz ueber Studium",
-        "Campus Humor",
-        "Pruefungswitz"
+        "Bewerte ein Produkt",
+        "Gib mir einen Eco-Score",
+        "Produkt bewerten",
+        "Bewerte dieses Produkt",
+        "Kannst du dieses Produkt einschaetzen?"
       ],
       "antwort": [
-        "Pruefungsphase ist wie ein Escape Room, nur dass du den Raum selbst bezahlt hast.",
-        "Studentenleben in einem Satz: Zu wenig Zeit, zu viele Tabs, zu viel Kaffee.",
-        "Ich lerne am besten unter Druck. Leider auch nur unter Druck.",
-        "Klausurstoff ist wie Geschirr: Wenn man ihn stapelt, faellt irgendwann alles.",
-        "Der Unterschied zwischen Motivation und Deadline? Etwa drei Wochen.",
-        "Mein Lernplan war perfekt. Dann kam die Realitaet in den Raum."
+        "Sicher. Schick mir Name oder URL plus bekannte Details (Material, Herkunft, Zertifizierungen). Ich gebe dann einen Eco-Score mit Begruendung.",
+        "Ja. Fuer eine gute Einschaetzung brauche ich: Produktart, Hauptmaterial, voraussichtliche Nutzung und Verpackung/Versandinfos.",
+        "Gern. Ohne externe Daten nutze ich Heuristiken: langlebig + reparierbar + recycelt = besserer Score."
       ],
-      "kontext": "fun"
+      "kontext": "sustainable"
     },
     {
-      "intent": "fun_wortspiel",
+      "intent": "sustainable_eco_score_explain",
       "synonym": [
-        "Mach ein Wortspiel",
-        "Wortwitz",
-        "Kalauer bitte",
-        "Noch ein Wortspiel",
-        "Sag etwas mit Wortwitz",
-        "Ich will einen flachen Witz"
+        "Wie berechnest du den Eco-Score?",
+        "Erklaer Eco-Score",
+        "Was bedeutet Eco-Score?",
+        "Wie funktioniert dein Nachhaltigkeitsscore?",
+        "Eco-Score erklaeren"
       ],
       "antwort": [
-        "Ich mache heute Di-aet. Ich esse nur Dialoge.",
-        "Mein Lernstoff ist tiefgruendig. Ich komme naemlich nicht auf den Grund.",
-        "Ich wollte weniger aufschieben, aber ich verschiebe den Vorsatz.",
-        "Mein Kalender ist so voll, er braucht eine Zweitwohnung.",
-        "Ich bin nicht chaotisch. Ich arbeite nur in mehreren offenen Versionen meiner selbst."
+        "Mein Eco-Score ist heuristisch: 35% Materialethik, 25% Haltbarkeit/Reparatur, 20% Transport, 10% Verpackung, 10% Transparenz/Zertifikate.",
+        "Eco-Score 0-100: hoeher bedeutet meist geringerer Umweltimpact und bessere Material- bzw. Lieferketten-Indizien.",
+        "Ich nutze keine Live-Lieferkettendaten, sondern nachvollziehbare Regeln. Der Score ist eine Orientierung, keine Zertifizierung."
       ],
-      "kontext": "fun"
+      "kontext": "sustainable"
     },
     {
-      "intent": "fun_kleine_geschichte",
+      "intent": "sustainable_materials",
       "synonym": [
-        "Erzaehl eine kurze Geschichte",
-        "Kleine Geschichte bitte",
-        "Mini Story",
-        "Kurzgeschichte",
-        "Story fuer zwischendurch",
-        "Erzaehl etwas"
+        "Welche Materialien sind besser?",
+        "Materialvergleich nachhaltig",
+        "Ist Baumwolle nachhaltig?",
+        "Polyester oder Bio-Baumwolle",
+        "Material Ethik"
       ],
       "antwort": [
-        "In der Bibliothek sass ein Student mit einem leeren Blatt. Er schrieb als Ueberschrift 'Plan'. Dann schrieb er den ersten Satz: 'Heute nur 25 Minuten.' Zwei Stunden spaeter war das Blatt voll und der Kopf ruhig.",
-        "Eine Studentin verlor staendig den Fokus. Eines Tages stellte sie einen Timer auf 20 Minuten und legte das Handy in den Flur. Das war kein Zauber, aber es war der erste Abend ohne schlechtes Gewissen.",
-        "Ein Tutor sagte: 'Du brauchst nicht mehr Disziplin, nur eine kleinere Startschwelle.' Seitdem begann ein Student jedes Kapitel mit genau einer Frage. Aus einer Frage wurden Seiten.",
-        "Im Seminar fragte jemand: 'Wann wird es leichter?' Der Dozent antwortete: 'Nicht wenn alles einfach wird, sondern wenn du eine Struktur hast.' Das war der Satz, den alle mitnahmen."
+        "Als Faustregel: recycelte Materialien, zertifizierte Naturfasern und langlebige Mischungen schneiden besser ab als kurzlebige Fast-Fashion-Qualitaet.",
+        "Bio-zertifizierte oder recycelte Materialien sind oft besser als neu produzierte Kunstfasern ohne Ruecknahme- oder Recyclingkonzept.",
+        "Achte auf Haltbarkeit statt nur Materiallabel: ein langlebiges Produkt mit Reparaturoption kann oekologisch klar besser sein."
       ],
-      "kontext": "story"
+      "kontext": "sustainable"
     },
     {
-      "intent": "fun_scifi_geschichte",
+      "intent": "sustainable_shipping",
       "synonym": [
-        "Scifi Geschichte",
-        "Erzaehl mir Scifi",
-        "Futuristische Story",
-        "Science Fiction bitte",
-        "Story aus der Zukunft"
+        "Wie wichtig ist Versand fuer den Score?",
+        "Versand und Nachhaltigkeit",
+        "Verpackung und Umwelt",
+        "Lieferung CO2",
+        "Ist Expressversand schlecht?"
       ],
       "antwort": [
-        "Im Jahr 2042 gab es eine App, die Prokrastination in Echtzeit anzeigte. Immer wenn jemand aus Angst scrollte, erschien nur ein Satz: 'Wovor weichst du gerade aus?' Die Abschlussquoten stiegen schlagartig.",
-        "Auf einem Mars-Campus lernte man in 12-Minuten-Zyklen wegen der knappen Energie. Ironischerweise wurden die Ergebnisse besser als auf der Erde.",
-        "Eine KI in der Sternenuni durfte nur Fragen stellen, keine Antworten. Nach einem Semester konnten alle Studierenden ploetzlich selbst denken.",
-        "Die Bibliothek der Zukunft war still, aber nicht leise: Jeder Tisch zeigte den naechsten kleinsten Schritt. Niemand blieb mehr stecken."
+        "Expressversand und Einzellieferungen verschlechtern den Score oft deutlich. Gebuendelte Lieferung ist meist besser.",
+        "Wenig Verpackung, recyceltes Material und regionale Lager verbessern die Versandkomponente des Eco-Scores.",
+        "Transport ist relevant: Luftfracht und Retouren treiben den Impact. Besser: passende Groesse, gebuendelte Bestellung, Standardversand."
       ],
-      "kontext": "story"
+      "kontext": "sustainable"
     },
     {
-      "intent": "fun_fantasy_geschichte",
+      "intent": "sustainable_labels",
       "synonym": [
-        "Fantasy Geschichte",
-        "Magische Geschichte",
-        "Erzaehl ein Fantasy Maerchen",
-        "Story mit Magie",
-        "Kleine Fantasy Story"
+        "Welche Labels soll ich pruefen?",
+        "Nachhaltigkeitslabel",
+        "Faire Zertifikate",
+        "Woran erkenne ich Greenwashing?",
+        "Label check"
       ],
       "antwort": [
-        "Im Koenigreich Deadline bewachte ein Drache die Bibliothek. Er schlief nur ein, wenn jemand den ersten Absatz schrieb. Also schrieb das ganze Dorf ploetzlich sehr produktiv.",
-        "Eine Studentin fand eine Feder, die nur dann schrieb, wenn das Handy ausser Sicht lag. In drei Tagen war ihre Hausarbeit fertig.",
-        "Der alte Magier der Fakultaet sagte: 'Zauber heisst nicht schneller arbeiten, sondern klarer entscheiden.' Seitdem lernten alle zuerst das Nein-Sagen.",
-        "Im Turm der Klausuren gab es 100 Treppen. Wer in 10-Minuten-Schritten ging, kam immer oben an. Wer sprang, stolperte."
+        "Pruefe nachvollziehbare Zertifikate und konkrete Lieferkettenangaben statt vager Begriffe wie 'green' oder 'conscious'.",
+        "Wenn ein Shop nur Marketingbegriffe zeigt, aber keine Materialherkunft oder Standards nennt, ist Vorsicht sinnvoll.",
+        "Gute Zeichen: transparente Lieferkette, belastbare Zertifikate, Reparatur- oder Ruecknahmeangebote."
       ],
-      "kontext": "story"
+      "kontext": "sustainable"
     },
     {
-      "intent": "fun_motivation_spruch",
+      "intent": "sustainable_alternative",
       "synonym": [
-        "Gib mir Motivation",
-        "Motivationsspruch",
-        "Ich brauche einen Push",
-        "Spruch zum Durchziehen",
-        "Mach mir Mut",
-        "Sag etwas Aufbauendes"
+        "Gib mir eine nachhaltigere Alternative",
+        "Alternative zu diesem Produkt",
+        "Bessere Option",
+        "Was waere nachhaltiger?",
+        "nachhaltigere Wahl"
       ],
       "antwort": [
-        "Du musst nicht in Stimmung sein, um anzufangen. Anfangen erzeugt Stimmung.",
-        "Fokus ist oft nur die Entscheidung, 20 Minuten bei einer Sache zu bleiben.",
-        "Kleine Siege schlagen grosses Warten.",
-        "Nicht perfekt ist immer noch besser als nie begonnen.",
-        "Heute reicht: eine klare Aufgabe, ein Timer, ein Haken.",
-        "Disziplin ist oft nur freundlich gesetzte Grenzen fuer dein spaeteres Ich."
+        "Oft besser: gebraucht kaufen, refurbished waehlen oder ein reparierbares Markenprodukt mit Ersatzteilen nehmen.",
+        "Suche nach langlebiger Qualitaet mit Garantie und Reparaturservice statt dem billigsten Neukauf.",
+        "Eine nachhaltigere Alternative ist haeufig: weniger neu kaufen, laenger nutzen, gezielt hochwertig ersetzen."
       ],
-      "kontext": "mindset"
+      "kontext": "sustainable"
     },
 
     {
-      "intent": "philosophie_stoiker",
+      "intent": "mental_checkin_start",
       "synonym": [
-        "Stoiker",
-        "Sag was zu Stoizismus",
-        "Stoische Philosophie",
-        "Was sagen die Stoiker?",
-        "Marcus Aurelius Tipp",
-        "Epiktet Idee"
+        "Ich brauche einen Check-in",
+        "Mental Health Check-in",
+        "Check-in bitte",
+        "Mir geht es mental nicht gut",
+        "Kannst du mit mir einchecken?"
       ],
       "antwort": [
-        "Stoischer Kern: Unterscheide zwischen dem, was in deiner Kontrolle liegt, und dem, was ausserhalb liegt.",
-        "Epiktet wuerde sagen: Nicht die Dinge stoeren uns, sondern unsere Urteile ueber die Dinge.",
-        "Stoischer Alltagstipp: Frage in Stressmomenten 'Was ist hier meine naechste gute Handlung?'.",
-        "Marcus Aurelius erinnert: Du kannst den aeusseren Laerm nicht stoppen, aber deine Reaktion steuern.",
-        "Stoisch heisst nicht kalt, sondern handlungsfaehig trotz Unsicherheit."
+        "Danke, dass du es ansprichst. Auf einer Skala von 1 bis 10: Wie hoch ist dein aktueller Stress?",
+        "Klar, wir machen einen kurzen Check-in. Was ist gerade am staerksten: Stress, Angst, Erschoepfung oder Schlafprobleme?",
+        "Ich bin da. Sag mir kurz, was heute am meisten belastet, dann schlage ich einen naechsten Mini-Schritt vor."
       ],
-      "kontext": "philosophie"
+      "kontext": "mental"
     },
     {
-      "intent": "philosophie_aristoteles",
+      "intent": "mental_stress_support",
       "synonym": [
-        "Aristoteles",
-        "Was sagt Aristoteles?",
-        "Erklaer Tugendethik",
-        "Goldene Mitte",
-        "Aristoteles im Alltag",
-        "Aristoteles Zitat"
+        "Ich bin gestresst",
+        "Ich bin ueberfordert",
+        "Ich habe zu viel Stress",
+        "Alles ist mir zu viel",
+        "Ich fuehle mich ausgebrannt"
       ],
       "antwort": [
-        "Aristoteles: Charakter entsteht durch Gewohnheit. Du wirst, was du wiederholt tust.",
-        "Die goldene Mitte bedeutet: Zwischen Extremen liegt oft die praktikable Tugend.",
-        "Fuer den Uni-Alltag: Nicht maximal schuften und nicht komplett treiben lassen, sondern konstant und vernuenftig handeln.",
-        "Aristoteles wuerde Lernroutinen als ethische Praxis sehen: kleine gute Handlungen, oft wiederholt.",
-        "Ein gutes Leben ist fuer ihn taetig, nicht passiv. Also: tun, reflektieren, nachjustieren."
+        "Verstanden. Lass uns zuerst entlasten: 1 Aufgabe fuer 10 Minuten, Benachrichtigungen aus, dann kurze Pause.",
+        "Bei Ueberforderung hilft Priorisierung: Was ist heute wirklich kritisch, was kann warten, was kann weg?",
+        "Mini-Reset: 4 tiefe Atemzuege, Schultern lockern, dann nur den naechsten kleinen Schritt definieren."
       ],
-      "kontext": "philosophie"
+      "kontext": "mental"
     },
     {
-      "intent": "philosophie_nietzsche",
+      "intent": "mental_anxiety_support",
       "synonym": [
-        "Nietzsche",
-        "Sag was von Nietzsche",
-        "Nietzsche Spruch",
-        "Was meint Nietzsche?",
-        "Wille zur Macht erklaeren",
-        "Nietzsche Motivation"
+        "Ich habe Angst",
+        "Ich habe Panik",
+        "Ich bin sehr unruhig",
+        "Mein Kopf rast",
+        "Ich fuehle mich nervoes"
       ],
       "antwort": [
-        "Nietzsche provoziert: Werde, der du bist. Also nicht kopieren, sondern den eigenen Stil formen.",
-        "Ein bekannter Gedanke: Wer ein Warum hat, ertraegt fast jedes Wie.",
-        "Fuer Studierende: Sinn vor Methode. Wenn dein Warum klar ist, wird dein Plan stabiler.",
-        "Nietzsche fordert Selbstueberwindung: den inneren Widerstand sehen und trotzdem handeln.",
-        "Er waere gegen Mittelmass aus Bequemlichkeit, aber fuer ehrliche Selbstpruefung."
+        "Wenn Angst hochgeht, hilf deinem Koerper zuerst: langsam 4 Sekunden ein, 6 Sekunden aus, zehn Runden.",
+        "Du bist nicht allein damit. Benenne 3 Dinge im Raum, die du siehst. Das kann dein Nervensystem stabilisieren.",
+        "Versuche den Satz: 'Ich habe gerade Angst, aber ich bin im Moment in Sicherheit.' Wiederhole ihn ruhig mehrmals."
       ],
-      "kontext": "philosophie"
+      "kontext": "mental"
     },
     {
-      "intent": "philosophie_schopenhauer",
+      "intent": "mental_sleep_support",
       "synonym": [
-        "Schopenhauer",
-        "Was sagt Schopenhauer?",
-        "Schopenhauer Zitat",
-        "Pessimismus Philosophie",
-        "Schopenhauer im Alltag",
-        "Erklaer Schopenhauer"
+        "Ich schlafe schlecht",
+        "Schlafprobleme",
+        "Ich kann nicht schlafen",
+        "Tipps gegen schlechten Schlaf",
+        "Mein Schlaf ist kaputt"
       ],
       "antwort": [
-        "Schopenhauer betont: Wuensche treiben uns, und Ruhe ist selten. Darum lohnt es sich, bewusst zu begrenzen.",
-        "Sein Rat fuer den Alltag koennte sein: Schuetze deine Aufmerksamkeit wie ein knappes Gut.",
-        "Er war skeptisch gegen blinden Optimismus, aber stark in der Analyse von Selbsttaeuschung.",
-        "Fuer Studierende: Nicht jedem Impuls folgen. Weniger Reize, mehr klare Arbeitseinheiten.",
-        "Schopenhauer erinnert daran, dass innere Ruhe oft wichtiger ist als aeusserer Applaus."
+        "Fuer heute Nacht: kein Doomscrolling im Bett, Licht runter, Atemrhythmus verlaengern und morgen gleiche Aufstehzeit halten.",
+        "Schon 60 Minuten weniger Bildschirm vor dem Schlafen kann helfen. Wichtig ist Regelmaessigkeit statt Perfektion.",
+        "Wenn Gedanken kreisen: schreibe sie 5 Minuten auf Papier, dann erst ins Bett. Das entlastet oft merklich."
       ],
-      "kontext": "philosophie"
+      "kontext": "mental"
     },
     {
-      "intent": "philosophie_vergleich",
+      "intent": "mental_breathing_exercise",
       "synonym": [
-        "Vergleiche Stoiker und Nietzsche",
-        "Stoiker vs Schopenhauer",
-        "Aristoteles oder Stoiker",
-        "Welche Philosophie passt zu Lernstress?",
-        "Welche Denkschule hilft im Studium?",
-        "Philosophen Vergleich"
+        "Atemuebung",
+        "Noch eine Atemuebung",
+        "Gib mir eine Atemtechnik",
+        "Beruhigungsuebung",
+        "Atemhilfe jetzt"
       ],
       "antwort": [
-        "Kurzvergleich: Stoiker = Kontrolle und Gelassenheit, Aristoteles = Gewohnheit und Tugend, Nietzsche = Sinn und Selbstueberwindung, Schopenhauer = Reizkontrolle und Nuechternheit.",
-        "Bei akutem Stress helfen oft stoische Fragen. Fuer langfristigen Aufbau ist Aristoteles sehr stark.",
-        "Wenn dir Sinn fehlt, passt Nietzsche. Wenn du von Reizen ueberflutet bist, hilft Schopenhauer.",
-        "Du kannst sie kombinieren: Stoisch reagieren, aristotelisch routinieren, nietzscheanisch begruenden, schopenhauerisch begrenzen."
+        "Box-Breathing: 4 Sekunden einatmen, 4 halten, 4 ausatmen, 4 halten. Fuer 2 Minuten.",
+        "Laenger ausatmen als einatmen: 4 ein, 6 aus, 10 Runden. Das kann schnell beruhigen.",
+        "Lege eine Hand auf den Bauch und atme so, dass sich vor allem die Bauchdecke hebt. Ruhig und langsam."
       ],
-      "kontext": "philosophie"
+      "kontext": "mental"
     },
     {
-      "intent": "philosophie_alltag_anwendung",
+      "intent": "mental_grounding",
       "synonym": [
-        "Wie setze ich Philosophie im Alltag um?",
-        "Philosophie fuer Studenten",
-        "Praktische Philosophie",
-        "Wie hilft Philosophie bei Klausuren?",
-        "Gib mir eine alltagstaugliche Regel"
+        "Grounding Uebung",
+        "5 4 3 2 1 Methode",
+        "Wie funktioniert Grounding?",
+        "Ich brauche Erdung",
+        "Schnelle Stabilisierung"
       ],
       "antwort": [
-        "Alltagsregel: Morgens 1 stoische Frage, mittags 1 aristotelische Gewohnheit, abends 1 kurzer Rueckblick.",
-        "Praktisch: Definiere vor dem Lernen dein Warum (Nietzsche), dann den kleinsten Schritt (Aristoteles), dann stoische Ruhe bei Stoerungen.",
-        "Wenn du festhaengst: 'Was liegt in meiner Kontrolle in den naechsten 15 Minuten?'",
-        "Philosophie wird nutzbar, wenn sie als Entscheidungshilfe dient, nicht nur als Zitat."
+        "5-4-3-2-1: Nenne 5 Dinge die du siehst, 4 die du fuehlst, 3 die du hoerst, 2 die du riechst, 1 die du schmeckst.",
+        "Grounding hilft, wenn Gedanken rasen. Geh systematisch durch deine Sinne, langsam und konkret.",
+        "Du kannst Grounding auch im Sitzen machen: Blick fixieren, Umgebung beschreiben, Atmung verlangsamen."
       ],
-      "kontext": "philosophie"
-    },
-
-    {
-      "intent": "psychologie_kahneman",
-      "synonym": [
-        "Kahneman",
-        "System 1 und System 2",
-        "Erklaer Kahneman",
-        "Schnelles und langsames Denken",
-        "Thinking fast and slow",
-        "Was bedeutet System 1?"
-      ],
-      "antwort": [
-        "Kahneman: System 1 ist schnell, intuitiv, energiesparend. System 2 ist langsam, analytisch, anstrengend.",
-        "In Klausuren ist System 1 gut fuer Routine, aber bei kniffligen Aufgaben brauchst du bewusst System 2.",
-        "Guter Trick: Bei wichtigen Entscheidungen einmal stoppen und aktiv Gegenargumente suchen.",
-        "Wenn du muede bist, dominiert oft System 1. Deshalb schwierige Aufgaben eher in deine Hochphasen legen.",
-        "Kahneman zeigt: Unser Kopf ist effizient, aber nicht immer akkurat."
-      ],
-      "kontext": "psychologie"
+      "kontext": "mental"
     },
     {
-      "intent": "psychologie_stanovich",
+      "intent": "mental_crisis_support",
       "synonym": [
-        "Stanovich",
-        "Erklaer Stanovich",
-        "Tripartite model",
-        "Algorithmic und reflective mind",
-        "Rationalitaet Stanovich",
-        "Was sagt Stanovich?"
+        "Ich halte das nicht mehr aus",
+        "Ich will mir was antun",
+        "Ich bin in einer Krise",
+        "Ich brauche sofort Hilfe",
+        "Akute Krise"
       ],
       "antwort": [
-        "Stanovich trennt zwischen algorithmischer Leistung und reflektiver Steuerung. Beides ist wichtig.",
-        "Du kannst schlau sein und trotzdem schlechte Entscheidungen treffen, wenn der reflektive Teil nicht eingreift.",
-        "Fuer den Alltag: Nicht nur fragen 'Kann ich das denken?', sondern 'Soll ich so denken?'.",
-        "Stanovich hilft beim Lernfehler: Faktenwissen reicht nicht, wenn die Denkstrategie unklar ist.",
-        "Sein Fokus ist praktische Rationalitaet: gute Urteile unter realen Bedingungen."
+        "Das klingt akut. Bitte hole jetzt sofort menschliche Hilfe: in Deutschland 112 bei akuter Gefahr oder 0800 1110111 / 0800 1110222 (TelefonSeelsorge).",
+        "Du musst damit nicht allein bleiben. Kontaktiere jetzt eine vertraute Person oder den Notruf 112, wenn unmittelbare Gefahr besteht.",
+        "Bei akuter Selbstgefaehrdung zaehlt sofortige Hilfe: 112 oder Krisendienst in deiner Region. Bitte bleib nicht allein."
       ],
-      "kontext": "psychologie"
-    },
-    {
-      "intent": "psychologie_biases",
-      "synonym": [
-        "Kognitive Biases",
-        "Denkfehler",
-        "Welche Denkfehler gibt es?",
-        "Bias erklaeren",
-        "Typische Fehlurteile",
-        "Nenne mir Biases"
-      ],
-      "antwort": [
-        "Drei haeufige Biases: Bestaetigungsfehler, Verfuegbarkeitsheuristik und Verlustaversion.",
-        "Bestaetigungsfehler: Du suchst nur Infos, die deine Meinung stuetzen.",
-        "Verfuegbarkeitsheuristik: Was leicht einfaellt, wirkt haeufiger oder wichtiger als es ist.",
-        "Verlustaversion: Verluste fuehlen sich staerker an als gleich grosse Gewinne.",
-        "Gegenmittel: aktiv Gegenbeispiele sammeln, Basisraten anschauen, Entscheidung kurz schriftlich begruenden."
-      ],
-      "kontext": "psychologie"
-    },
-    {
-      "intent": "psychologie_prokrastination",
-      "synonym": [
-        "Ich prokrastiniere",
-        "Aufschieben",
-        "Was tun gegen Prokrastination?",
-        "Ich komme nicht ins Tun",
-        "Ich schiebe alles auf",
-        "Hilfe gegen Aufschieben"
-      ],
-      "antwort": [
-        "Nutze die 5-Minuten-Regel: Starte mit nur 5 Minuten. Der Einstieg ist der Engpass.",
-        "Formel: Aufgabe verkleinern, Startzeit fixieren, Stoerung entfernen, Timer setzen.",
-        "Teile jede Aufgabe in 'oeffnen, orientieren, ausfuehren'. Oft fehlt nur die klare erste Bewegung.",
-        "Setze einen sichtbaren Startpunkt: Datei offen, Titel geschrieben, erste Frage notiert.",
-        "Prokrastination ist oft Emotionsmanagement, nicht Faulheit. Senke Reibung statt dich zu beschimpfen."
-      ],
-      "kontext": "psychologie"
-    },
-    {
-      "intent": "psychologie_lernen_gedaechtnis",
-      "synonym": [
-        "Wie lernt man besser?",
-        "Lernpsychologie",
-        "Gedachtnis verbessern",
-        "Effizient lernen",
-        "Lernmethoden",
-        "Wie merke ich mir Stoff besser?"
-      ],
-      "antwort": [
-        "Die drei staerksten Hebel: Active Recall, spaced repetition und Interleaving.",
-        "Lies weniger passiv. Stelle dir Fragen aus dem Kopf und pruefe erst dann die Loesung.",
-        "Kurze verteilte Sessions schlagen lange Marathons kurz vor der Klausur.",
-        "Mische Themenblaecke. Das fuehlt sich schwerer an, verbessert aber den Transfer.",
-        "Wenn du etwas erklaeren kannst, hast du es wirklich verstanden."
-      ],
-      "kontext": "psychologie"
-    },
-    {
-      "intent": "psychologie_pruefungsentscheidungen",
-      "synonym": [
-        "Fehler in Klausuren vermeiden",
-        "Wie entscheide ich besser in Pruefungen?",
-        "Blackout in Klausur",
-        "Ich treffe in Pruefungen schlechte Entscheidungen",
-        "Klausur Strategie"
-      ],
-      "antwort": [
-        "Erst einfache Punkte sichern, dann schwere Aufgaben. Das stabilisiert Selbstwirksamkeit und Zeitkonto.",
-        "Wenn du festhaengst: 90-Sekunden-Regel, markieren, weiter. Spaeter mit frischem Blick zurueck.",
-        "Nutze kurze Plausibilitaetschecks: Einheiten, Grenzfaelle, Vorzeichen, Begriffsdefinitionen.",
-        "Bei Blackout: 3 tiefe Atemzuege, Problem paraphrasieren, kleinstes Teilproblem rechnen.",
-        "Nicht Perfektion, sondern Punktmaximierung unter Zeit ist das Ziel."
-      ],
-      "kontext": "psychologie"
+      "kontext": "mental"
     },
 
     {
-      "intent": "studentenleben_pruefungsstress",
+      "intent": "feedback_positiv",
       "synonym": [
-        "Ich habe Pruefungsstress",
-        "Klausurphase ueberfordert mich",
-        "Ich bin gestresst wegen Uni",
-        "Lernstress",
-        "Zu viel Stoff",
-        "Ich komme nicht hinterher"
+        "Danke",
+        "Hilfreich",
+        "Das hat geholfen",
+        "Super",
+        "Top danke"
       ],
       "antwort": [
-        "Atme kurz durch, dann priorisieren wir: Muss, Soll, Kann. Arbeite zuerst an Muss.",
-        "Nimm heute nur 2 Hauptziele. Alles andere ist Bonus.",
-        "Stress sinkt oft, wenn Aufgaben sichtbar werden: Liste auf Papier, dann Reihenfolge festlegen.",
-        "Arbeite in 25/5-Bloecken fuer 2 Stunden und mach danach eine echte Pause.",
-        "Wenn du willst, machen wir jetzt sofort einen 60-Minuten-Notfallplan."
+        "Gern. Wenn du willst, machen wir direkt den naechsten Schritt.",
+        "Freut mich. Soll ich tiefer in Eco-Score oder Check-in gehen?",
+        "Perfekt. Sag einfach, womit wir weitermachen."
       ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_zeitmanagement",
-      "synonym": [
-        "Zeitmanagement",
-        "Wie plane ich meinen Tag?",
-        "Ich habe keine Zeit",
-        "Wochenplan Studium",
-        "Wie organisiere ich Lernen und Alltag?",
-        "Produktiver werden"
-      ],
-      "antwort": [
-        "Nimm Time-Blocking: Vorlesung, Lernen, Orga, Erholung als feste Bloecke.",
-        "Plane nur 60 bis 70 Prozent deines Tages, sonst kippt der Plan bei der ersten Stoerung.",
-        "Jeder Tag braucht 1 prioritaere Aufgabe, 2 kleine Aufgaben und 1 Pufferfenster.",
-        "Ein guter Wochenplan beginnt mit Deadlines, nicht mit Wunschaufgaben.",
-        "Wenn du willst, erstelle ich dir jetzt ein simples Wochenraster."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_lerngruppe",
-      "synonym": [
-        "Lerngruppe",
-        "Sind Lerngruppen sinnvoll?",
-        "Wie organisiere ich eine Lerngruppe?",
-        "Lernen mit Freunden",
-        "Tipps fuer Lerngruppe"
-      ],
-      "antwort": [
-        "Lerngruppen funktionieren, wenn das Ziel pro Sitzung klar ist: z. B. 20 Aufgaben, 3 offene Fragen, 1 Zusammenfassung.",
-        "Rollen helfen: Moderator, Zeitwaechter, Protokoll. Sonst driftet die Gruppe schnell ab.",
-        "Faustregel: 60 Prozent individuelle Vorbereitung, 40 Prozent Gruppenarbeit.",
-        "Endet jede Sitzung mit konkreten To-dos bis zum naechsten Treffen.",
-        "Wenn eine Gruppe nur beruhigt statt verbessert, lieber kleiner und fokussierter arbeiten."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_wg_wohnen",
-      "synonym": [
-        "WG Probleme",
-        "Stress in der WG",
-        "Zusammen wohnen im Studium",
-        "Wie fuehre ich WG Gespraeche?",
-        "Konflikte in der Wohnung"
-      ],
-      "antwort": [
-        "Nutze klare Absprachen statt diffuse Erwartungen: Putzplan, Ruhezeiten, gemeinsame Kosten.",
-        "Konfliktregel: Beobachtung, Wirkung, Wunsch. Kurz und ohne Vorwuerfe.",
-        "WG-Stress sinkt, wenn feste Orga-Zeiten existieren, z. B. 15 Minuten sonntags.",
-        "Schreibe offene Punkte in ein gemeinsames Dokument, damit nichts ungesagt bleibt.",
-        "Wenn es eskaliert: kleines Gespraech zu zweit statt grosse Runde im Affekt."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_budget",
-      "synonym": [
-        "Ich habe wenig Geld",
-        "Studentenbudget",
-        "Sparen im Studium",
-        "Wie komme ich mit wenig Geld klar?",
-        "Finanzen als Student",
-        "Monatsbudget"
-      ],
-      "antwort": [
-        "Einfaches Modell: Fixkosten zuerst, dann Essen, dann Lernmittel, dann Freizeitbudget.",
-        "Tracke 30 Tage lang jede Ausgabe in 4 Kategorien. Das schafft sofort Klarheit.",
-        "Meal-Prep und gemeinsame Einkaeufe in der WG reduzieren Kosten deutlich.",
-        "Setze ein kleines Notfallpolster, auch wenn es nur wenig pro Monat ist.",
-        "Wenn du willst, kann ich dir ein konkretes 4-Konten-Budgetschema geben."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_nebenjob",
-      "synonym": [
-        "Nebenjob",
-        "Arbeiten neben dem Studium",
-        "Wie kombiniere ich Job und Uni?",
-        "Werkstudent Tipps",
-        "Zu wenig Zeit wegen Nebenjob"
-      ],
-      "antwort": [
-        "Plane zuerst deine akademischen Kernzeiten, dann lege Jobstunden darum.",
-        "Schuetze mindestens 3 tiefe Lernfenster pro Woche, sonst leidet die Klausurphase.",
-        "Kommuniziere frueh mit dem Arbeitgeber, wenn Pruefungen naeher ruecken.",
-        "Nutze pendelnahe Mikrozeiten fuer leichte Aufgaben, nicht fuer schwere Lernarbeit.",
-        "Wenn Job und Uni kollidieren, priorisiere langfristig die Module mit hoher Folgewirkung."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_praesentation",
-      "synonym": [
-        "Ich muss ein Referat halten",
-        "Praesentation Tipps",
-        "Angst vor Vortrag",
-        "Wie halte ich ein gutes Referat?",
-        "Freies Sprechen im Seminar"
-      ],
-      "antwort": [
-        "Struktur fuer Sicherheit: Einstieg, Kernthese, 3 Punkte, Schluss mit Takeaway.",
-        "Sprich in Sinnabschnitten statt den Text auswendig zu lernen.",
-        "Probe laut mit Timer. Einmal trocken ueben reduziert Aufregung massiv.",
-        "Nutze Folien als Orientierung, nicht als Skript.",
-        "Wenn Nervositaet hoch ist: langsamer starten, Blickkontakt zu einer freundlichen Person, erster Satz bewusst."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_sozialleben",
-      "synonym": [
-        "Keine Balance zwischen Lernen und Leben",
-        "Ich verliere mein Sozialleben",
-        "Wie halte ich Balance im Studium?",
-        "Freunde und Uni unter einen Hut",
-        "Work life balance als Student"
-      ],
-      "antwort": [
-        "Balance ist planbar: fixe Lernzeiten plus fixe Erholungszeiten, beides verbindlich.",
-        "Ein freier Abend pro Woche ist kein Luxus, sondern Leistungsmaintenance.",
-        "Qualitaet vor Quantitaet: wenige gute soziale Termine stabilisieren mehr als viele zufaellige.",
-        "Wenn alles kippt, starte mit Mini-Erholung: Spaziergang, Sport, frueher Schlaf.",
-        "Langfristige Leistung braucht Rhythmen, nicht Dauerdruck."
-      ],
-      "kontext": "studium"
-    },
-    {
-      "intent": "studentenleben_ersti",
-      "synonym": [
-        "Tipps fuer Erstsemester",
-        "Ich bin Ersti",
-        "Neu an der Uni",
-        "Wie starte ich gut ins Studium?",
-        "Erstiwoche Hilfe",
-        "Ich kenne niemanden an der Uni"
-      ],
-      "antwort": [
-        "Fuer den Start: Stundenplan verstehen, 2 Lernorte finden, 3 Kontakte aufbauen.",
-        "Wichtig: Frueh Fragen stellen. Unklarheiten werden sonst teuer in der Klausurphase.",
-        "Baue ab Woche 1 eine kleine Wochenroutine auf, auch wenn sie noch simpel ist.",
-        "Verbinde dich mit Fachschaft, Tutorium und einem Lernbuddy.",
-        "Du musst nicht alles sofort koennen. Konstanz schlaegt Ueberforderung."
-      ],
-      "kontext": "studium"
-    },
-
-    {
-      "intent": "mix_runde",
-      "synonym": [
-        "mix",
-        "Gib mir von allem etwas",
-        "Ueberrasche mich",
-        "Mischung bitte",
-        "Mach eine gemischte Runde"
-      ],
-      "antwort": [
-        "Mix-Runde: 1) Witz: 'Deadline ist der beste Tutor.' 2) Stoiker: 'Konzentriere dich auf das Steuerbare.' 3) Psychologie: 'Starte mit 5 Minuten, nicht mit Perfektion.'",
-        "Kurzer Mix: Humor, Denkimpuls, Studientipp. Humor: 'Mehr Tabs, weniger Fokus.' Denkimpuls: 'Warum tust du das?' Studientipp: '25 Minuten tief arbeiten.'",
-        "Ueberraschung: Mini-Witz, Mini-Philosophie, Mini-Psychologie. Wenn du eins vertiefen willst, nenne nur das Stichwort."
-      ],
-      "kontext": "navigation"
+      "kontext": "abschluss"
     },
     {
       "intent": "feedback_negativ",
       "synonym": [
         "Das hilft nicht",
-        "Du verstehst mich nicht",
-        "Nicht gut",
-        "Falsche Antwort",
-        "Das passt nicht",
-        "Nochmal anders"
+        "Nicht hilfreich",
+        "Verstanden habe ich das nicht",
+        "Das war nicht gut",
+        "Ich brauche was anderes"
       ],
       "antwort": [
-        "Verstanden. Gib mir bitte Ziel + Kontext in einem Satz, dann antworte ich genauer.",
-        "Danke, dann kalibrieren wir: Willst du Humor, Theorie oder konkrete Schritte?",
-        "Okay, neuer Versuch. Schreibe bitte: Thema, dein aktueller Stand, gewuenschtes Ergebnis."
+        "Danke fuer das klare Feedback. Soll ich es kuerzer, konkreter oder schrittweise formulieren?",
+        "Alles klar. Gib mir bitte ein Beispiel, dann passe ich die Antwort genauer an.",
+        "Verstanden. Wir starten neu: Produktanalyse oder Mental-Check-in?"
       ],
       "kontext": "repair"
-    },
-    {
-      "intent": "feedback_positiv",
-      "synonym": [
-        "Super",
-        "Perfekt",
-        "Danke",
-        "Top",
-        "Hat geholfen",
-        "Genau das"
-      ],
-      "antwort": [
-        "Freut mich. Wollen wir direkt die naechste Frage angehen?",
-        "Sehr gut. Wenn du magst, machen wir eine kurze Vertiefung.",
-        "Top. Sag einfach das naechste Thema und ich bleibe im Flow."
-      ],
-      "kontext": "abschluss"
     }
   ]
 }
