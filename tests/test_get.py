@@ -83,6 +83,28 @@ class ChatbotGetEndpointTest(unittest.TestCase):
                 break
         self.assertIn(body, breathing_answers)
 
+    def test_plain_check_in_maps_to_mental_checkin(self):
+        response = self.client.post("/get", data={"msg": "check in"})
+        self.assertEqual(response.status_code, 200)
+        body = response.data.decode("utf-8")
+        checkin_answers = []
+        for item in dialogflow["dialogflow"]:
+            if item["intent"] == "mental_checkin_start":
+                checkin_answers = item["antwort"]
+                break
+        self.assertIn(body, checkin_answers)
+
+    def test_plain_materialvergleich_maps_to_materials_intent(self):
+        response = self.client.post("/get", data={"msg": "Materialvergleich"})
+        self.assertEqual(response.status_code, 200)
+        body = response.data.decode("utf-8")
+        material_answers = []
+        for item in dialogflow["dialogflow"]:
+            if item["intent"] == "sustainable_materials":
+                material_answers = item["antwort"]
+                break
+        self.assertIn(body, material_answers)
+
 
 if __name__ == "__main__":
     unittest.main()

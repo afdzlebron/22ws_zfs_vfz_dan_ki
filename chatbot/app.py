@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import pickle
+import queue
 import random
 import re
 import threading
@@ -38,6 +39,8 @@ GREETING_INTENT = "smalltalk_begruessung"
 ERROR_THRESHOLD = 0.10
 MIN_CONFIDENCE = 0.25
 GREETING_CONFIDENCE_THRESHOLD = 0.55
+MODEL_LOCK_TIMEOUT_SECONDS = float(os.environ.get("MODEL_LOCK_TIMEOUT_SECONDS", "2.0"))
+MODEL_PREDICTION_TIMEOUT_SECONDS = float(os.environ.get("MODEL_PREDICTION_TIMEOUT_SECONDS", "2.5"))
 FOLLOW_UP_MARKERS = (
     "weiter",
     "weitermachen",
@@ -327,6 +330,8 @@ def requested_context(frage):
     if "http" in normalized or "www" in normalized:
         return "sustainable"
     tokens = set(normalized.split())
+    if "check in" in normalized:
+        return "mental"
     if any(
         word in tokens
         for word in {
@@ -336,6 +341,7 @@ def requested_context(frage):
             "oekologisch",
             "produkt",
             "material",
+            "materialvergleich",
             "labels",
             "label",
             "greenwashing",
@@ -351,6 +357,7 @@ def requested_context(frage):
         word in tokens
         for word in {
             "mental",
+            "check",
             "checkin",
             "check-in",
             "stress",
@@ -408,20 +415,55 @@ def klassifizieren(frage):
     if exact_match:
         return [(exact_match, 1.0)]
 
+    normalized = normalize_phrase(frage)
+    tokens = set(normalized.split())
+    # Fast path for common short prompts that otherwise depend on ML inference.
+    if "check in" in normalized or "checkin" in tokens:
+        return [("mental_checkin_start", 0.99)]
+    if "materialvergleich" in tokens or ("material" in tokens and "vergleich" in tokens):
+        return [("sustainable_materials", 0.99)]
+
     if not MODEL_READY:
         logger.error("Model is not ready yet.")
         return []
     bag_vector = bow(frage, words)
     if int(np.sum(bag_vector)) == 0:
         return []
-    # generiere Wahrscheinlichkeiten von dem Modell
-    try:
-        # tflearn/tf1 inference is sensitive to threaded access under gunicorn.
-        with MODEL_LOCK:
-            results = model.predict([bag_vector])[0]
-    except Exception as exc:
-        logger.exception("Model prediction failed: %s", exc)
+    # Generiere Wahrscheinlichkeiten vom Modell mit Timeout-Schutz gegen Hänger.
+    result_queue = queue.Queue(maxsize=1)
+
+    def _predict_worker():
+        acquired = MODEL_LOCK.acquire(timeout=MODEL_LOCK_TIMEOUT_SECONDS)
+        if not acquired:
+            result_queue.put(("lock-timeout", None))
+            return
+        try:
+            result_queue.put(("ok", model.predict([bag_vector])[0]))
+        except Exception as exc:
+            result_queue.put(("error", exc))
+        finally:
+            MODEL_LOCK.release()
+
+    worker = threading.Thread(target=_predict_worker, daemon=True)
+    worker.start()
+    worker.join(MODEL_PREDICTION_TIMEOUT_SECONDS)
+    if worker.is_alive():
+        logger.error("Model prediction timed out after %.2fs.", MODEL_PREDICTION_TIMEOUT_SECONDS)
         return []
+
+    try:
+        status, payload = result_queue.get_nowait()
+    except queue.Empty:
+        logger.error("Model prediction returned no result.")
+        return []
+    if status == "lock-timeout":
+        logger.error("Model lock timeout after %.2fs.", MODEL_LOCK_TIMEOUT_SECONDS)
+        return []
+    if status == "error":
+        logger.exception("Model prediction failed: %s", payload)
+        return []
+    results = payload
+
     ranked_results = sorted(
         [(classes[i], float(score)) for i, score in enumerate(results)],
         key=lambda item: item[1],
