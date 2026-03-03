@@ -61,6 +61,28 @@ class ChatbotGetEndpointTest(unittest.TestCase):
                 break
         self.assertNotIn(body, feedback_positive_answers)
 
+    def test_explicit_schopenhauer_prompt_not_overridden_by_follow_up_marker(self):
+        response = self.client.post("/get", data={"msg": "Erklaer Schopenhauer"})
+        self.assertEqual(response.status_code, 200)
+        body = response.data.decode("utf-8")
+        schopenhauer_answers = []
+        for item in dialogflow["dialogflow"]:
+            if item["intent"] == "philosophie_schopenhauer":
+                schopenhauer_answers = item["antwort"]
+                break
+        self.assertIn(body, schopenhauer_answers)
+
+    def test_explicit_wortspiel_prompt_not_overridden_by_follow_up_marker(self):
+        response = self.client.post("/get", data={"msg": "Noch ein Wortspiel"})
+        self.assertEqual(response.status_code, 200)
+        body = response.data.decode("utf-8")
+        wortspiel_answers = []
+        for item in dialogflow["dialogflow"]:
+            if item["intent"] == "fun_wortspiel":
+                wortspiel_answers = item["antwort"]
+                break
+        self.assertIn(body, wortspiel_answers)
+
 
 if __name__ == "__main__":
     unittest.main()

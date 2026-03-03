@@ -392,12 +392,12 @@ def antwort(frage, state=None):
     preferred_context = requested_context(frage)
 
     results = klassifizieren(frage)
+    top_intent = results[0][0] if results else ""
     if follow_up and state.get("last_intent"):
         follow_up_intent = pick_follow_up_intent(
             state,
             preferred_context=preferred_context or state.get("last_context"),
         )
-        top_intent = results[0][0] if results else ""
         if follow_up_intent and (not top_intent or is_meta_intent(top_intent)):
             response = pick_response(
                 follow_up_intent,
@@ -406,7 +406,10 @@ def antwort(frage, state=None):
             if response:
                 return response, follow_up_intent
 
-    if preferred_context and (follow_up or not results):
+    if preferred_context and (
+        not results
+        or (follow_up and (not top_intent or is_meta_intent(top_intent)))
+    ):
         context_intents = intents_for_context(preferred_context)
         if context_intents:
             chosen_intent = pick_follow_up_intent(
