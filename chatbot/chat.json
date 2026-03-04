@@ -60,9 +60,9 @@
         "Was kann ich dich fragen?"
       ],
       "antwort": [
-        "Ich biete einen Mental Health Check-in an und kann dir mit kurzen Uebungen helfen.",
-        "Frag mich nach Themen wie Stress, Angst, Schlaf, Entspannung oder Grounding.",
-        "Starte mit: 'Ich brauche einen Check-in' oder 'Ich bin gestresst'."
+        "Ich biete dir mentale Unterstuetzung mit kurzen, praktischen Check-ins.",
+        "Frag mich zu Stress, Angst, Schlaf, Konzentration, Antrieb, Gedankenkreisen oder Entspannungsuebungen.",
+        "Starte z. B. mit: 'Ich brauche einen Check-in', 'Ich bin gestresst' oder 'Ich kann mich nicht konzentrieren'."
       ],
       "kontext": "navigation"
     },
@@ -145,6 +145,70 @@
         "Fuer heute Nacht: kein Doomscrolling im Bett, Licht runter, Atemrhythmus verlaengern und morgen gleiche Aufstehzeit halten.",
         "Schon 60 Minuten weniger Bildschirm vor dem Schlafen kann helfen. Wichtig ist Regelmaessigkeit statt Perfektion.",
         "Wenn Gedanken kreisen: schreibe sie 5 Minuten auf Papier, dann erst ins Bett. Das entlastet oft merklich."
+      ],
+      "kontext": "mental"
+    },
+    {
+      "intent": "mental_focus_support",
+      "synonym": [
+        "Ich kann mich nicht konzentrieren",
+        "Ich prokrastiniere",
+        "Ich bin dauernd abgelenkt",
+        "Ich komme nicht ins Tun",
+        "Ich verliere meinen Fokus"
+      ],
+      "antwort": [
+        "Das ist absolut nachvollziehbar. Probier 10 Minuten Fokus ohne Perfektionsdruck: Timer stellen, nur eine kleine Aufgabe.",
+        "Wenn alles gleichzeitig ruft: Schreibe 3 Aufgaben auf und starte nur mit der leichtesten fuer 5 Minuten.",
+        "Mini-Fokus-Protokoll: Handy weg, ein klares Ziel, 15 Minuten konzentriert arbeiten, dann 2 Minuten Pause."
+      ],
+      "kontext": "mental"
+    },
+    {
+      "intent": "mental_energy_support",
+      "synonym": [
+        "Ich bin antriebslos",
+        "Ich habe keine Energie",
+        "Ich fuehle mich leer",
+        "Alles kostet Kraft",
+        "Ich komme kaum aus dem Bett"
+      ],
+      "antwort": [
+        "Danke, dass du das teilst. Lass uns klein starten: Wasser trinken, kurz aufstehen und dann nur einen Mini-Schritt planen.",
+        "Bei wenig Energie hilft sanfte Aktivierung: 2 Minuten Bewegung, 3 tiefe Atemzuege und eine machbare Aufgabe.",
+        "Du musst heute nicht alles schaffen. Was waere ein realistischer naechster Schritt in den naechsten 10 Minuten?"
+      ],
+      "kontext": "mental"
+    },
+    {
+      "intent": "mental_overthinking_support",
+      "synonym": [
+        "Ich overthinke alles",
+        "Ich mache mir zu viele Gedanken",
+        "Ich grueble zu viel",
+        "Gedankenkarussell",
+        "Ich kann nicht abschalten im Kopf"
+      ],
+      "antwort": [
+        "Wenn der Kopf rotiert, hilft Struktur: Schreibe deine Gedanken in zwei Spalten auf - beeinflussbar und nicht beeinflussbar.",
+        "Sag dir freundlich: 'Ich darf das spaeter loesen.' Dann setz einen 10-Minuten-Zeitpunkt fuer's Nachdenken.",
+        "Kurze Entlastung: Benenne den Hauptgedanken in einem Satz und den kleinsten naechsten Handlungsschritt."
+      ],
+      "kontext": "mental"
+    },
+    {
+      "intent": "mental_body_scan",
+      "synonym": [
+        "Body Scan",
+        "Koerperreise",
+        "Gib mir einen Body Scan",
+        "Entspannung im Koerper",
+        "Progressive Entspannung bitte"
+      ],
+      "antwort": [
+        "Gern. Wir machen einen kurzen Body-Scan. Wenn du bereit bist, schreibe 'weiter'.",
+        "Okay, ich leite dich durch eine kurze Koerperwahrnehmung. Antworte mit 'weiter', wenn es fuer dich passt.",
+        "Klar, wir starten mit einem 2-Minuten-Body-Scan. Schreib 'weiter' fuer den ersten Schritt."
       ],
       "kontext": "mental"
     },

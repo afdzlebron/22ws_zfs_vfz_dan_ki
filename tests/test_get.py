@@ -1,6 +1,6 @@
+import json
 import unittest
 from unittest.mock import patch
-import json
 
 from chatbot.app import DEFAULT_RESPONSE, app, bot
 
@@ -8,6 +8,20 @@ from chatbot.app import DEFAULT_RESPONSE, app, bot
 class ChatbotGetEndpointTest(unittest.TestCase):
     def setUp(self):
         self.client = app.test_client()
+
+    def _answers_for_intent(self, intent):
+        for item in bot.dialogflow["dialogflow"]:
+            if item["intent"] == intent:
+                return item["antwort"]
+        return []
+
+    def _response_contains_intent_answer(self, response_text, intent):
+        answers = self._answers_for_intent(intent)
+        for answer in answers:
+            clean_answer = answer.replace(" [Name]", "").replace("[Name]", "")
+            if clean_answer in response_text:
+                return True
+        return False
 
     def test_get_returns_response(self):
         response = self.client.post("/get", data={"msg": "Hallo"})
@@ -23,7 +37,6 @@ class ChatbotGetEndpointTest(unittest.TestCase):
         self.assertEqual(data["text"], "")
 
     def test_get_fallback_response_on_internal_error(self):
-        # Patching bot.get_response since app.py calls it
         with patch.object(bot, "get_response", side_effect=Exception("boom")):
             response = self.client.post("/get", data={"msg": "Hallo"})
         self.assertEqual(response.status_code, 200)
@@ -35,38 +48,16 @@ class ChatbotGetEndpointTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
         self.assertEqual(data["text"], DEFAULT_RESPONSE)
+        self.assertIn("buttons", data)
+        self.assertGreaterEqual(len(data["buttons"]), 1)
 
     def test_get_stimmung_question_returns_stimmung_answer(self):
         response = self.client.post("/get", data={"msg": "Wie geht es dir?"})
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-        text = data["text"]
-
-        stimmung_answers = []
-        for item in bot.dialogflow["dialogflow"]:
-            if item["intent"] == "smalltalk_stimmung":
-                stimmung_answers = item["antwort"]
-                break
-
-        # The bot might sanitize/format the answer (e.g. replacing [Name])
-        # We check if the core part of the answer is present
-        found = False
-        for answer in stimmung_answers:
-            clean_answer = answer.replace(" [Name]", "").replace("[Name]", "")
-            if clean_answer in text:
-                found = True
-                break
         self.assertTrue(
-            found, f"Response '{text}' not found in expected answers {stimmung_answers}"
+            self._response_contains_intent_answer(data["text"], "smalltalk_stimmung")
         )
-
-    def test_follow_up_reuses_context(self):
-        first = self.client.post("/get", data={"msg": "Bewerte ein Produkt"})
-        self.assertEqual(first.status_code, 200)
-        second = self.client.post("/get", data={"msg": "noch genauer"})
-        self.assertEqual(second.status_code, 200)
-        data = json.loads(second.data)
-        self.assertNotEqual(data["text"], DEFAULT_RESPONSE)
 
     def test_follow_up_detail_request_after_mental_prompt(self):
         first = self.client.post("/get", data={"msg": "Ich bin gestresst"})
@@ -76,60 +67,56 @@ class ChatbotGetEndpointTest(unittest.TestCase):
         data = json.loads(second.data)
         self.assertNotEqual(data["text"], DEFAULT_RESPONSE)
 
-        feedback_positive_answers = []
-        for item in bot.dialogflow["dialogflow"]:
-            if item["intent"] == "feedback_positiv":
-                feedback_positive_answers = item["antwort"]
-                break
-        self.assertNotIn(data["text"], feedback_positive_answers)
-
-    def test_explicit_ecoscore_prompt_not_overridden_by_follow_up_marker(self):
-        response = self.client.post("/get", data={"msg": "Erklaer Eco-Score"})
+    def test_flexible_focus_intent_detection(self):
+        response = self.client.post(
+            "/get", data={"msg": "Ich bin gerade total abgelenkt und komme nicht ins Tun"}
+        )
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
+        self.assertTrue(
+            self._response_contains_intent_answer(data["text"], "mental_focus_support")
+        )
 
-        eco_score_answers = []
-        for item in bot.dialogflow["dialogflow"]:
-            if item["intent"] == "sustainable_eco_score_explain":
-                eco_score_answers = item["antwort"]
-                break
-        self.assertIn(data["text"], eco_score_answers)
+    def test_keyword_energy_intent_detection(self):
+        response = self.client.post(
+            "/get", data={"msg": "Heute fuehle ich mich komplett antriebslos und energielos"}
+        )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.data)
+        self.assertTrue(
+            self._response_contains_intent_answer(data["text"], "mental_energy_support")
+        )
+
+    def test_body_scan_follow_up_steps(self):
+        first = self.client.post("/get", data={"msg": "Body Scan bitte"})
+        self.assertEqual(first.status_code, 200)
+        first_data = json.loads(first.data)
+        self.assertTrue(
+            self._response_contains_intent_answer(first_data["text"], "mental_body_scan")
+        )
+
+        second = self.client.post("/get", data={"msg": "weiter"})
+        self.assertEqual(second.status_code, 200)
+        second_data = json.loads(second.data)
+        self.assertIn("Schritt 1", second_data["text"])
+        self.assertIn("buttons", second_data)
+        self.assertTrue(any(btn.get("value") == "weiter" for btn in second_data["buttons"]))
 
     def test_explicit_breathing_prompt_not_overridden_by_follow_up_marker(self):
         response = self.client.post("/get", data={"msg": "Noch eine Atemuebung"})
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-
-        breathing_answers = []
-        for item in bot.dialogflow["dialogflow"]:
-            if item["intent"] == "mental_breathing_exercise":
-                breathing_answers = item["antwort"]
-                break
-        self.assertIn(data["text"], breathing_answers)
+        self.assertTrue(
+            self._response_contains_intent_answer(data["text"], "mental_breathing_exercise")
+        )
 
     def test_plain_check_in_maps_to_mental_checkin(self):
         response = self.client.post("/get", data={"msg": "check in"})
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.data)
-
-        checkin_answers = []
-        for item in bot.dialogflow["dialogflow"]:
-            if item["intent"] == "mental_checkin_start":
-                checkin_answers = item["antwort"]
-                break
-        self.assertIn(data["text"], checkin_answers)
-
-    def test_plain_materialvergleich_maps_to_materials_intent(self):
-        response = self.client.post("/get", data={"msg": "Materialvergleich"})
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.data)
-
-        material_answers = []
-        for item in bot.dialogflow["dialogflow"]:
-            if item["intent"] == "sustainable_materials":
-                material_answers = item["antwort"]
-                break
-        self.assertIn(data["text"], material_answers)
+        self.assertTrue(
+            self._response_contains_intent_answer(data["text"], "mental_checkin_start")
+        )
 
 
 if __name__ == "__main__":

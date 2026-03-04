@@ -59,7 +59,8 @@ def chatbot_response():
             state["last_response"] = final_response
             state["turns"] = min(int(state.get("turns", 0)) + 1, 1000)
 
-        state["chat_state"] = state
+        session["chat_state"] = state
+        session.modified = True
     except Exception as exc:
         logger.exception("Failed to generate bot response: %s", exc)
         final_response = {"text": DEFAULT_RESPONSE, "buttons": []}

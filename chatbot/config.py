@@ -1,8 +1,8 @@
 import os
 
 DEFAULT_RESPONSE = (
-    "Entschuldigung, ich habe das nicht verstanden. "
-    "Kannst du deine Frage bitte anders formulieren?"
+    "Danke fuer deine Nachricht. Ich bin fuer dich da, habe dich aber noch nicht klar verstanden. "
+    "Magst du kurz sagen, ob es um Stress, Angst, Schlaf oder eine Uebung geht?"
 )
 MAX_MESSAGE_LENGTH = 500
 GREETING_INTENT = "smalltalk_begruessung"

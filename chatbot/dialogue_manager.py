@@ -1,8 +1,9 @@
 import json
 import logging
 import random
+from difflib import SequenceMatcher
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Any
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from textblob_de import TextBlobDE
 from transitions import Machine
@@ -35,6 +36,7 @@ class DialogueManager:
         self.context_to_intents = {}
         self.phrase_to_intents = {}
         self.greeting_stems = set()
+        self.synonym_index: List[Tuple[str, str, Set[str]]] = []
 
         self._load_dialogflow()
 
@@ -66,6 +68,7 @@ class DialogueManager:
                     self.phrase_to_intents.setdefault(key, [])
                     if intent not in self.phrase_to_intents[key]:
                         self.phrase_to_intents[key].append(intent)
+                    self.synonym_index.append((intent, key, set(key.split())))
 
                 # build greeting stems
                 if intent == GREETING_INTENT:
@@ -86,6 +89,84 @@ class DialogueManager:
     def _looks_like_greeting(self, frage: str) -> bool:
         frage_stems = set(frage_bearbeitung(frage, self.ignore_words))
         return bool(frage_stems.intersection(self.greeting_stems))
+
+    def _keyword_intent_match(self, frage: str) -> Optional[str]:
+        normalized = normalize_phrase(frage)
+        tokens = set(normalized.split())
+        if not normalized:
+            return None
+
+        if any(
+            phrase in normalized
+            for phrase in (
+                "ich will nicht mehr leben",
+                "mir etwas antun",
+                "ich kann nicht mehr",
+                "suizid",
+                "selbstmord",
+            )
+        ):
+            return "mental_crisis_support"
+
+        if tokens.intersection({"panik", "nervoes", "unruhig", "angst"}):
+            return "mental_anxiety_support"
+        if tokens.intersection(
+            {"gestresst", "ueberfordert", "stress", "ausgebrannt", "burnout"}
+        ):
+            return "mental_stress_support"
+        if tokens.intersection({"schlaf", "einschlafen", "durchschlafen", "muede"}):
+            return "mental_sleep_support"
+        if tokens.intersection(
+            {"konzentration", "fokus", "abgelenkt", "prokrastination", "prokrastiniere"}
+        ):
+            return "mental_focus_support"
+        if tokens.intersection(
+            {"antriebslos", "energielos", "kraftlos", "erschoepft", "leer"}
+        ):
+            return "mental_energy_support"
+        if tokens.intersection({"gruebeln", "grueble", "gedankenkarussell", "overthinke"}):
+            return "mental_overthinking_support"
+        if "body scan" in normalized or tokens.intersection({"koerperreise", "bodyscan"}):
+            return "mental_body_scan"
+        return None
+
+    def _flexible_synonym_intent_match(self, frage: str) -> Optional[str]:
+        normalized = normalize_phrase(frage)
+        msg_tokens = set(normalized.split())
+        if not msg_tokens:
+            return None
+
+        best_intent: Optional[str] = None
+        best_score = 0.0
+
+        for intent, synonym, synonym_tokens in self.synonym_index:
+            if not synonym_tokens:
+                continue
+
+            overlap_tokens = msg_tokens.intersection(synonym_tokens)
+            overlap = len(overlap_tokens) / len(synonym_tokens)
+            coverage = len(overlap_tokens) / len(msg_tokens)
+            token_score = (0.7 * overlap) + (0.3 * coverage)
+            text_similarity = SequenceMatcher(None, normalized, synonym).ratio()
+            score = max(token_score, text_similarity)
+
+            if len(overlap_tokens) >= 2:
+                score += 0.08
+
+            if score > best_score:
+                best_score = score
+                best_intent = intent
+
+        if not best_intent:
+            return None
+
+        if best_intent == GREETING_INTENT and not self._looks_like_greeting(frage):
+            return None
+
+        threshold = 0.78 if best_intent == GREETING_INTENT else 0.68
+        if best_score >= threshold:
+            return best_intent
+        return None
 
     def _context_for_intent(self, intent: str) -> str:
         if not intent:
@@ -143,6 +224,13 @@ class DialogueManager:
                 "atemuebung",
                 "grounding",
                 "krise",
+                "konzentration",
+                "fokus",
+                "antriebslos",
+                "gruebeln",
+                "gedankenkarussell",
+                "body",
+                "scan",
             }
         ):
             return "mental"
@@ -206,6 +294,14 @@ class DialogueManager:
         exact_match = self._get_exact_match_intent(frage)
         if exact_match:
             return [(exact_match, 1.0)]
+
+        keyword_match = self._keyword_intent_match(frage)
+        if keyword_match:
+            return [(keyword_match, 0.99)]
+
+        flexible_match = self._flexible_synonym_intent_match(frage)
+        if flexible_match:
+            return [(flexible_match, 0.95)]
 
         normalized = normalize_phrase(frage)
         tokens = set(normalized.split())
@@ -322,9 +418,41 @@ class DialogueManager:
                         ),
                         active_exercise,
                     )
+            elif active_exercise == "mental_body_scan":
+                steps = [
+                    "Schritt 1: Setz oder leg dich bequem hin und schliesse, wenn moeglich, kurz die Augen.",
+                    "Schritt 2: Richte die Aufmerksamkeit auf deine Stirn, Kiefer und Schultern. Loese dort bewusst Spannung.",
+                    "Schritt 3: Wandere mit der Aufmerksamkeit langsam durch Brust, Bauch und Ruecken.",
+                    "Schritt 4: Spuere Beine und Fuesse. Atme ruhig aus und lass Gewicht in den Boden sinken.",
+                    "Schritt 5: Oeffne langsam die Augen und nenne ein Wort fuer dein aktuelles Koerpergefuehl.",
+                ]
+                if step < len(steps):
+                    state["exercise_step"] = step + 1
+                    buttons = [{"label": "Weiter", "value": "weiter"}]
+                    return (
+                        self._format_response(
+                            steps[step], state, empathy_prefix, buttons
+                        ),
+                        active_exercise,
+                    )
+                state["active_exercise"] = None
+                state["exercise_step"] = 0
+                return (
+                    self._format_response(
+                        "Stark gemacht. Wenn du willst, machen wir als naechstes einen kurzen Check-in.",
+                        state,
+                        "",
+                        [],
+                    ),
+                    active_exercise,
+                )
 
         # When entering an exercise
-        if top_intent in ["mental_breathing_exercise", "mental_grounding"]:
+        if top_intent in [
+            "mental_breathing_exercise",
+            "mental_grounding",
+            "mental_body_scan",
+        ]:
             state["active_exercise"] = top_intent
             state["exercise_step"] = 0
 
@@ -414,7 +542,12 @@ class DialogueManager:
                         follow_up_intent,
                     )
 
-        return {"text": DEFAULT_RESPONSE}, None
+        fallback_buttons = [
+            {"label": "Check-in", "value": "Ich brauche einen Check-in"},
+            {"label": "Atemuebung", "value": "Atemuebung"},
+            {"label": "Grounding", "value": "Grounding Uebung"},
+        ]
+        return self._format_response(DEFAULT_RESPONSE, state, "", fallback_buttons), None
 
     def _format_response(
         self,
@@ -443,6 +576,7 @@ class DialogueManager:
             buttons = [
                 {"label": "Atemübung", "value": "Atemuebung"},
                 {"label": "Grounding", "value": "Grounding Uebung"},
+                {"label": "Body-Scan", "value": "Body Scan"},
             ]
 
         return {"text": final_text, "buttons": buttons}
