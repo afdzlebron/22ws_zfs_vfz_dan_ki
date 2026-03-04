@@ -1,4 +1,4 @@
-2026-03-04 02:18:20.474159: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+2026-03-04 02:26:37.266879: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
 To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
 WARNING:tensorflow:From /Users/afdzlebron/Library/Mobile Documents/com~apple~CloudDocs/icloud_documents/IT/IT-Projects/22ws_zfs_vfz_dan_ki/.venv/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
 Instructions for updating:
@@ -18,30 +18,23 @@ INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a
  * Running on http://127.0.0.1:5000
  * Running on http://192.168.1.104:5000
 INFO:werkzeug:[33mPress CTRL+C to quit[0m
-INFO:__main__:Incoming message: Hallo
-INFO:__main__:Outgoing response: Hi. Ich bin dein Mental Health Check-in Bot. Bereit fuer einen kurzen Check-in?
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:18:32] "POST /get HTTP/1.1" 200 -
+INFO:__main__:Incoming message: hallo, ich heisse Daniel
+INFO:__main__:Outgoing response: {'text': 'Willkommen Daniel. Ich bin hier, um einen kurzen Mental-Health-Check-in mit dir zu machen.', 'buttons': []}
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:34:31] "POST /get HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:35:54] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:35:55] "GET /static/style.css HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:35:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+INFO:__main__:Incoming message: hallo, ich heisse Daniel
+INFO:__main__:Outgoing response: {'text': 'Willkommen Daniel. Ich bin hier, um einen kurzen Mental-Health-Check-in mit dir zu machen.', 'buttons': []}
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:37:43] "POST /get HTTP/1.1" 200 -
 INFO:__main__:Incoming message: Ich brauche einen Check in
-INFO:__main__:Outgoing response: Ich bin da. Sag mir kurz, was heute am meisten belastet, dann schlage ich einen naechsten Mini-Schritt vor.
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:18:33] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: weiter
-INFO:__main__:Outgoing response: Entschuldigung, ich habe das nicht verstanden. Kannst du deine Frage bitte anders formulieren?
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:18:34] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: Ich brauche einen Check in
-INFO:__main__:Outgoing response: Danke, dass du es ansprichst. Auf einer Skala von 1 bis 10: Wie hoch ist dein aktueller Stress?
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:18:43] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: Grounding Uebung
-INFO:__main__:Outgoing response: 5-4-3-2-1: Nenne 5 Dinge die du siehst, 4 die du fuehlst, 3 die du hoerst, 2 die du riechst, 1 die du schmeckst.
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:19:07] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: weiter
-INFO:__main__:Outgoing response: Schritt 1: Nenne 5 Dinge, die du im Raum sehen kannst.
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:19:07] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: weiter
-INFO:__main__:Outgoing response: Schritt 2: Beruehre 4 Dinge und spuere ihre Textur.
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:19:07] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: Atemtechnik
-INFO:__main__:Outgoing response: Laenger ausatmen als einatmen: 4 ein, 6 aus, 10 Runden. Das kann schnell beruhigen.
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:19:07] "POST /get HTTP/1.1" 200 -
-INFO:__main__:Incoming message: weiter
-INFO:__main__:Outgoing response: Schritt 1: Setz dich bequem hin und schliesse die Augen.
-INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:19:07] "POST /get HTTP/1.1" 200 -
+INFO:__main__:Outgoing response: {'text': 'Klar, wir machen einen kurzen Check-in. Was ist gerade am staerksten: Stress, Angst, Erschoepfung oder Schlafp
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:39:20] "POST /get HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:46:26] "GET / HTTP/1.1" 200 -
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:46:27] "[36mGET /static/style.css HTTP/1.1[0m" 304 -
+INFO:__main__:Incoming message: Ich bin gestresst
+INFO:__main__:Outgoing response: {'text': 'Das hoert sich wirklich anstrengend an. Mini-Reset: 4 tiefe Atemzuege, Schultern lockern, dann nur den naechst
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:46:39] "POST /get HTTP/1.1" 200 -
+INFO:__main__:Incoming message: Atemuebung
+INFO:__main__:Outgoing response: {'text': 'Box-Breathing: 4 Sekunden einatmen, 4 halten, 4 ausatmen, 4 halten. Fuer 2 Minuten.', 'buttons': []}
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:48:55] "POST /get HTTP/1.1" 200 -

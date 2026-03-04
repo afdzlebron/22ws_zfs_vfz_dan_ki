@@ -12,9 +12,9 @@
         "Huhu"
       ],
       "antwort": [
-        "Hi. Ich bin dein Mental Health Check-in Bot. Bereit fuer einen kurzen Check-in?",
-        "Willkommen. Ich bin hier, um einen kurzen Mental-Health-Check-in mit dir zu machen.",
-        "Hallo. Lass uns einen kurzen Stress- und Wohlbefinden-Check-in machen."
+        "Hi [Name]. Ich bin dein Mental Health Check-in Bot. Bereit fuer einen kurzen Check-in?",
+        "Willkommen [Name]. Ich bin hier, um einen kurzen Mental-Health-Check-in mit dir zu machen.",
+        "Hallo [Name]. Lass uns einen kurzen Stress- und Wohlbefinden-Check-in machen."
       ],
       "kontext": "start"
     },
@@ -28,9 +28,9 @@
         "Was geht?"
       ],
       "antwort": [
-        "Stabil und fokussiert. Und wie geht es dir heute?",
-        "Gut, danke. Wie fuehlst du dich gerade?",
-        "Mir geht es gut. Magst du mir erzaehlen, wie es dir geht?"
+        "Stabil und fokussiert. Und wie geht es dir heute, [Name]?",
+        "Gut, danke [Name]. Wie fuehlst du dich gerade?",
+        "Mir geht es gut. Magst du mir erzaehlen, wie es dir geht, [Name]?"
       ],
       "kontext": "smalltalk"
     },
@@ -82,7 +82,6 @@
       ],
       "kontext": "ende"
     },
-
     {
       "intent": "mental_checkin_start",
       "synonym": [
@@ -197,7 +196,6 @@
       ],
       "kontext": "mental"
     },
-
     {
       "intent": "feedback_positiv",
       "synonym": [

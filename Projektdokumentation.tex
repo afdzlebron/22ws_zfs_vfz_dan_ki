@@ -2,7 +2,7 @@
 
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage[ngerman]{babel}
+% babel is broken on this system, using manual translations
 \usepackage{geometry}
 \geometry{margin=2.2cm}
 \usepackage{booktabs}
@@ -13,6 +13,10 @@
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 \usepackage{hyperref}
 \usepackage{float}
+
+\renewcommand{\contentsname}{Inhaltsverzeichnis}
+\renewcommand{\figurename}{Abbildung}
+\renewcommand{\tablename}{Tabelle}
 
 \lstdefinestyle{shared}{
   basicstyle=\ttfamily\small,
@@ -30,8 +34,8 @@
 
 \title{Technische Dokumentation des Chatbots\\
 \large Datenanalyse auf Basis von KI-Methoden (WS 2022/2023)}
-\author{AFL et al.}
-\date{\today}
+\author{Alwin, Andres, Donya, Luisa}
+\date{4. M\"arz 2026}
 
 \begin{document}
 \maketitle
@@ -39,17 +43,18 @@
 \newpage
 
 \section{Zielsetzung}
-Ziel des Projekts ist ein einfacher, deutschsprachiger Kundenservice-Chatbot, der typische Fragen zu Produkten, Lieferung und Retouren beantwortet.\
-Die Anwendung kombiniert eine kompakte Inferenz-Pipeline (Bag-of-Words + TFLearn-Modell) mit einer webbasierten Oberfläche.
+Ziel des Projekts ist ein KI-gest\"utzter Mental-Health-Chatbot, der Nutzer bei Stress, Angst oder Schlafproblemen durch Check-ins und gezielte \"Ubungen (z.B. Atem\"ubungen, Grounding) unterst\"utzt.
+Die Anwendung kombiniert eine Inferenz-Pipeline (Bag-of-Words + TFLearn) mit einem zustandsbehafteten Dialog-Manager und einer modernen Weboberfl\"ache.
 
 \section{System\"ubersicht}
 \begin{itemize}
-  \item \textbf{Backend:} Flask-App mit Textvorverarbeitung, Modellinferenz und Antwortauswahl.
-  \item \textbf{Modell:} TFLearn-Feedforward-Netz mit Softmax-Klassifikation, trainiert auf \texttt{chat.json}.
-  \item \textbf{Frontend:} Einfache Chat-Oberfl\"ache mit Fetch-API und klarer Fehlerbehandlung.
+  \item \textbf{Backend:} Flask-App mit Textvorverarbeitung, Sentiment-Analyse (TextBlob) und zustandsbehafteter Logik.
+  \item \textbf{Dialog-Manager:} Verwendet eine State-Machine (\texttt{transitions}) f\"ur gef\"uhrte \"Ubungen.
+  \item \textbf{Modell:} TFLearn-Feedforward-Netz mit Softmax-Klassifikation.
+  \item \textbf{Frontend:} Interaktive Oberfl\"ache mit Buttons, klickbaren Tipps und Animationen.
 \end{itemize}
 
-\section{Datei\"ubersicht und Aufgaben}
+\section{Datei\"ubersicht}
 \begin{longtable}{p{0.38\linewidth} p{0.55\linewidth}}
 \toprule
 \textbf{Datei} & \textbf{Funktion} \\
@@ -57,9 +62,10 @@ Die Anwendung kombiniert eine kompakte Inferenz-Pipeline (Bag-of-Words + TFLearn
 \texttt{chatbot/app.py} & Flask-App mit Textverarbeitung, Modellinferenz und API-Routen. \\
 \texttt{chatbot/chat.json} & Trainingsdaten: Intents, Beispiele und Antworten. \\
 \texttt{chatbot/train.py} & Training-Skript zum Erzeugen von Modellartefakten. \\
+\texttt{chatbot/dialogue\_manager.py} & Zustandsbehaftetes Dialog-Management und Sentiment-Analyse. \\
 \texttt{chatbot/model.tflearn*} & Gespeichertes TFLearn-Modell (Weights + Meta). \\
 \texttt{chatbot/trained\_data} & Gepickelte Trainingsdaten (Vokabular, Klassen, BoW-Arrays). \\
-\texttt{chatbot/templates/index.html} & UI-Struktur und Client-Logik f\"ur den Chat. \\
+\texttt{chatbot/templates/index.html} & UI-Struktur mit interaktiven Buttons und klickbaren Tipps. \\
 \texttt{chatbot/static/style.css} & Layout, Farbwelt und Animationen der Oberfl\"ache. \\
 \texttt{render.yaml} & Render-Deployment (Build + Start Command). \\
 \texttt{requirements.txt} & Python-Abh\"angigkeiten. \\
@@ -81,8 +87,8 @@ Die Eingabe wird tokenisiert, von Stoppw\"ortern bereinigt und mittels Snowball-
 \node[block] (input) {User-Nachricht};
 \node[block, below=of input] (token) {Tokenisierung + Stemming};
 \node[block, below=of token] (bow) {Bag-of-Words-Vektor};
-\node[block, below=of bow] (model) {TFLearn-Modell\nSoftmax-Klassifikation};
-\node[block, below=of model] (intent) {Intent-Auswahl\nmit Schwellenwert};
+\node[block, below=of bow] (model) {TFLearn-Modell\\Softmax-Klassifikation};
+\node[block, below=of model] (intent) {Intent-Auswahl\\mit Schwellenwert};
 \node[block, below=of intent] (answer) {Antwort aus \texttt{chat.json}};
 
 \draw[line] (input) -- (token);
@@ -95,12 +101,12 @@ Die Eingabe wird tokenisiert, von Stoppw\"ortern bereinigt und mittels Snowball-
 \end{figure}
 
 \subsection{Antwortauswahl}
-Die Softmax-Ergebnisse werden nach Wahrscheinlichkeit sortiert. Unterhalb eines Schwellenwerts werden Intents verworfen.\
+Die Softmax-Ergebnisse werden nach Wahrscheinlichkeit sortiert. Unterhalb eines Schwellenwerts werden Intents verworfen.
 Die erste passende Intent-Antwort aus \texttt{chat.json} wird zuf\"allig ausgew\"ahlt. Bei Unsicherheit erfolgt eine Standardantwort.
 
 \section{Frontend}
 \subsection{UI-Konzept}
-Die Oberfl\"ache ist bewusst kompakt gehalten: Kopfbereich mit Projektkontext, darunter ein Chatfenster mit\
+Die Oberfl\"ache ist bewusst kompakt gehalten: Kopfbereich mit Projektkontext, darunter ein Chatfenster mit
 Message-Bubbles und ein Eingabefeld. Ein Typing-Indikator signalisiert aktive Verarbeitung.
 
 \subsection{Client-Ablauf}
@@ -112,17 +118,13 @@ Message-Bubbles und ein Eingabefeld. Ein Typing-Indikator signalisiert aktive Ve
 
 \section{Verbesserungen}
 \begin{itemize}
-  \item Robuste Modellinitialisierung mit Status-Flag und Health-Endpoint.
-  \item Explizites Deaktivieren von Eager-Execution f\"ur stabile TFLearn-Inferenz.
-  \item UI-\"Uberarbeitung: klare visuelle Hierarchie, responsives Layout, Animationen.
+  \item Sentiment-Analyse zur empathischen Einleitung von Antworten.
+  \item Gef\"uhrte, interaktive \"Ubungen (z.B. Box-Breathing) mittels State-Machine.
+  \item Benutzeroberfl\"ache mit klickbaren Tipps und Schnellwahl-Buttons.
+  \item Robuste Modellinitialisierung und Health-Endpoint.
+  \item Explizites Deaktivieren von Eager-Execution f\"ur stabile Inferenz.
   \item Besseres Request-Handling im Frontend mit Typing-Indikator und Fehler-Feedback.
-  \item L\"angenlimit f\"ur Eingaben zur Vermeidung unpraktischer Requests.
 \end{itemize}
-
-\section{Deployment und Betrieb}
-\subsection{Render}
-Die Anwendung wird via \texttt{render.yaml} bereitgestellt.\
-Der Build-Schritt installiert Abh\"angigkeiten und l\"adt NLTK-Ressourcen, der Start erfolgt \"uber Gunicorn.
 
 \section{Ausf\"uhrung und Tests}
 \subsection{Lokales Starten}
@@ -141,30 +143,29 @@ Ein einfacher Unit-Test pr\"uft, ob der \texttt{/get}-Endpoint auf eine Nachrich
 \begin{lstlisting}[style=shared,language=bash]
 .venv/bin/python -m unittest tests.test_get
 \end{lstlisting}
-Der Test sendet eine Beispielnachricht und erwartet eine nicht-leere Antwort.
 
 \section{Codeauszug (Python)}
 \begin{lstlisting}[style=shared,language=Python]
 @app.route("/get", methods=["POST"])
 def chatbot_response():
-    msg = request.form.get("msg", "").strip()
-    if not msg:
-        return ""
-    if len(msg) > MAX_MESSAGE_LENGTH:
-        return "Bitte formuliere deine Nachricht etwas kuerzer."
-    res = antwort(msg)
-    return res or DEFAULT_RESPONSE
+    msg = request.form.get("msg", "")
+    state = session.get("chat_state", {})
+    res, intent = bot.get_response(msg, state)
+    final_response = res or DEFAULT_RESPONSE
+    session["chat_state"] = state
+    return jsonify(final_response)
 \end{lstlisting}
 
 \section{Codeauszug (JavaScript)}
-\begin{lstlisting}[style=shared,language=JavaScript]
+\begin{lstlisting}[style=shared]
 const response = await fetch(endpoint, {
   method: "POST",
   headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
   body: new URLSearchParams({ msg: rawText }),
 });
-const data = await response.text();
-appendMessage("bot", data || "Keine Antwort vom Server.");
+const data = await response.json();
+const botMsg = data.text || "Keine Antwort vom Server.";
+appendMessage("bot", botMsg);
 \end{lstlisting}
 
 \end{document}

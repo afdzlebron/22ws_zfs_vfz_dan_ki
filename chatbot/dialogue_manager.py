@@ -4,6 +4,9 @@ import random
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
 
+from textblob_de import TextBlobDE
+from transitions import Machine
+
 from config import (
     DEFAULT_RESPONSE,
     MAX_MESSAGE_LENGTH,
@@ -231,22 +234,41 @@ class DialogueManager:
 
     def get_response(
         self, msg: str, state: Dict[str, Any]
-    ) -> Tuple[str, Optional[str]]:
+    ) -> Tuple[Dict[str, Any], Optional[str]]:
         msg = msg.strip()
         if not msg:
-            return "", None
+            return {"text": ""}, None
         if len(msg) > MAX_MESSAGE_LENGTH:
-            return "Bitte formuliere deine Nachricht etwas kürzer.", None
+            return {"text": "Bitte formuliere deine Nachricht etwas kürzer."}, None
 
         prior_response = state.get("last_response")
         follow_up = self._is_follow_up_message(msg)
         preferred_context = self._requested_context(msg)
+
+        # Analyze Sentiment
+        blob = TextBlobDE(msg)
+        sentiment_polarity = blob.sentiment.polarity
+        empathy_prefix = ""
+        if sentiment_polarity < -0.5:
+            empathy_prefix = "Das hoert sich wirklich anstrengend an. "
+        elif sentiment_polarity > 0.5:
+            empathy_prefix = "Das klingt doch schon mal positiv! "
+
+        # Dynamic Placeholders: name extraction
+        msg_lower = msg.lower()
+        if "ich heisse " in msg_lower or "ich hei" in msg_lower:
+            words = msg.split()
+            # Very basic extraction: grab the last word
+            if len(words) > 2:
+                name = words[-1].strip(".,!?")
+                state["user_name"] = name
 
         results = self._klassifizieren(msg)
         top_intent = results[0][0] if results else ""
 
         # Stateful Guided Exercise Logic
         active_exercise = state.get("active_exercise")
+        buttons = []
         if active_exercise and follow_up:
             step = state.get("exercise_step", 0)
             if active_exercise == "mental_breathing_exercise":
@@ -258,11 +280,22 @@ class DialogueManager:
                 ]
                 if step < len(steps):
                     state["exercise_step"] = step + 1
-                    return steps[step], active_exercise
+                    buttons = [{"label": "Weiter", "value": "weiter"}]
+                    return (
+                        self._format_response(
+                            steps[step], state, empathy_prefix, buttons
+                        ),
+                        active_exercise,
+                    )
                 else:
                     state["active_exercise"] = None
                     state["exercise_step"] = 0
-                    return "Gut gemacht! Wie fuehlst du dich jetzt?", active_exercise
+                    return (
+                        self._format_response(
+                            "Gut gemacht! Wie fuehlst du dich jetzt?", state, "", []
+                        ),
+                        active_exercise,
+                    )
             elif active_exercise == "mental_grounding":
                 steps = [
                     "Schritt 1: Nenne 5 Dinge, die du im Raum sehen kannst.",
@@ -273,11 +306,22 @@ class DialogueManager:
                 ]
                 if step < len(steps):
                     state["exercise_step"] = step + 1
-                    return steps[step], active_exercise
+                    buttons = [{"label": "Weiter", "value": "weiter"}]
+                    return (
+                        self._format_response(
+                            steps[step], state, empathy_prefix, buttons
+                        ),
+                        active_exercise,
+                    )
                 else:
                     state["active_exercise"] = None
                     state["exercise_step"] = 0
-                    return "Sehr gut. Hat dich das ein wenig geerdet?", active_exercise
+                    return (
+                        self._format_response(
+                            "Sehr gut. Hat dich das ein wenig geerdet?", state, "", []
+                        ),
+                        active_exercise,
+                    )
 
         # When entering an exercise
         if top_intent in ["mental_breathing_exercise", "mental_grounding"]:
@@ -303,7 +347,10 @@ class DialogueManager:
                     ),
                 )
                 if response:
-                    return response, follow_up_intent
+                    return (
+                        self._format_response(response, state, empathy_prefix, []),
+                        follow_up_intent,
+                    )
 
         if preferred_context and (
             not results
@@ -327,7 +374,10 @@ class DialogueManager:
                     ),
                 )
                 if response:
-                    return response, chosen_intent
+                    return (
+                        self._format_response(response, state, empathy_prefix, []),
+                        chosen_intent,
+                    )
 
         if results:
             while results:
@@ -339,7 +389,10 @@ class DialogueManager:
                         prior_response if intent == state.get("last_intent") else None,
                     )
                     if response:
-                        return response, intent
+                        return (
+                            self._format_response(response, state, empathy_prefix, []),
+                            intent,
+                        )
                 results.pop(0)
 
         if follow_up:
@@ -356,6 +409,40 @@ class DialogueManager:
                     ),
                 )
                 if response:
-                    return response, follow_up_intent
+                    return (
+                        self._format_response(response, state, empathy_prefix, []),
+                        follow_up_intent,
+                    )
 
-        return DEFAULT_RESPONSE, None
+        return {"text": DEFAULT_RESPONSE}, None
+
+    def _format_response(
+        self,
+        text: str,
+        state: Dict[str, Any],
+        empathy_prefix: str,
+        buttons: List[Dict[str, str]],
+    ) -> Dict[str, Any]:
+        """Helper to inject placeholders, prepend empathy, and pack into UI dict."""
+        uname = state.get("user_name", "")
+        # Remove empty bracket placeholders if we don't know the name yet.
+        if uname:
+            text = text.replace("[Name]", uname)
+        else:
+            text = text.replace(" [Name]", "").replace("[Name]", "")
+
+        final_text = (empathy_prefix + text).strip()
+
+        # Determine structured UI buttons
+        # If no active exercise buttons, maybe suggest an exercise if it's stress/anxiety
+        if (
+            not buttons
+            and state.get("last_context") == "mental"
+            and not state.get("active_exercise")
+        ):
+            buttons = [
+                {"label": "Atemübung", "value": "Atemuebung"},
+                {"label": "Grounding", "value": "Grounding Uebung"},
+            ]
+
+        return {"text": final_text, "buttons": buttons}

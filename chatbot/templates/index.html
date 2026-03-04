@@ -16,8 +16,14 @@
                 <p class="eyebrow">KI-gestützter Kundenservice</p>
                 <h1>ChatBot</h1>
                 <p class="lead">
-                    Frage nach nachhaltigen Produktbewertungen mit Eco-Score oder nach einem Mental Health Check-in.
+                    Mental Health Check-in
                 </p>
+                <div style="margin-top: 15px;">
+                    <a href="{{ url_for('static', filename='docs/Projektdokumentation.pdf') }}" target="_blank"
+                        style="color: var(--accent); font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; gap: 6px; font-weight: 500;">
+                        <span>📄</span> Dokumentation öffnen
+                    </a>
+                </div>
             </div>
             <div class="hero__card">
                 <p class="hero__label">Gruppe</p>
@@ -28,117 +34,156 @@
         <section class="chat-panel">
             <div id="chatbox" class="chatbox" role="log" aria-live="polite" aria-relevant="additions">
                 <div class="message bot">
-                    <span>Hi! Soll ich ein Produkt auf Nachhaltigkeit einschaetzen oder einen kurzen Check-in mit dir machen?</span>
+                    <span>Hi! Soll ich einen kurzen Mental Health Check-in mit dir machen?</span>
+                    <div style="margin-top: 10px;">
+                        <button class="btn btn-outline-primary btn-sm"
+                            style="margin-right: 5px; margin-bottom: 5px; cursor: pointer; border-radius: 14px; padding: 6px 12px; border: 1px solid var(--accent); background: white; color: var(--accent);"
+                            onclick="document.getElementById('text').value='Ich brauche einen Check-in'; document.getElementById('chat-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true})); this.parentElement.remove();">Check-in
+                            starten</button>
+                    </div>
                 </div>
             </div>
             <form id="chat-form" class="chat-form" autocomplete="off">
-                <input id="text" type="text" name="msg" placeholder="Nachricht hier eingeben"
-                    class="form-control" maxlength="500" aria-label="Nachricht eingeben" required>
+                <input id="text" type="text" name="msg" placeholder="Nachricht hier eingeben" class="form-control"
+                    maxlength="500" aria-label="Nachricht eingeben" required>
                 <button type="submit" id="send" class="btn btn-warning">Senden</button>
             </form>
-            <p class="hint">Tipp: Frag z. B. nach \"Eco-Score\", \"Materialvergleich\", \"Ich bin gestresst\" oder \"Atemuebung\".</p>
+            <p class="hint">Tipp: Frag z. B. nach <a href="#"
+                    style="color: var(--accent); text-decoration: none; font-weight: bold;"
+                    onclick="document.getElementById('text').value='Ich bin gestresst'; document.getElementById('chat-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true})); return false;">"Ich
+                    bin gestresst"</a>, <a href="#"
+                    style="color: var(--accent); text-decoration: none; font-weight: bold;"
+                    onclick="document.getElementById('text').value='Ich kann nicht schlafen'; document.getElementById('chat-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true})); return false;">"Ich
+                    kann nicht schlafen"</a> oder <a href="#"
+                    style="color: var(--accent); text-decoration: none; font-weight: bold;"
+                    onclick="document.getElementById('text').value='Atemuebung'; document.getElementById('chat-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true})); return false;">"Atemuebung"</a>.
+            </p>
         </section>
     </main>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var form = document.getElementById("chat-form");
-        var textInput = document.getElementById("text");
-        var chatbox = document.getElementById("chatbox");
-        var endpoint = document.body.dataset.endpoint || "/get";
-        var pending = false;
-        var REQUEST_TIMEOUT_MS = 25000;
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var form = document.getElementById("chat-form");
+            var textInput = document.getElementById("text");
+            var chatbox = document.getElementById("chatbox");
+            var endpoint = document.body.dataset.endpoint || "/get";
+            var pending = false;
+            var REQUEST_TIMEOUT_MS = 25000;
 
-        function appendMessage(kind, text) {
-            var wrapper = document.createElement("div");
-            wrapper.className = "message " + kind;
-            var span = document.createElement("span");
-            span.textContent = text;
-            wrapper.appendChild(span);
-            chatbox.appendChild(wrapper);
-            chatbox.scrollTop = chatbox.scrollHeight;
-            return wrapper;
-        }
-
-        function setPending(state) {
-            pending = state;
-            textInput.disabled = state;
-            document.getElementById("send").disabled = state;
-            if (!state) {
-                textInput.focus();
-            }
-        }
-
-        async function fetchWithTimeout(url, options) {
-            var controller = new AbortController();
-            var timer = setTimeout(function() {
-                controller.abort();
-            }, REQUEST_TIMEOUT_MS);
-            try {
-                var mergedOptions = Object.assign({}, options, { signal: controller.signal });
-                return await fetch(url, mergedOptions);
-            } finally {
-                clearTimeout(timer);
-            }
-        }
-
-        async function sendMessage(rawText) {
-            var response = await fetchWithTimeout(endpoint, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
-                },
-                body: new URLSearchParams({ msg: rawText })
-            });
-
-            if (response.ok) {
-                return response;
+            function appendMessage(kind, text) {
+                var wrapper = document.createElement("div");
+                wrapper.className = "message " + kind;
+                var span = document.createElement("span");
+                span.textContent = text;
+                wrapper.appendChild(span);
+                chatbox.appendChild(wrapper);
+                chatbox.scrollTop = chatbox.scrollHeight;
+                return wrapper;
             }
 
-            // Retry once with JSON in case a proxy/server strips form payloads.
-            return fetchWithTimeout(endpoint, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ msg: rawText })
-            });
-        }
-
-        form.addEventListener("submit", async function(event) {
-            event.preventDefault();
-            var rawText = textInput.value.trim();
-            if (!rawText || pending) {
-                return;
+            function setPending(state) {
+                pending = state;
+                textInput.disabled = state;
+                document.getElementById("send").disabled = state;
+                if (!state) {
+                    textInput.focus();
+                }
             }
-            appendMessage("user", rawText);
-            textInput.value = "";
-            var typingIndicator = appendMessage("bot typing", "Schreibt ...");
-            setPending(true);
 
-            try {
-                var response = await sendMessage(rawText);
-                if (!response.ok) {
-                    typingIndicator.remove();
-                    appendMessage("bot error", "HTTP-Fehler " + response.status + " beim Antworten.");
+            async function fetchWithTimeout(url, options) {
+                var controller = new AbortController();
+                var timer = setTimeout(function () {
+                    controller.abort();
+                }, REQUEST_TIMEOUT_MS);
+                try {
+                    var mergedOptions = Object.assign({}, options, { signal: controller.signal });
+                    return await fetch(url, mergedOptions);
+                } finally {
+                    clearTimeout(timer);
+                }
+            }
+
+            async function sendMessage(rawText) {
+                var response = await fetchWithTimeout(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+                    },
+                    body: new URLSearchParams({ msg: rawText })
+                });
+
+                if (response.ok) {
+                    return response;
+                }
+
+                // Retry once with JSON in case a proxy/server strips form payloads.
+                return fetchWithTimeout(endpoint, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ msg: rawText })
+                });
+            }
+
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                var rawText = textInput.value.trim();
+                if (!rawText || pending) {
                     return;
                 }
-                var data = await response.text();
-                typingIndicator.remove();
-                appendMessage("bot", (data || "").trim() || "Keine Antwort vom Server.");
-            } catch (err) {
-                typingIndicator.remove();
-                if (err && err.name === "AbortError") {
-                    appendMessage("bot error", "Zeitüberschreitung beim Antworten. Bitte erneut versuchen.");
-                } else {
-                    appendMessage("bot error", "Serverfehler. Bitte später erneut versuchen.");
+                appendMessage("user", rawText);
+                textInput.value = "";
+                var typingIndicator = appendMessage("bot typing", "Schreibt ...");
+                setPending(true);
+
+                try {
+                    var response = await sendMessage(rawText);
+                    if (!response.ok) {
+                        typingIndicator.remove();
+                        appendMessage("bot error", "HTTP-Fehler " + response.status + " beim Antworten.");
+                        return;
+                    }
+
+                    var data = await response.json();
+                    typingIndicator.remove();
+
+                    var botMsg = data.text || "Keine Antwort vom Server.";
+                    var msgNode = appendMessage("bot", botMsg);
+
+                    if (data.buttons && data.buttons.length > 0) {
+                        var btnContainer = document.createElement("div");
+                        btnContainer.style.marginTop = "10px";
+                        data.buttons.forEach(function (btn) {
+                            var singleBtn = document.createElement("button");
+                            singleBtn.className = "btn btn-outline-primary btn-sm";
+                            singleBtn.style.marginRight = "5px";
+                            singleBtn.style.marginBottom = "5px";
+                            singleBtn.style.cursor = "pointer";
+                            singleBtn.textContent = btn.label;
+                            singleBtn.onclick = function () {
+                                textInput.value = btn.value;
+                                // manually trigger the form submit logic
+                                form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+                            };
+                            btnContainer.appendChild(singleBtn);
+                        });
+                        msgNode.appendChild(btnContainer);
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                    }
+                } catch (err) {
+                    typingIndicator.remove();
+                    if (err && err.name === "AbortError") {
+                        appendMessage("bot error", "Zeitüberschreitung beim Antworten. Bitte erneut versuchen.");
+                    } else {
+                        appendMessage("bot error", "Serverfehler. Bitte später erneut versuchen.");
+                    }
+                } finally {
+                    setPending(false);
                 }
-            } finally {
-                setPending(false);
-            }
+            });
         });
-    });
-</script>
+    </script>
 </body>
 
 </html>
