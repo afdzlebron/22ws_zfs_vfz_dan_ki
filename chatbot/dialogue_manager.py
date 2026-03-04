@@ -1,0 +1,361 @@
+import json
+import logging
+import random
+from pathlib import Path
+from typing import Dict, List, Tuple, Optional, Any
+
+from config import (
+    DEFAULT_RESPONSE,
+    MAX_MESSAGE_LENGTH,
+    GREETING_INTENT,
+    ERROR_THRESHOLD,
+    MIN_CONFIDENCE,
+    GREETING_CONFIDENCE_THRESHOLD,
+    FOLLOW_UP_MARKERS,
+    GENERIC_FOLLOW_UP_TOKENS,
+)
+from nlp_utils import normalize_phrase, frage_bearbeitung, bow, get_ignore_words
+from model_engine import IntentClassifier
+
+logger = logging.getLogger(__name__)
+
+
+class DialogueManager:
+    def __init__(self, base_dir: Path, classifier: IntentClassifier):
+        self.base_dir = base_dir
+        self.classifier = classifier
+        self.ignore_words = get_ignore_words()
+
+        self.dialogflow = {}
+        self.intent_to_responses = {}
+        self.intent_to_context = {}
+        self.context_to_intents = {}
+        self.phrase_to_intents = {}
+        self.greeting_stems = set()
+
+        self._load_dialogflow()
+
+    def _load_dialogflow(self) -> None:
+        chat_json_path = self.base_dir / "chat.json"
+        try:
+            with open(chat_json_path, encoding="utf8") as json_data:
+                self.dialogflow = json.load(json_data)
+        except Exception as e:
+            logger.exception("Failed to load chat.json: %s", e)
+            return
+
+        for entry in self.dialogflow.get("dialogflow", []):
+            intent = entry.get("intent")
+            if not intent:
+                continue
+
+            self.intent_to_responses[intent] = entry.get("antwort", [])
+
+            raw_context = (entry.get("kontext") or "").strip().lower()
+            self.intent_to_context[intent] = raw_context
+            self.context_to_intents.setdefault(raw_context, [])
+            if intent not in self.context_to_intents[raw_context]:
+                self.context_to_intents[raw_context].append(intent)
+
+            for synonym in entry.get("synonym", []):
+                key = normalize_phrase(synonym)
+                if key:
+                    self.phrase_to_intents.setdefault(key, [])
+                    if intent not in self.phrase_to_intents[key]:
+                        self.phrase_to_intents[key].append(intent)
+
+                # build greeting stems
+                if intent == GREETING_INTENT:
+                    self.greeting_stems.update(
+                        frage_bearbeitung(synonym, self.ignore_words)
+                    )
+
+    def _get_exact_match_intent(self, frage: str) -> Optional[str]:
+        normalized = normalize_phrase(frage)
+        intents = self.phrase_to_intents.get(normalized, [])
+        if not intents:
+            return None
+        for intent in intents:
+            if intent != GREETING_INTENT:
+                return intent
+        return intents[0]
+
+    def _looks_like_greeting(self, frage: str) -> bool:
+        frage_stems = set(frage_bearbeitung(frage, self.ignore_words))
+        return bool(frage_stems.intersection(self.greeting_stems))
+
+    def _context_for_intent(self, intent: str) -> str:
+        if not intent:
+            return ""
+        context = (self.intent_to_context.get(intent) or "").strip().lower()
+        if context:
+            return context
+        if intent.startswith("mental_"):
+            return "mental"
+        if intent.startswith("smalltalk_"):
+            return "smalltalk"
+        return ""
+
+    def _intents_for_context(self, context: str) -> List[str]:
+        context = (context or "").strip().lower()
+        intents = self.context_to_intents.get(context, [])
+        if intents:
+            return intents
+        dynamic = []
+        for intent in self.intent_to_responses:
+            if self._context_for_intent(intent) == context:
+                dynamic.append(intent)
+        return dynamic
+
+    def _is_follow_up_message(self, frage: str) -> bool:
+        normalized = normalize_phrase(frage)
+        if not normalized:
+            return False
+        return any(marker in normalized for marker in FOLLOW_UP_MARKERS)
+
+    def _is_generic_follow_up_message(self, frage: str) -> bool:
+        tokens = set(normalize_phrase(frage).split())
+        if not tokens or len(tokens) > 5:
+            return False
+        return tokens.issubset(GENERIC_FOLLOW_UP_TOKENS)
+
+    def _requested_context(self, frage: str) -> str:
+        normalized = normalize_phrase(frage)
+        tokens = set(normalized.split())
+        if "check in" in normalized:
+            return "mental"
+        if any(
+            word in tokens
+            for word in {
+                "mental",
+                "check",
+                "checkin",
+                "check-in",
+                "stress",
+                "angst",
+                "panik",
+                "schlaf",
+                "ueberfordert",
+                "erschoepft",
+                "atemuebung",
+                "grounding",
+                "krise",
+            }
+        ):
+            return "mental"
+        return ""
+
+    def _is_meta_intent(self, intent: str) -> bool:
+        if not intent:
+            return False
+        if (
+            intent.startswith("feedback_")
+            or intent.startswith("smalltalk_")
+            or intent == "thema_auswahl"
+        ):
+            return True
+        return self._context_for_intent(intent) in {
+            "start",
+            "ende",
+            "navigation",
+            "repair",
+            "abschluss",
+            "smalltalk",
+        }
+
+    def _pick_response(
+        self, intent: str, previous_response: Optional[str] = None
+    ) -> Optional[str]:
+        responses = self.intent_to_responses.get(intent, [])
+        if not responses:
+            return None
+        if previous_response and len(responses) > 1:
+            alternatives = [r for r in responses if r != previous_response]
+            if alternatives:
+                return random.choice(alternatives)
+        return random.choice(responses)
+
+    def _pick_follow_up_intent(
+        self, state: Dict[str, Any], preferred_context: str = ""
+    ) -> str:
+        last_intent = state.get("last_intent")
+        last_context = (
+            preferred_context
+            or state.get("last_context")
+            or self._context_for_intent(last_intent)
+        )
+        if not last_context and last_intent:
+            return last_intent
+
+        intents = self._intents_for_context(last_context)
+        if not intents:
+            return last_intent
+
+        if last_intent in intents and len(intents) > 1 and last_context in {"mental"}:
+            idx = intents.index(last_intent)
+            return intents[(idx + 1) % len(intents)]
+
+        if last_intent in intents:
+            return last_intent
+        return intents[0]
+
+    def _klassifizieren(self, frage: str) -> List[Tuple[str, float]]:
+        exact_match = self._get_exact_match_intent(frage)
+        if exact_match:
+            return [(exact_match, 1.0)]
+
+        normalized = normalize_phrase(frage)
+        tokens = set(normalized.split())
+        if "check in" in normalized or "checkin" in tokens:
+            return [("mental_checkin_start", 0.99)]
+
+        bag_vector = bow(frage, self.classifier.words, self.ignore_words)
+        ranked_results = self.classifier.classify_bag(bag_vector)
+
+        if (
+            ranked_results
+            and ranked_results[0][0] == GREETING_INTENT
+            and ranked_results[0][1] < GREETING_CONFIDENCE_THRESHOLD
+            and not self._looks_like_greeting(frage)
+        ):
+            ranked_results = [
+                item for item in ranked_results if item[0] != GREETING_INTENT
+            ]
+
+        filtered_results = [
+            item
+            for item in ranked_results
+            if item[1] >= ERROR_THRESHOLD and item[1] >= MIN_CONFIDENCE
+        ]
+        return filtered_results
+
+    def get_response(
+        self, msg: str, state: Dict[str, Any]
+    ) -> Tuple[str, Optional[str]]:
+        msg = msg.strip()
+        if not msg:
+            return "", None
+        if len(msg) > MAX_MESSAGE_LENGTH:
+            return "Bitte formuliere deine Nachricht etwas kürzer.", None
+
+        prior_response = state.get("last_response")
+        follow_up = self._is_follow_up_message(msg)
+        preferred_context = self._requested_context(msg)
+
+        results = self._klassifizieren(msg)
+        top_intent = results[0][0] if results else ""
+
+        # Stateful Guided Exercise Logic
+        active_exercise = state.get("active_exercise")
+        if active_exercise and follow_up:
+            step = state.get("exercise_step", 0)
+            if active_exercise == "mental_breathing_exercise":
+                steps = [
+                    "Schritt 1: Setz dich bequem hin und schliesse die Augen.",
+                    "Schritt 2: Atme tief durch die Nase ein (4 Sekunden).",
+                    "Schritt 3: Halte den Atem (4 Sekunden).",
+                    "Schritt 4: Atme langsam durch den Mund aus (4 Sekunden).",
+                ]
+                if step < len(steps):
+                    state["exercise_step"] = step + 1
+                    return steps[step], active_exercise
+                else:
+                    state["active_exercise"] = None
+                    state["exercise_step"] = 0
+                    return "Gut gemacht! Wie fuehlst du dich jetzt?", active_exercise
+            elif active_exercise == "mental_grounding":
+                steps = [
+                    "Schritt 1: Nenne 5 Dinge, die du im Raum sehen kannst.",
+                    "Schritt 2: Beruehre 4 Dinge und spuere ihre Textur.",
+                    "Schritt 3: Achte auf 3 verschiedene Geraeusche um dich herum.",
+                    "Schritt 4: Kannst du 2 Dinge riechen?",
+                    "Schritt 5: Wie schmeckt dein Mund gerade? Trink einen Schluck Wasser.",
+                ]
+                if step < len(steps):
+                    state["exercise_step"] = step + 1
+                    return steps[step], active_exercise
+                else:
+                    state["active_exercise"] = None
+                    state["exercise_step"] = 0
+                    return "Sehr gut. Hat dich das ein wenig geerdet?", active_exercise
+
+        # When entering an exercise
+        if top_intent in ["mental_breathing_exercise", "mental_grounding"]:
+            state["active_exercise"] = top_intent
+            state["exercise_step"] = 0
+
+        if follow_up and state.get("last_intent"):
+            follow_up_intent = self._pick_follow_up_intent(
+                state,
+                preferred_context=preferred_context or state.get("last_context"),
+            )
+            if follow_up_intent and (
+                not top_intent
+                or self._is_meta_intent(top_intent)
+                or self._is_generic_follow_up_message(msg)
+            ):
+                response = self._pick_response(
+                    follow_up_intent,
+                    (
+                        prior_response
+                        if follow_up_intent == state.get("last_intent")
+                        else None
+                    ),
+                )
+                if response:
+                    return response, follow_up_intent
+
+        if preferred_context and (
+            not results
+            or (follow_up and (not top_intent or self._is_meta_intent(top_intent)))
+        ):
+            context_intents = self._intents_for_context(preferred_context)
+            if context_intents:
+                chosen_intent = self._pick_follow_up_intent(
+                    {
+                        "last_intent": state.get("last_intent"),
+                        "last_context": preferred_context,
+                    },
+                    preferred_context=preferred_context,
+                )
+                response = self._pick_response(
+                    chosen_intent,
+                    (
+                        prior_response
+                        if chosen_intent == state.get("last_intent")
+                        else None
+                    ),
+                )
+                if response:
+                    return response, chosen_intent
+
+        if results:
+            while results:
+                intent = results[0][0]
+                responses = self.intent_to_responses.get(intent, [])
+                if responses:
+                    response = self._pick_response(
+                        intent,
+                        prior_response if intent == state.get("last_intent") else None,
+                    )
+                    if response:
+                        return response, intent
+                results.pop(0)
+
+        if follow_up:
+            follow_up_intent = self._pick_follow_up_intent(
+                state, preferred_context=preferred_context
+            )
+            if follow_up_intent:
+                response = self._pick_response(
+                    follow_up_intent,
+                    (
+                        prior_response
+                        if follow_up_intent == state.get("last_intent")
+                        else None
+                    ),
+                )
+                if response:
+                    return response, follow_up_intent
+
+        return DEFAULT_RESPONSE, None
