@@ -12,9 +12,9 @@
         "Huhu"
       ],
       "antwort": [
-        "Hi. Ich bin dein Sustainable Shopping und Mental Health Check-in Bot. Womit willst du starten?",
-        "Willkommen. Ich kann Produkte auf Nachhaltigkeit einschaetzen oder einen kurzen Mental-Health-Check-in mit dir machen.",
-        "Hallo. Thema 1: Eco-Score fuer Produkte. Thema 2: Stress- und Wohlbefinden-Check-in."
+        "Hi. Ich bin dein Mental Health Check-in Bot. Bereit fuer einen kurzen Check-in?",
+        "Willkommen. Ich bin hier, um einen kurzen Mental-Health-Check-in mit dir zu machen.",
+        "Hallo. Lass uns einen kurzen Stress- und Wohlbefinden-Check-in machen."
       ],
       "kontext": "start"
     },
@@ -28,9 +28,9 @@
         "Was geht?"
       ],
       "antwort": [
-        "Stabil und fokussiert. Soll ich ein Produkt bewerten oder einen kurzen Check-in mit dir machen?",
-        "Gut, danke. Magst du heute eher Nachhaltigkeitsberatung oder mentale Entlastung?",
-        "Mir geht es gut. Ich kann direkt mit Eco-Score oder Stress-Check-in starten."
+        "Stabil und fokussiert. Und wie geht es dir heute?",
+        "Gut, danke. Wie fuehlst du dich gerade?",
+        "Mir geht es gut. Magst du mir erzaehlen, wie es dir geht?"
       ],
       "kontext": "smalltalk"
     },
@@ -44,9 +44,9 @@
         "Bist du ein Bot?"
       ],
       "antwort": [
-        "Ich bin ein themenspezifischer Assistent fuer nachhaltiges Einkaufen und mentale Check-ins.",
-        "Du schreibst mit einem Bot, der Eco-Score-Heuristiken und Mental-Health-Mini-Tools kombiniert.",
-        "Ich bin dein Shopping-und-Wellbeing-Companion fuer schnelle, praktische Orientierung."
+        "Ich bin dein themenspezifischer Assistent fuer mentale Check-ins.",
+        "Du schreibst mit einem Chatbot, der dir kleine mentale Unterstuetzungen bietet.",
+        "Ich bin dein Wellbeing-Companion fuer schnelle, praktische Entlastung."
       ],
       "kontext": "smalltalk"
     },
@@ -60,9 +60,9 @@
         "Was kann ich dich fragen?"
       ],
       "antwort": [
-        "Ich biete zwei Kernbereiche: 1) Sustainable Shopping mit Eco-Score, 2) Mental Health Check-in mit konkreten Uebungen.",
-        "Frag mich z. B. nach Eco-Score, Materialien, Labels, Versand oder nach Stress, Schlaf, Atemuebungen und Grounding.",
-        "Starte mit: 'Bewerte ein Produkt' oder 'Ich brauche einen Check-in'."
+        "Ich biete einen Mental Health Check-in an und kann dir mit kurzen Uebungen helfen.",
+        "Frag mich nach Themen wie Stress, Angst, Schlaf, Entspannung oder Grounding.",
+        "Starte mit: 'Ich brauche einen Check-in' oder 'Ich bin gestresst'."
       ],
       "kontext": "navigation"
     },
@@ -76,125 +76,11 @@
         "Ich bin dann weg"
       ],
       "antwort": [
-        "Bis bald. Wenn du willst, machen wir spaeter einen neuen Eco-Score oder Check-in.",
-        "Ciao. Kleine Schritte helfen sowohl der Umwelt als auch deinem Nervensystem.",
-        "Machs gut. Schreib einfach wieder, wenn du Orientierung brauchst."
+        "Bis bald. Wenn du willst, koennen wir spaeter nochmal einen Check-in machen.",
+        "Ciao. Kleine Schritte helfen auch schon dem Nervensystem.",
+        "Machs gut. Schreib einfach wieder, wenn du mentale Unterstuetzung brauchst."
       ],
       "kontext": "ende"
-    },
-
-    {
-      "intent": "sustainable_intro",
-      "synonym": [
-        "Nachhaltig einkaufen",
-        "Sustainable Shopping",
-        "Ich will nachhaltiger kaufen",
-        "Hilf mir bei nachhaltigen Produkten",
-        "Tipps fuer nachhaltiges Shoppen"
-      ],
-      "antwort": [
-        "Klar. Ich schaetze Produkte mit einem Eco-Score von 0 bis 100 ein: Material, Haltbarkeit, Reparierbarkeit, Verpackung und Transport.",
-        "Gerne. Nenne mir Produktname oder URL plus Material und Preisbereich, dann gebe ich dir einen schnellen Eco-Score.",
-        "Wir koennen direkt starten: Produkt schicken, ich bewerte mit einer transparenten Heuristik."
-      ],
-      "kontext": "sustainable"
-    },
-    {
-      "intent": "sustainable_product_eval",
-      "synonym": [
-        "Bewerte ein Produkt",
-        "Gib mir einen Eco-Score",
-        "Produkt bewerten",
-        "Bewerte dieses Produkt",
-        "Kannst du dieses Produkt einschaetzen?"
-      ],
-      "antwort": [
-        "Sicher. Schick mir Name oder URL plus bekannte Details (Material, Herkunft, Zertifizierungen). Ich gebe dann einen Eco-Score mit Begruendung.",
-        "Ja. Fuer eine gute Einschaetzung brauche ich: Produktart, Hauptmaterial, voraussichtliche Nutzung und Verpackung/Versandinfos.",
-        "Gern. Ohne externe Daten nutze ich Heuristiken: langlebig + reparierbar + recycelt = besserer Score."
-      ],
-      "kontext": "sustainable"
-    },
-    {
-      "intent": "sustainable_eco_score_explain",
-      "synonym": [
-        "Wie berechnest du den Eco-Score?",
-        "Erklaer Eco-Score",
-        "Was bedeutet Eco-Score?",
-        "Wie funktioniert dein Nachhaltigkeitsscore?",
-        "Eco-Score erklaeren"
-      ],
-      "antwort": [
-        "Mein Eco-Score ist heuristisch: 35% Materialethik, 25% Haltbarkeit/Reparatur, 20% Transport, 10% Verpackung, 10% Transparenz/Zertifikate.",
-        "Eco-Score 0-100: hoeher bedeutet meist geringerer Umweltimpact und bessere Material- bzw. Lieferketten-Indizien.",
-        "Ich nutze keine Live-Lieferkettendaten, sondern nachvollziehbare Regeln. Der Score ist eine Orientierung, keine Zertifizierung."
-      ],
-      "kontext": "sustainable"
-    },
-    {
-      "intent": "sustainable_materials",
-      "synonym": [
-        "Welche Materialien sind besser?",
-        "Materialvergleich nachhaltig",
-        "Materialvergleich",
-        "Ist Baumwolle nachhaltig?",
-        "Polyester oder Bio-Baumwolle",
-        "Material Ethik"
-      ],
-      "antwort": [
-        "Als Faustregel: recycelte Materialien, zertifizierte Naturfasern und langlebige Mischungen schneiden besser ab als kurzlebige Fast-Fashion-Qualitaet.",
-        "Bio-zertifizierte oder recycelte Materialien sind oft besser als neu produzierte Kunstfasern ohne Ruecknahme- oder Recyclingkonzept.",
-        "Achte auf Haltbarkeit statt nur Materiallabel: ein langlebiges Produkt mit Reparaturoption kann oekologisch klar besser sein."
-      ],
-      "kontext": "sustainable"
-    },
-    {
-      "intent": "sustainable_shipping",
-      "synonym": [
-        "Wie wichtig ist Versand fuer den Score?",
-        "Versand und Nachhaltigkeit",
-        "Verpackung und Umwelt",
-        "Lieferung CO2",
-        "Ist Expressversand schlecht?"
-      ],
-      "antwort": [
-        "Expressversand und Einzellieferungen verschlechtern den Score oft deutlich. Gebuendelte Lieferung ist meist besser.",
-        "Wenig Verpackung, recyceltes Material und regionale Lager verbessern die Versandkomponente des Eco-Scores.",
-        "Transport ist relevant: Luftfracht und Retouren treiben den Impact. Besser: passende Groesse, gebuendelte Bestellung, Standardversand."
-      ],
-      "kontext": "sustainable"
-    },
-    {
-      "intent": "sustainable_labels",
-      "synonym": [
-        "Welche Labels soll ich pruefen?",
-        "Nachhaltigkeitslabel",
-        "Faire Zertifikate",
-        "Woran erkenne ich Greenwashing?",
-        "Label check"
-      ],
-      "antwort": [
-        "Pruefe nachvollziehbare Zertifikate und konkrete Lieferkettenangaben statt vager Begriffe wie 'green' oder 'conscious'.",
-        "Wenn ein Shop nur Marketingbegriffe zeigt, aber keine Materialherkunft oder Standards nennt, ist Vorsicht sinnvoll.",
-        "Gute Zeichen: transparente Lieferkette, belastbare Zertifikate, Reparatur- oder Ruecknahmeangebote."
-      ],
-      "kontext": "sustainable"
-    },
-    {
-      "intent": "sustainable_alternative",
-      "synonym": [
-        "Gib mir eine nachhaltigere Alternative",
-        "Alternative zu diesem Produkt",
-        "Bessere Option",
-        "Was waere nachhaltiger?",
-        "nachhaltigere Wahl"
-      ],
-      "antwort": [
-        "Oft besser: gebraucht kaufen, refurbished waehlen oder ein reparierbares Markenprodukt mit Ersatzteilen nehmen.",
-        "Suche nach langlebiger Qualitaet mit Garantie und Reparaturservice statt dem billigsten Neukauf.",
-        "Eine nachhaltigere Alternative ist haeufig: weniger neu kaufen, laenger nutzen, gezielt hochwertig ersetzen."
-      ],
-      "kontext": "sustainable"
     },
 
     {
@@ -319,12 +205,13 @@
         "Hilfreich",
         "Das hat geholfen",
         "Super",
-        "Top danke"
+        "Top danke",
+        "Vielen Dank"
       ],
       "antwort": [
-        "Gern. Wenn du willst, machen wir direkt den naechsten Schritt.",
-        "Freut mich. Soll ich tiefer in Eco-Score oder Check-in gehen?",
-        "Perfekt. Sag einfach, womit wir weitermachen."
+        "Gern. Wenn du willst, machen wir direkt den naechsten Schritt oder eine weitere Uebung.",
+        "Freut mich sehr. Hast du noch eine Frage zu unserem Check-in?",
+        "Perfekt. Sag einfach, womit wir als Naechstes weitermachen koennen."
       ],
       "kontext": "abschluss"
     },
@@ -338,9 +225,9 @@
         "Ich brauche was anderes"
       ],
       "antwort": [
-        "Danke fuer das klare Feedback. Soll ich es kuerzer, konkreter oder schrittweise formulieren?",
-        "Alles klar. Gib mir bitte ein Beispiel, dann passe ich die Antwort genauer an.",
-        "Verstanden. Wir starten neu: Produktanalyse oder Mental-Check-in?"
+        "Danke fuer das Feedback. Soll ich etwas kuerzer, konkreter oder mit einer anderen Perspektiven probieren?",
+        "Alles klar. Welche Richtung wuerde dir gerade besser helfen?",
+        "Verstanden. Sollen wir vielleicht mit der 5-4-3-2-1 Grounding-Uebung neu starten?"
       ],
       "kontext": "repair"
     }

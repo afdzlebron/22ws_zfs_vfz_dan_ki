@@ -282,18 +282,8 @@ def context_for_intent(intent):
     context = (INTENT_TO_CONTEXT.get(intent) or "").strip().lower()
     if context:
         return context
-    if intent.startswith("sustainable_"):
-        return "sustainable"
     if intent.startswith("mental_"):
         return "mental"
-    if intent.startswith("fun_"):
-        return "fun"
-    if intent.startswith("philosophie_"):
-        return "philosophie"
-    if intent.startswith("psychologie_"):
-        return "psychologie"
-    if intent.startswith("studentenleben_"):
-        return "studium"
     if intent.startswith("smalltalk_"):
         return "smalltalk"
     return ""
@@ -327,32 +317,9 @@ def is_generic_follow_up_message(frage):
 
 def requested_context(frage):
     normalized = normalize_phrase(frage)
-    if "http" in normalized or "www" in normalized:
-        return "sustainable"
     tokens = set(normalized.split())
     if "check in" in normalized:
         return "mental"
-    if any(
-        word in tokens
-        for word in {
-            "nachhaltig",
-            "sustainable",
-            "eco",
-            "oekologisch",
-            "produkt",
-            "material",
-            "materialvergleich",
-            "labels",
-            "label",
-            "greenwashing",
-            "co2",
-            "carbon",
-            "versand",
-            "verpackung",
-            "shoppen",
-        }
-    ):
-        return "sustainable"
     if any(
         word in tokens
         for word in {
@@ -402,7 +369,7 @@ def pick_follow_up_intent(state, preferred_context=""):
     intents = intents_for_context(last_context)
     if not intents:
         return last_intent
-    if last_intent in intents and len(intents) > 1 and last_context in {"fun", "story"}:
+    if last_intent in intents and len(intents) > 1 and last_context in {"mental"}:
         idx = intents.index(last_intent)
         return intents[(idx + 1) % len(intents)]
     if last_intent in intents:
@@ -420,8 +387,6 @@ def klassifizieren(frage):
     # Fast path for common short prompts that otherwise depend on ML inference.
     if "check in" in normalized or "checkin" in tokens:
         return [("mental_checkin_start", 0.99)]
-    if "materialvergleich" in tokens or ("material" in tokens and "vergleich" in tokens):
-        return [("sustainable_materials", 0.99)]
 
     if not MODEL_READY:
         logger.error("Model is not ready yet.")

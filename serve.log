@@ -1,0 +1,23 @@
+2026-03-04 02:03:32.517095: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+WARNING:tensorflow:From /Users/afdzlebron/Library/Mobile Documents/com~apple~CloudDocs/icloud_documents/IT/IT-Projects/22ws_zfs_vfz_dan_ki/.venv/lib/python3.10/site-packages/tensorflow/python/compat/v2_compat.py:107: disable_resource_variables (from tensorflow.python.ops.variable_scope) is deprecated and will be removed in a future version.
+Instructions for updating:
+non-resource variables are not supported in the long term
+WARNING:tensorflow:From /Users/afdzlebron/Library/Mobile Documents/com~apple~CloudDocs/icloud_documents/IT/IT-Projects/22ws_zfs_vfz_dan_ki/.venv/lib/python3.10/site-packages/tflearn/initializations.py:164: calling TruncatedNormal.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+WARNING:tensorflow:From /Users/afdzlebron/Library/Mobile Documents/com~apple~CloudDocs/icloud_documents/IT/IT-Projects/22ws_zfs_vfz_dan_ki/.venv/lib/python3.10/site-packages/tflearn/initializations.py:164: calling TruncatedNormal.__init__ (from tensorflow.python.ops.init_ops) with dtype is deprecated and will be removed in a future version.
+Instructions for updating:
+Call initializer instance with the dtype argument instead of passing it to the constructor
+INFO:tensorflow:Restoring parameters from /Users/afdzlebron/Library/Mobile Documents/com~apple~CloudDocs/icloud_documents/IT/IT-Projects/22ws_zfs_vfz_dan_ki/chatbot/model.tflearn
+INFO:tensorflow:Restoring parameters from /Users/afdzlebron/Library/Mobile Documents/com~apple~CloudDocs/icloud_documents/IT/IT-Projects/22ws_zfs_vfz_dan_ki/chatbot/model.tflearn
+ * Serving Flask app 'app'
+ * Debug mode: off
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://192.168.1.104:5000
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:__main__:Incoming message: Ich brauche einen Check in
+INFO:__main__:Outgoing response: Danke, dass du es ansprichst. Auf einer Skala von 1 bis 10: Wie hoch ist dein aktueller Stress?
+INFO:werkzeug:127.0.0.1 - - [04/Mar/2026 02:03:51] "POST /get HTTP/1.1" 200 -
