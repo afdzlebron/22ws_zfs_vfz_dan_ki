@@ -9,4 +9,4 @@ if [[ ! -x "${VENV_PY}" ]]; then
   exit 1
 fi
 
-exec "${VENV_PY}" "${ROOT_DIR}/chatbot/app.py"
+exec "${VENV_PY}" -m chatbot.app

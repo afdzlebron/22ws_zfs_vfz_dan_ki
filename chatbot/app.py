@@ -4,10 +4,10 @@ from pathlib import Path
 
 from flask import Flask, render_template, request, jsonify, Response, session
 
-from config import DEFAULT_RESPONSE
-from nlp_utils import ensure_nltk_data
-from model_engine import IntentClassifier
-from dialogue_manager import DialogueManager
+from .config import DEFAULT_RESPONSE
+from .nlp_utils import ensure_nltk_data
+from .model_engine import IntentClassifier
+from .dialogue_manager import DialogueManager
 
 BASE_DIR = Path(__file__).resolve().parent
 

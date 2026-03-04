@@ -9,7 +9,7 @@ import numpy as np
 import tensorflow as tf
 import tflearn
 
-from config import MODEL_LOCK_TIMEOUT_SECONDS, MODEL_PREDICTION_TIMEOUT_SECONDS
+from .config import MODEL_LOCK_TIMEOUT_SECONDS, MODEL_PREDICTION_TIMEOUT_SECONDS
 
 tf.compat.v1.disable_eager_execution()
 

@@ -7,7 +7,7 @@ from typing import Dict, List, Tuple, Optional, Any
 from textblob_de import TextBlobDE
 from transitions import Machine
 
-from config import (
+from .config import (
     DEFAULT_RESPONSE,
     MAX_MESSAGE_LENGTH,
     GREETING_INTENT,
@@ -17,8 +17,8 @@ from config import (
     FOLLOW_UP_MARKERS,
     GENERIC_FOLLOW_UP_TOKENS,
 )
-from nlp_utils import normalize_phrase, frage_bearbeitung, bow, get_ignore_words
-from model_engine import IntentClassifier
+from .nlp_utils import normalize_phrase, frage_bearbeitung, bow, get_ignore_words
+from .model_engine import IntentClassifier
 
 logger = logging.getLogger(__name__)
 
