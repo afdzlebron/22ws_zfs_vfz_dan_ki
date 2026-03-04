@@ -48,6 +48,18 @@
                     maxlength="500" aria-label="Nachricht eingeben" required>
                 <button type="submit" id="send" class="btn btn-warning">Senden</button>
             </form>
+            <div class="quick-actions" aria-label="Schnellaktionen">
+                <button type="button" class="quick-action" data-message="Ich brauche einen Check-in">Check-in</button>
+                <button type="button" class="quick-action" data-message="Ich bin gestresst">Stress</button>
+                <button type="button" class="quick-action" data-message="Ich kann nicht schlafen">Schlaf</button>
+                <button type="button" class="quick-action" data-message="Atemuebung">Atemuebung</button>
+                <button type="button" class="quick-action" data-message="/hilfe">Hilfe</button>
+            </div>
+            <div class="quick-actions quick-actions--mode" aria-label="Antwortmodus">
+                <button type="button" class="quick-action" data-message="/modus kurz">Modus kurz</button>
+                <button type="button" class="quick-action" data-message="/modus normal">Modus normal</button>
+                <button type="button" class="quick-action" data-message="/modus ausfuehrlich">Modus ausfuehrlich</button>
+            </div>
             <p class="hint">Tipp: Frag z. B. nach <a href="#"
                     style="color: var(--accent); text-decoration: none; font-weight: bold;"
                     onclick="document.getElementById('text').value='Ich bin gestresst'; document.getElementById('chat-form').dispatchEvent(new Event('submit', {cancelable: true, bubbles: true})); return false;">"Ich
@@ -69,6 +81,7 @@
             var endpoint = document.body.dataset.endpoint || "/get";
             var pending = false;
             var REQUEST_TIMEOUT_MS = 25000;
+            var quickActionButtons = document.querySelectorAll(".quick-action");
 
             function appendMessage(kind, text) {
                 var wrapper = document.createElement("div");
@@ -125,6 +138,20 @@
                     body: JSON.stringify({ msg: rawText })
                 });
             }
+
+            function triggerMessage(message) {
+                if (!message || pending) {
+                    return;
+                }
+                textInput.value = message;
+                form.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+            }
+
+            quickActionButtons.forEach(function (btn) {
+                btn.addEventListener("click", function () {
+                    triggerMessage(btn.dataset.message);
+                });
+            });
 
             form.addEventListener("submit", async function (event) {
                 event.preventDefault();

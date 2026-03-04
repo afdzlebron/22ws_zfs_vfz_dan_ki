@@ -1,12 +1,15 @@
 import json
 import logging
 import random
+import re
 from difflib import SequenceMatcher
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from textblob_de import TextBlobDE
-from transitions import Machine
+try:
+    from textblob_de import TextBlobDE
+except Exception:  # pragma: no cover - environment dependent import
+    TextBlobDE = None
 
 from .config import (
     DEFAULT_RESPONSE,
@@ -15,6 +18,9 @@ from .config import (
     ERROR_THRESHOLD,
     MIN_CONFIDENCE,
     GREETING_CONFIDENCE_THRESHOLD,
+    LOW_CONFIDENCE_CLARIFY_THRESHOLD,
+    LOW_CONFIDENCE_MARGIN_THRESHOLD,
+    DEFAULT_RESPONSE_MODE,
     FOLLOW_UP_MARKERS,
     GENERIC_FOLLOW_UP_TOKENS,
 )
@@ -37,6 +43,55 @@ class DialogueManager:
         self.phrase_to_intents = {}
         self.greeting_stems = set()
         self.synonym_index: List[Tuple[str, str, Set[str]]] = []
+        self.intent_labels = {
+            "mental_stress_support": "Stress",
+            "mental_anxiety_support": "Angst",
+            "mental_sleep_support": "Schlaf",
+            "mental_focus_support": "Fokus",
+            "mental_energy_support": "Antrieb",
+            "mental_overthinking_support": "Gedankenkreisen",
+            "mental_breathing_exercise": "Atem",
+            "mental_grounding": "Grounding",
+            "mental_body_scan": "Koerperwahrnehmung",
+            "mental_crisis_support": "akute Unterstuetzung",
+        }
+        self.follow_up_plans = {
+            "mental_checkin_start": [
+                "mental_stress_support",
+                "mental_anxiety_support",
+                "mental_sleep_support",
+            ],
+            "mental_stress_support": [
+                "mental_breathing_exercise",
+                "mental_grounding",
+                "mental_focus_support",
+            ],
+            "mental_anxiety_support": [
+                "mental_breathing_exercise",
+                "mental_grounding",
+                "mental_overthinking_support",
+            ],
+            "mental_sleep_support": [
+                "mental_body_scan",
+                "mental_breathing_exercise",
+                "mental_overthinking_support",
+            ],
+            "mental_focus_support": [
+                "mental_breathing_exercise",
+                "mental_energy_support",
+                "mental_grounding",
+            ],
+            "mental_energy_support": [
+                "mental_body_scan",
+                "mental_focus_support",
+                "mental_breathing_exercise",
+            ],
+            "mental_overthinking_support": [
+                "mental_grounding",
+                "mental_breathing_exercise",
+                "mental_body_scan",
+            ],
+        }
 
         self._load_dialogflow()
 
@@ -89,6 +144,148 @@ class DialogueManager:
     def _looks_like_greeting(self, frage: str) -> bool:
         frage_stems = set(frage_bearbeitung(frage, self.ignore_words))
         return bool(frage_stems.intersection(self.greeting_stems))
+
+    def _default_quick_buttons(self) -> List[Dict[str, str]]:
+        return [
+            {"label": "Check-in", "value": "Ich brauche einen Check-in"},
+            {"label": "Stress", "value": "Ich bin gestresst"},
+            {"label": "Schlaf", "value": "Ich kann nicht schlafen"},
+            {"label": "Atemuebung", "value": "Atemuebung"},
+            {"label": "Hilfe", "value": "/hilfe"},
+        ]
+
+    def _is_mental_intent(self, intent: str) -> bool:
+        return bool(intent) and intent.startswith("mental_")
+
+    def _topic_label(self, intent: str) -> str:
+        return self.intent_labels.get(intent, "dein Thema")
+
+    def _dedupe_buttons(self, buttons: List[Dict[str, str]]) -> List[Dict[str, str]]:
+        seen = set()
+        unique = []
+        for button in buttons:
+            value = button.get("value", "")
+            if value in seen:
+                continue
+            seen.add(value)
+            unique.append(button)
+        return unique
+
+    def _extract_response_mode(self, frage: str) -> Optional[str]:
+        normalized = normalize_phrase(frage)
+        if not normalized:
+            return None
+
+        short_markers = {"kurz", "knapp", "kompakt"}
+        normal_markers = {"normal", "standard"}
+        detailed_markers = {"ausfuehrlich", "detailliert", "lang"}
+
+        if normalized.startswith("modus "):
+            mode_value = normalized.split()[-1]
+            if mode_value in short_markers:
+                return "short"
+            if mode_value in normal_markers:
+                return "normal"
+            if mode_value in detailed_markers:
+                return "detailed"
+
+        if normalized.startswith("/modus "):
+            mode_value = normalized.split()[-1]
+            if mode_value in short_markers:
+                return "short"
+            if mode_value in normal_markers:
+                return "normal"
+            if mode_value in detailed_markers:
+                return "detailed"
+
+        if "antwortmodus" in normalized or "antworten" in normalized:
+            tokens = set(normalized.split())
+            if tokens.intersection(short_markers):
+                return "short"
+            if tokens.intersection(normal_markers):
+                return "normal"
+            if tokens.intersection(detailed_markers):
+                return "detailed"
+        return None
+
+    def _is_help_request(self, frage: str) -> bool:
+        normalized = normalize_phrase(frage)
+        if not normalized:
+            return False
+        if normalized in {"hilfe", "/hilfe", "help", "/help"}:
+            return True
+        return "was kannst du" in normalized or "hilfe" in normalized
+
+    def _extract_slots(self, frage: str, state: Dict[str, Any]) -> None:
+        normalized = normalize_phrase(frage)
+        if not normalized:
+            return
+
+        stress_match = re.search(
+            r"(?:stress(?:level)?\s*)?(10|[1-9])(?:\s*(?:von|/)?\s*10)?",
+            normalized,
+        )
+        if stress_match:
+            level = int(stress_match.group(1))
+            state["stress_level"] = level
+
+        sleep_match = re.search(
+            r"\b(\d{1,2})(?:[\.,](\d))?\s*(?:h|std|stunden)\b",
+            normalized,
+        )
+        if sleep_match:
+            hours = float(sleep_match.group(1))
+            decimal_part = sleep_match.group(2)
+            if decimal_part:
+                hours += float(f"0.{decimal_part}")
+            state["sleep_hours"] = round(hours, 1)
+
+    def _is_plain_stress_rating(self, frage: str) -> bool:
+        normalized = normalize_phrase(frage)
+        if not normalized:
+            return False
+        return bool(re.fullmatch(r"(10|[1-9])(?:\s*(?:von|/)?\s*10)?", normalized))
+
+    def _should_clarify_intent(
+        self, results: List[Tuple[str, float]], follow_up: bool
+    ) -> bool:
+        if follow_up or not results:
+            return False
+        top_score = float(results[0][1])
+        if top_score >= LOW_CONFIDENCE_CLARIFY_THRESHOLD:
+            return False
+        if len(results) == 1:
+            return True
+        margin = top_score - float(results[1][1])
+        return margin <= LOW_CONFIDENCE_MARGIN_THRESHOLD
+
+    def _clarification_buttons(self, results: List[Tuple[str, float]]) -> List[Dict[str, str]]:
+        suggestions = {
+            "mental_stress_support": {"label": "Stress", "value": "Ich bin gestresst"},
+            "mental_anxiety_support": {"label": "Angst", "value": "Ich habe Angst"},
+            "mental_sleep_support": {
+                "label": "Schlaf",
+                "value": "Ich kann nicht schlafen",
+            },
+            "mental_breathing_exercise": {
+                "label": "Atemuebung",
+                "value": "Atemuebung",
+            },
+            "mental_grounding": {
+                "label": "Grounding",
+                "value": "Grounding Uebung",
+            },
+        }
+
+        buttons = []
+        for intent, _score in results[:4]:
+            if intent in suggestions:
+                buttons.append(suggestions[intent])
+
+        if not buttons:
+            buttons = self._default_quick_buttons()[:3]
+
+        return self._dedupe_buttons(buttons)
 
     def _keyword_intent_match(self, frage: str) -> Optional[str]:
         normalized = normalize_phrase(frage)
@@ -267,7 +464,10 @@ class DialogueManager:
         return random.choice(responses)
 
     def _pick_follow_up_intent(
-        self, state: Dict[str, Any], preferred_context: str = ""
+        self,
+        state: Dict[str, Any],
+        preferred_context: str = "",
+        rotate_for_progression: bool = False,
     ) -> str:
         last_intent = state.get("last_intent")
         last_context = (
@@ -275,6 +475,20 @@ class DialogueManager:
             or state.get("last_context")
             or self._context_for_intent(last_intent)
         )
+        if last_intent and not rotate_for_progression:
+            return last_intent
+
+        if last_intent in self.follow_up_plans:
+            plan = [
+                candidate
+                for candidate in self.follow_up_plans[last_intent]
+                if candidate in self.intent_to_responses
+            ]
+            if plan:
+                idx = int(state.get("follow_up_plan_index", 0))
+                state["follow_up_plan_index"] = idx + 1
+                return plan[idx % len(plan)]
+
         if not last_context and last_intent:
             return last_intent
 
@@ -282,13 +496,119 @@ class DialogueManager:
         if not intents:
             return last_intent
 
-        if last_intent in intents and len(intents) > 1 and last_context in {"mental"}:
+        if (
+            rotate_for_progression
+            and last_intent in intents
+            and len(intents) > 1
+            and last_context in {"mental"}
+        ):
             idx = intents.index(last_intent)
             return intents[(idx + 1) % len(intents)]
 
         if last_intent in intents:
             return last_intent
         return intents[0]
+
+    def _choose_primary_intent(
+        self,
+        results: List[Tuple[str, float]],
+        state: Dict[str, Any],
+        follow_up: bool,
+        msg: str,
+    ) -> str:
+        if not results:
+            return ""
+
+        top_intent, top_score = results[0]
+        last_intent = state.get("last_intent", "")
+
+        if follow_up and last_intent:
+            if self._is_generic_follow_up_message(msg):
+                return last_intent
+            if (
+                self._context_for_intent(last_intent) == self._context_for_intent(top_intent)
+                and top_intent != last_intent
+                and top_score < 0.75
+            ):
+                return last_intent
+
+        topic_intent = state.get("topic_intent", "")
+        if (
+            topic_intent
+            and top_intent != topic_intent
+            and self._context_for_intent(top_intent) == self._context_for_intent(topic_intent)
+            and top_score < 0.55
+        ):
+            return topic_intent
+
+        return top_intent
+
+    def _build_intent_response(
+        self,
+        intent: str,
+        state: Dict[str, Any],
+        response: str,
+        empathy_prefix: str,
+        buttons: List[Dict[str, str]],
+    ) -> Tuple[Dict[str, Any], Optional[str]]:
+        state["fallback_count"] = 0
+        if self._is_mental_intent(intent):
+            state["topic_intent"] = intent
+        return (
+            self._format_response(
+                response,
+                state,
+                empathy_prefix,
+                buttons,
+                intent=intent,
+            ),
+            intent,
+        )
+
+    def _fallback_response(
+        self, state: Dict[str, Any], preferred_context: str
+    ) -> Tuple[Dict[str, Any], Optional[str]]:
+        state["fallback_count"] = int(state.get("fallback_count", 0)) + 1
+        fallback_count = state["fallback_count"]
+
+        if fallback_count >= 2:
+            last_topic = state.get("topic_intent") or state.get("last_intent", "")
+            if self._is_mental_intent(last_topic):
+                repair_text = (
+                    f"Ich bin noch nicht ganz sicher, was du brauchst. "
+                    f"Sollen wir bei {self._topic_label(last_topic)} bleiben oder kurz wechseln?"
+                )
+            elif preferred_context == "mental" or state.get("last_context") == "mental":
+                repair_text = (
+                    "Ich verstehe dich noch nicht eindeutig. "
+                    "Waehle bitte kurz das Thema, dann mache ich direkt passend weiter."
+                )
+            else:
+                repair_text = (
+                    "Ich habe dich noch nicht klar verstanden. "
+                    "Nimm gern eine der schnellen Optionen, dann antworte ich gezielter."
+                )
+            return (
+                self._format_response(
+                    repair_text,
+                    state,
+                    "",
+                    self._default_quick_buttons(),
+                    intent="thema_auswahl",
+                ),
+                None,
+            )
+
+        return (
+            self._format_response(
+                DEFAULT_RESPONSE,
+                state,
+                "",
+                self._default_quick_buttons(),
+                intent="thema_auswahl",
+            ),
+            None,
+        )
 
     def _klassifizieren(self, frage: str) -> List[Tuple[str, float]]:
         exact_match = self._get_exact_match_intent(frage)
@@ -338,17 +658,65 @@ class DialogueManager:
             return {"text": "Bitte formuliere deine Nachricht etwas kürzer."}, None
 
         prior_response = state.get("last_response")
+        if isinstance(prior_response, dict):
+            prior_response = prior_response.get("text")
+        state.setdefault("response_mode", DEFAULT_RESPONSE_MODE)
+
+        requested_mode = self._extract_response_mode(msg)
+        if requested_mode:
+            state["response_mode"] = requested_mode
+            mode_text = {
+                "short": "Alles klar, ich antworte ab jetzt kuerzer und direkter.",
+                "normal": "Alles klar, ich antworte wieder im normalen Modus.",
+                "detailed": "Alles klar, ich antworte ab jetzt ausfuehrlicher.",
+            }
+            return self._build_intent_response(
+                "thema_auswahl",
+                state,
+                mode_text.get(requested_mode, mode_text["normal"]),
+                "",
+                [],
+            )
+
+        if self._is_help_request(msg):
+            help_response = self._pick_response("thema_auswahl") or (
+                "Ich kann dir bei Stress, Angst, Schlaf, Fokus, Antrieb und "
+                "Entspannungsuebungen helfen."
+            )
+            return self._build_intent_response(
+                "thema_auswahl",
+                state,
+                help_response,
+                "",
+                [],
+            )
+
+        self._extract_slots(msg, state)
         follow_up = self._is_follow_up_message(msg)
+        generic_follow_up = follow_up and self._is_generic_follow_up_message(msg)
+        if follow_up:
+            if generic_follow_up:
+                state["generic_follow_up_count"] = int(
+                    state.get("generic_follow_up_count", 0)
+                ) + 1
+            else:
+                state["generic_follow_up_count"] = 0
+        else:
+            state["generic_follow_up_count"] = 0
         preferred_context = self._requested_context(msg)
 
         # Analyze Sentiment
-        blob = TextBlobDE(msg)
-        sentiment_polarity = blob.sentiment.polarity
         empathy_prefix = ""
-        if sentiment_polarity < -0.5:
-            empathy_prefix = "Das hoert sich wirklich anstrengend an. "
-        elif sentiment_polarity > 0.5:
-            empathy_prefix = "Das klingt doch schon mal positiv! "
+        if len(msg.split()) >= 4 and TextBlobDE is not None:
+            try:
+                blob = TextBlobDE(msg)
+                sentiment_polarity = blob.sentiment.polarity
+                if sentiment_polarity < -0.5:
+                    empathy_prefix = "Das hoert sich wirklich anstrengend an. "
+                elif sentiment_polarity > 0.5:
+                    empathy_prefix = "Das klingt doch schon mal positiv! "
+            except Exception:
+                logger.debug("Sentiment analysis skipped for input.")
 
         # Dynamic Placeholders: name extraction
         msg_lower = msg.lower()
@@ -359,7 +727,49 @@ class DialogueManager:
                 name = words[-1].strip(".,!?")
                 state["user_name"] = name
 
-        results = self._klassifizieren(msg)
+        if (
+            self._is_plain_stress_rating(msg)
+            and state.get("last_intent") == "mental_checkin_start"
+        ):
+            results = [("mental_stress_support", 0.99)]
+        else:
+            results = self._klassifizieren(msg)
+
+        if (
+            not results
+            and state.get("sleep_hours") is not None
+            and state.get("last_context") == "mental"
+        ):
+            results = [("mental_sleep_support", 0.92)]
+
+        if self._should_clarify_intent(results, follow_up):
+            clarify_text = (
+                "Ich bin mir noch nicht ganz sicher, was du gerade brauchst. "
+                "Waehle bitte kurz die passende Richtung:"
+            )
+            return (
+                self._format_response(
+                    clarify_text,
+                    state,
+                    "",
+                    self._clarification_buttons(results),
+                    intent="thema_auswahl",
+                ),
+                None,
+            )
+
+        if results:
+            primary_intent = self._choose_primary_intent(results, state, follow_up, msg)
+            if primary_intent:
+                primary_score = next(
+                    (score for intent, score in results if intent == primary_intent),
+                    float(results[0][1]),
+                )
+                remaining_results = [
+                    (intent, score) for intent, score in results if intent != primary_intent
+                ]
+                results = [(primary_intent, primary_score)] + remaining_results
+
         top_intent = results[0][0] if results else ""
 
         # Stateful Guided Exercise Logic
@@ -377,21 +787,18 @@ class DialogueManager:
                 if step < len(steps):
                     state["exercise_step"] = step + 1
                     buttons = [{"label": "Weiter", "value": "weiter"}]
-                    return (
-                        self._format_response(
-                            steps[step], state, empathy_prefix, buttons
-                        ),
-                        active_exercise,
+                    return self._build_intent_response(
+                        active_exercise, state, steps[step], empathy_prefix, buttons
                     )
-                else:
-                    state["active_exercise"] = None
-                    state["exercise_step"] = 0
-                    return (
-                        self._format_response(
-                            "Gut gemacht! Wie fuehlst du dich jetzt?", state, "", []
-                        ),
-                        active_exercise,
-                    )
+                state["active_exercise"] = None
+                state["exercise_step"] = 0
+                return self._build_intent_response(
+                    active_exercise,
+                    state,
+                    "Gut gemacht! Wie fuehlst du dich jetzt?",
+                    "",
+                    [],
+                )
             elif active_exercise == "mental_grounding":
                 steps = [
                     "Schritt 1: Nenne 5 Dinge, die du im Raum sehen kannst.",
@@ -403,21 +810,18 @@ class DialogueManager:
                 if step < len(steps):
                     state["exercise_step"] = step + 1
                     buttons = [{"label": "Weiter", "value": "weiter"}]
-                    return (
-                        self._format_response(
-                            steps[step], state, empathy_prefix, buttons
-                        ),
-                        active_exercise,
+                    return self._build_intent_response(
+                        active_exercise, state, steps[step], empathy_prefix, buttons
                     )
-                else:
-                    state["active_exercise"] = None
-                    state["exercise_step"] = 0
-                    return (
-                        self._format_response(
-                            "Sehr gut. Hat dich das ein wenig geerdet?", state, "", []
-                        ),
-                        active_exercise,
-                    )
+                state["active_exercise"] = None
+                state["exercise_step"] = 0
+                return self._build_intent_response(
+                    active_exercise,
+                    state,
+                    "Sehr gut. Hat dich das ein wenig geerdet?",
+                    "",
+                    [],
+                )
             elif active_exercise == "mental_body_scan":
                 steps = [
                     "Schritt 1: Setz oder leg dich bequem hin und schliesse, wenn moeglich, kurz die Augen.",
@@ -429,22 +833,17 @@ class DialogueManager:
                 if step < len(steps):
                     state["exercise_step"] = step + 1
                     buttons = [{"label": "Weiter", "value": "weiter"}]
-                    return (
-                        self._format_response(
-                            steps[step], state, empathy_prefix, buttons
-                        ),
-                        active_exercise,
+                    return self._build_intent_response(
+                        active_exercise, state, steps[step], empathy_prefix, buttons
                     )
                 state["active_exercise"] = None
                 state["exercise_step"] = 0
-                return (
-                    self._format_response(
-                        "Stark gemacht. Wenn du willst, machen wir als naechstes einen kurzen Check-in.",
-                        state,
-                        "",
-                        [],
-                    ),
+                return self._build_intent_response(
                     active_exercise,
+                    state,
+                    "Stark gemacht. Wenn du willst, machen wir als naechstes einen kurzen Check-in.",
+                    "",
+                    [],
                 )
 
         # When entering an exercise
@@ -457,14 +856,18 @@ class DialogueManager:
             state["exercise_step"] = 0
 
         if follow_up and state.get("last_intent"):
+            rotate_for_progression = (
+                generic_follow_up and int(state.get("generic_follow_up_count", 0)) >= 2
+            )
             follow_up_intent = self._pick_follow_up_intent(
                 state,
                 preferred_context=preferred_context or state.get("last_context"),
+                rotate_for_progression=rotate_for_progression,
             )
             if follow_up_intent and (
                 not top_intent
                 or self._is_meta_intent(top_intent)
-                or self._is_generic_follow_up_message(msg)
+                or generic_follow_up
             ):
                 response = self._pick_response(
                     follow_up_intent,
@@ -475,9 +878,8 @@ class DialogueManager:
                     ),
                 )
                 if response:
-                    return (
-                        self._format_response(response, state, empathy_prefix, []),
-                        follow_up_intent,
+                    return self._build_intent_response(
+                        follow_up_intent, state, response, empathy_prefix, []
                     )
 
         if preferred_context and (
@@ -502,14 +904,12 @@ class DialogueManager:
                     ),
                 )
                 if response:
-                    return (
-                        self._format_response(response, state, empathy_prefix, []),
-                        chosen_intent,
+                    return self._build_intent_response(
+                        chosen_intent, state, response, empathy_prefix, []
                     )
 
         if results:
-            while results:
-                intent = results[0][0]
+            for intent, _score in results:
                 responses = self.intent_to_responses.get(intent, [])
                 if responses:
                     response = self._pick_response(
@@ -517,15 +917,18 @@ class DialogueManager:
                         prior_response if intent == state.get("last_intent") else None,
                     )
                     if response:
-                        return (
-                            self._format_response(response, state, empathy_prefix, []),
-                            intent,
+                        return self._build_intent_response(
+                            intent, state, response, empathy_prefix, []
                         )
-                results.pop(0)
 
         if follow_up:
             follow_up_intent = self._pick_follow_up_intent(
-                state, preferred_context=preferred_context
+                state,
+                preferred_context=preferred_context,
+                rotate_for_progression=(
+                    generic_follow_up
+                    and int(state.get("generic_follow_up_count", 0)) >= 2
+                ),
             )
             if follow_up_intent:
                 response = self._pick_response(
@@ -537,17 +940,103 @@ class DialogueManager:
                     ),
                 )
                 if response:
-                    return (
-                        self._format_response(response, state, empathy_prefix, []),
-                        follow_up_intent,
+                    return self._build_intent_response(
+                        follow_up_intent, state, response, empathy_prefix, []
                     )
 
-        fallback_buttons = [
-            {"label": "Check-in", "value": "Ich brauche einen Check-in"},
-            {"label": "Atemuebung", "value": "Atemuebung"},
-            {"label": "Grounding", "value": "Grounding Uebung"},
+        return self._fallback_response(state, preferred_context)
+
+    def _apply_response_mode(self, text: str, mode: str) -> str:
+        if mode == "short":
+            sentences = re.split(r"(?<=[.!?])\s+", text.strip())
+            compact = sentences[0] if sentences else text
+            if len(compact) > 160:
+                compact = compact[:157].rsplit(" ", 1)[0] + "..."
+            return compact
+
+        if mode == "detailed":
+            if len(text) < 220:
+                return (
+                    f"{text} Wenn du willst, gehen wir den naechsten Schritt direkt "
+                    "gemeinsam durch."
+                )
+        return text
+
+    def _personalize_with_slots(
+        self, text: str, state: Dict[str, Any], intent: str
+    ) -> str:
+        notes = []
+
+        stress_level = state.get("stress_level")
+        if intent == "mental_stress_support" and isinstance(stress_level, int):
+            if stress_level >= 8:
+                notes.append(
+                    f"Du hast {stress_level}/10 Stress genannt. Bitte geh jetzt Schritt fuer Schritt vor."
+                )
+            elif stress_level <= 3:
+                notes.append(
+                    f"Mit {stress_level}/10 ist es schon etwas stabiler. Halte die kleinen Routinen aufrecht."
+                )
+
+        sleep_hours = state.get("sleep_hours")
+        if intent == "mental_sleep_support" and isinstance(sleep_hours, (int, float)):
+            if sleep_hours < 6:
+                notes.append(
+                    f"Du hast etwa {sleep_hours}h Schlaf genannt. Eine ruhige Abendroutine ist heute besonders wichtig."
+                )
+            else:
+                notes.append(
+                    f"Mit rund {sleep_hours}h Schlaf lohnt sich heute vor allem ein konstanter Schlafrhythmus."
+                )
+
+        if not notes:
+            return text
+        return f"{text} {' '.join(notes)}"
+
+    def _topic_transition_prefix(self, state: Dict[str, Any], intent: str) -> str:
+        previous_intent = state.get("last_intent", "")
+        if (
+            not intent
+            or not previous_intent
+            or previous_intent == intent
+            or not self._is_mental_intent(previous_intent)
+            or not self._is_mental_intent(intent)
+        ):
+            return ""
+
+        current_turn = int(state.get("turns", 0))
+        last_transition_turn = int(state.get("last_transition_turn", -999))
+        transition_key = f"{previous_intent}->{intent}"
+
+        # Do not spam transition phrases every turn.
+        if current_turn - last_transition_turn < 2:
+            return ""
+
+        # Avoid repeating the same announced switch in short distance.
+        if (
+            state.get("last_transition_key") == transition_key
+            and current_turn - last_transition_turn < 8
+        ):
+            return ""
+
+        templates = [
+            "Wenn es fuer dich passt, gehen wir von {from_topic} zu {to_topic}. ",
+            "Lass uns kurz von {from_topic} Richtung {to_topic} schauen. ",
+            "Okay, wir richten den Blick von {from_topic} auf {to_topic}. ",
+            "Wir nehmen jetzt den Schritt von {from_topic} zu {to_topic}. ",
         ]
-        return self._format_response(DEFAULT_RESPONSE, state, "", fallback_buttons), None
+        last_template = state.get("last_transition_template", "")
+        candidates = [template for template in templates if template != last_template]
+        template = random.choice(candidates or templates)
+
+        state["last_transition_turn"] = current_turn
+        state["last_transition_key"] = transition_key
+        state["last_transition_template"] = template
+
+        return template.format(
+            from_topic=self._topic_label(previous_intent),
+            to_topic=self._topic_label(intent),
+        )
 
     def _format_response(
         self,
@@ -555,6 +1044,7 @@ class DialogueManager:
         state: Dict[str, Any],
         empathy_prefix: str,
         buttons: List[Dict[str, str]],
+        intent: str = "",
     ) -> Dict[str, Any]:
         """Helper to inject placeholders, prepend empathy, and pack into UI dict."""
         uname = state.get("user_name", "")
@@ -564,19 +1054,24 @@ class DialogueManager:
         else:
             text = text.replace(" [Name]", "").replace("[Name]", "")
 
-        final_text = (empathy_prefix + text).strip()
+        transition_prefix = self._topic_transition_prefix(state, intent)
 
-        # Determine structured UI buttons
-        # If no active exercise buttons, maybe suggest an exercise if it's stress/anxiety
-        if (
-            not buttons
-            and state.get("last_context") == "mental"
-            and not state.get("active_exercise")
-        ):
-            buttons = [
-                {"label": "Atemübung", "value": "Atemuebung"},
-                {"label": "Grounding", "value": "Grounding Uebung"},
-                {"label": "Body-Scan", "value": "Body Scan"},
-            ]
+        final_text = (transition_prefix + empathy_prefix + text).strip()
+        final_text = self._personalize_with_slots(final_text, state, intent)
+        final_text = self._apply_response_mode(
+            final_text, state.get("response_mode", DEFAULT_RESPONSE_MODE)
+        )
 
-        return {"text": final_text, "buttons": buttons}
+        buttons = list(buttons or [])
+        if any(button.get("value") == "weiter" for button in buttons):
+            final_buttons = self._dedupe_buttons(buttons)
+        elif state.get("active_exercise"):
+            final_buttons = self._dedupe_buttons(
+                buttons + [{"label": "Weiter", "value": "weiter"}]
+            )
+        else:
+            final_buttons = self._dedupe_buttons(
+                buttons + self._default_quick_buttons()
+            )
+
+        return {"text": final_text, "buttons": final_buttons}

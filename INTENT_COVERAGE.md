@@ -19,11 +19,14 @@ Stand: 2026-03-04
 | `mental_crisis_support` | `Ich will mir was antun` | Hard Keyword Safety Rule | Keine dedizierte Einzelprüfung |
 | `feedback_positiv` | `Danke` | Exact/Fuzzy + Modell | Indirekt in Dialogfluss |
 | `feedback_negativ` | `Das hilft nicht` | Exact/Fuzzy + Modell | Indirekt in Dialogfluss |
-| `thema_auswahl` | `Welche Themen kannst du?` | Exact/Fuzzy + Modell | Keine dedizierte Einzelprüfung |
+| `thema_auswahl` | `/hilfe` | Hilfe-Regel + Exact/Fuzzy | `test_help_command_returns_thema_auswahl` |
 | `Fallback` | `Banane Fahrrad Wolke` | Kein Intent getroffen | `test_get_unknown_message_returns_default` |
+| `Low-Confidence Clarify` | `Unklar` (mit knappen Scores) | Confidence-Check + Klarifizierungsbuttons | `test_low_confidence_triggers_clarification` |
+| `Response-Mode` | `/modus kurz` | Modus-Regel im State | `test_response_mode_short` |
 
 ## Hinweise
 
 - Mehrdeutige Inputs nutzen eine Priorität: `Exact` -> `Keyword` -> `Fuzzy` -> `Modell`.
 - Follow-up (`weiter`, `genauer`, `noch`) nutzt Kontext und den letzten Intent.
 - Sicherheitskritische Krise-Begriffe werden vor dem Modell abgefangen.
+- Bei niedriger Modell-Sicherheit fragt der Bot aktiv nach der passenden Richtung.

@@ -57,12 +57,15 @@
         "Was kannst du jetzt?",
         "Gib mir Themen",
         "Wobei kannst du helfen?",
-        "Was kann ich dich fragen?"
+        "Was kann ich dich fragen?",
+        "Hilfe",
+        "/hilfe"
       ],
       "antwort": [
         "Ich biete dir mentale Unterstuetzung mit kurzen, praktischen Check-ins.",
         "Frag mich zu Stress, Angst, Schlaf, Konzentration, Antrieb, Gedankenkreisen oder Entspannungsuebungen.",
-        "Starte z. B. mit: 'Ich brauche einen Check-in', 'Ich bin gestresst' oder 'Ich kann mich nicht konzentrieren'."
+        "Starte z. B. mit: 'Ich brauche einen Check-in', 'Ich bin gestresst' oder 'Ich kann mich nicht konzentrieren'.",
+        "Tipps zur Bedienung: '/hilfe' fuer Themen, '/modus kurz' fuer kurze Antworten, '/modus ausfuehrlich' fuer mehr Details."
       ],
       "kontext": "navigation"
     },

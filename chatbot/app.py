@@ -56,7 +56,11 @@ def chatbot_response():
         if intent:
             state["last_intent"] = intent
             state["last_context"] = bot._context_for_intent(intent)
-            state["last_response"] = final_response
+            state["last_response"] = (
+                final_response.get("text", "")
+                if isinstance(final_response, dict)
+                else str(final_response)
+            )
             state["turns"] = min(int(state.get("turns", 0)) + 1, 1000)
 
         session["chat_state"] = state

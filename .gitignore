@@ -3,5 +3,6 @@
 __pycache__/
 chatbot/__pycache__/
 chatbot/nltk_data/
+chatbot/train_logs/
 *.pyc
 *.pyo
