@@ -1,4 +1,182 @@
 {
+  "response_components": {
+    "defaults": {
+      "validation": {
+        "warm": [
+          "Danke, dass du das so offen teilst.",
+          "Ich bin bei dir, wir gehen das ruhig zusammen an.",
+          "Das klingt nach einer Menge, danke fuer dein Vertrauen.",
+          "Ich hoere dir zu. Lass uns schauen, wie wir dich entlasten koennen."
+        ],
+        "direct": [
+          "Verstanden.",
+          "Okay, ich hab dich.",
+          "Ich nehme das so auf.",
+          "Alles klar, schauen wir uns das an."
+        ],
+        "brief": [
+          "Alles klar.",
+          "Verstanden.",
+          "Okay.",
+          "Ich sehe."
+        ],
+        "detailed": [
+          "Danke fuer deine Offenheit, wir gehen das strukturiert an.",
+          "Ich nehme das ernst, lass uns den naechsten Schritt klar aufbauen.",
+          "Das ist ein wichtiger Punkt, den wir uns genau ansehen sollten.",
+          "Danke fuer die detaillierte Schilderung, das hilft mir, dich besser zu unterstuetzen."
+        ]
+      },
+      "question": {
+        "open": [
+          "Was beschaeftigt dich dabei gerade am meisten?",
+          "Wie fuehlt sich das im Moment fuer dich an?",
+          "Was waere fuer dich heute ein hilfreicher erster Schritt?",
+          "Welchen Teil davon moechtest du dir zuerst ansehen?"
+        ],
+        "closed": [
+          "Sollen wir dazu eine kurze Uebung machen?",
+          "Moechtest du das Thema noch etwas vertiefen?",
+          "Hilft es dir, wenn wir das in kleine Schritte zerlegen?",
+          "Soll ich dir ein paar konkrete Tipps dazu geben?"
+        ]
+      }
+    },
+    "mental_checkin_start": {
+      "question": {
+        "open": [
+          "Was belastet dich heute am meisten?",
+          "Womit sollen wir als Erstes anfangen?",
+          "Was ist gerade deine groesste Baustelle?"
+        ],
+        "closed": [
+          "Soll ich mit Stress starten?",
+          "Moechtest du erst ein kurzes Check-in oder direkt eine Uebung?",
+          "Sollen wir uns heute auf den Schlaf konzentrieren?"
+        ]
+      }
+    },
+    "mental_stress_support": {
+      "question": {
+        "open": [
+          "Was waere fuer dich heute ein realistischer Mini-Schritt?",
+          "Welcher Teil vom Stress zieht dir gerade am meisten Energie?",
+          "Worauf koenntest du heute am ehesten verzichten, um Druck rauszunehmen?"
+        ],
+        "closed": [
+          "Willst du jetzt 2 Minuten Atemfokus probieren?",
+          "Sollen wir die naechste Aufgabe ganz konkret in 1 Schritt zerlegen?",
+          "Moechtest du eine kurze Pause-Technik lernen?"
+        ]
+      }
+    },
+    "mental_anxiety_support": {
+      "question": {
+        "open": [
+          "Was hilft dir in solchen Momenten normalerweise am schnellsten?",
+          "Wo spuerst du die Anspannung gerade am staerksten?",
+          "Welcher Gedanke macht dir gerade die meiste Unruhe?"
+        ],
+        "closed": [
+          "Moechtest du eine 60-Sekunden-Uebung zum Runterregeln machen?",
+          "Ist dein aktueller Ort im Moment sicher fuer dich?",
+          "Soll ich dich durch eine stabilisierende Atemuebung fuehren?"
+        ]
+      }
+    },
+    "mental_sleep_support": {
+      "question": {
+        "open": [
+          "Was haelt dich abends am ehesten wach?",
+          "Welche Abendgewohnheit koennten wir heute am leichtesten anpassen?",
+          "Wie sieht dein idealer Abend fuer einen guten Schlaf aus?"
+        ],
+        "closed": [
+          "Willst du heute eine feste Offline-Zeit vor dem Schlafen testen?",
+          "Sollen wir eine kurze Einschlafroutine fuer heute planen?",
+          "Moechtest du eine Entspannungsuebung fuer den Kiefer probieren?"
+        ]
+      }
+    },
+    "mental_focus_support": {
+      "question": {
+        "open": [
+          "Welche Aufgabe blockiert dich gerade am meisten?",
+          "Wann war dein Fokus heute am besten und was war da anders?",
+          "Was ist die eine Sache, die heute wirklich zaehlt?"
+        ],
+        "closed": [
+          "Sollen wir mit einem 10-Minuten-Fokusblock starten?",
+          "Willst du zuerst Ablenkungen fuer 15 Minuten komplett ausblenden?",
+          "Soll ich dir helfen, die erste Aufgabe ganz klein zu machen?"
+        ]
+      }
+    },
+    "mental_energy_support": {
+      "question": {
+        "open": [
+          "Welcher kleinste Schritt waere fuer dich gerade noch machbar?",
+          "Was gibt dir normalerweise ein bisschen Energie zurueck?",
+          "Was wuerde sich heute am wenigsten nach Arbeit anfuehlen?"
+        ],
+        "closed": [
+          "Willst du mit Wasser + 2 Minuten Bewegung starten?",
+          "Sollen wir fuer heute nur ein klares Minimalziel setzen?",
+          "Moechtest du eine sanfte Aktivierungsuebung machen?"
+        ]
+      }
+    },
+    "mental_overthinking_support": {
+      "question": {
+        "open": [
+          "Welcher Gedanke dreht sich gerade am meisten im Kreis?",
+          "Was waere ein naechster Schritt, den du wirklich beeinflussen kannst?",
+          "Worueber wuerdest du heute lieber nachdenken?"
+        ],
+        "closed": [
+          "Soll ich dir eine kurze Gedankenparkplatz-Technik geben?",
+          "Willst du jetzt 2 Minuten strukturieren statt weiter gruebeln?",
+          "Moechtest du eine Technik zum 'Stop' sagen lernen?"
+        ]
+      }
+    },
+    "mental_breathing_exercise": {
+      "question": {
+        "open": [
+          "Wie fuehlt sich dein Atem nach der Runde an?",
+          "Was hat sich in deinem Koerper gerade veraendert?"
+        ],
+        "closed": [
+          "Sollen wir direkt eine zweite Atemrunde starten?",
+          "Moechtest du eine noch etwas tiefere Technik probieren?"
+        ]
+      }
+    },
+    "mental_grounding": {
+      "question": {
+        "open": [
+          "Was hat dich bei der Uebung am meisten stabilisiert?",
+          "Was nimmst du aus dieser kurzen Erdung mit?"
+        ],
+        "closed": [
+          "Willst du die 5-4-3-2-1 Uebung jetzt Schritt fuer Schritt machen?",
+          "Sollen wir noch einen anderen Sinn mit dazunehmen?"
+        ]
+      }
+    },
+    "mental_body_scan": {
+      "question": {
+        "open": [
+          "Welche Koerperregion braucht gerade am meisten Entspannung?",
+          "Was hast du waehrend der Wahrnehmung gespuert?"
+        ],
+        "closed": [
+          "Moechtest du direkt mit dem ersten Body-Scan-Schritt weitermachen?",
+          "Sollen wir diese Stelle gezielt noch einmal auslockern?"
+        ]
+      }
+    }
+  },
   "dialogflow": [
     {
       "intent": "smalltalk_begruessung",
@@ -101,6 +279,13 @@
         "Klar, wir machen einen kurzen Check-in. Was ist gerade am staerksten: Stress, Angst, Erschoepfung oder Schlafprobleme?",
         "Ich bin da. Sag mir kurz, was heute am meisten belastet, dann schlage ich einen naechsten Mini-Schritt vor."
       ],
+      "components": {
+        "action": [
+          "Auf einer Skala von 1 bis 10: Wie hoch ist dein aktueller Stress?",
+          "Was ist gerade am staerksten: Stress, Angst, Erschoepfung oder Schlafprobleme?",
+          "Sag mir kurz, was heute am meisten belastet, dann schlage ich einen naechsten Mini-Schritt vor."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -117,6 +302,13 @@
         "Bei Ueberforderung hilft Priorisierung: Was ist heute wirklich kritisch, was kann warten, was kann weg?",
         "Mini-Reset: 4 tiefe Atemzuege, Schultern lockern, dann nur den naechsten kleinen Schritt definieren."
       ],
+      "components": {
+        "action": [
+          "Lass uns zuerst entlasten: 1 Aufgabe fuer 10 Minuten, Benachrichtigungen aus, dann kurze Pause.",
+          "Bei Ueberforderung hilft Priorisierung: Was ist heute wirklich kritisch, was kann warten, was kann weg?",
+          "Mini-Reset: 4 tiefe Atemzuege, Schultern lockern, dann nur den naechsten kleinen Schritt definieren."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -133,6 +325,13 @@
         "Du bist nicht allein damit. Benenne 3 Dinge im Raum, die du siehst. Das kann dein Nervensystem stabilisieren.",
         "Versuche den Satz: 'Ich habe gerade Angst, aber ich bin im Moment in Sicherheit.' Wiederhole ihn ruhig mehrmals."
       ],
+      "components": {
+        "action": [
+          "Wenn Angst hochgeht, hilf deinem Koerper zuerst: langsam 4 Sekunden ein, 6 Sekunden aus, zehn Runden.",
+          "Du bist nicht allein damit. Benenne 3 Dinge im Raum, die du siehst. Das kann dein Nervensystem stabilisieren.",
+          "Versuche den Satz: 'Ich habe gerade Angst, aber ich bin im Moment in Sicherheit.' Wiederhole ihn ruhig mehrmals."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -149,6 +348,13 @@
         "Schon 60 Minuten weniger Bildschirm vor dem Schlafen kann helfen. Wichtig ist Regelmaessigkeit statt Perfektion.",
         "Wenn Gedanken kreisen: schreibe sie 5 Minuten auf Papier, dann erst ins Bett. Das entlastet oft merklich."
       ],
+      "components": {
+        "action": [
+          "Fuer heute Nacht: kein Doomscrolling im Bett, Licht runter, Atemrhythmus verlaengern und morgen gleiche Aufstehzeit halten.",
+          "Schon 60 Minuten weniger Bildschirm vor dem Schlafen kann helfen. Wichtig ist Regelmaessigkeit statt Perfektion.",
+          "Wenn Gedanken kreisen: schreibe sie 5 Minuten auf Papier, dann erst ins Bett. Das entlastet oft merklich."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -165,6 +371,13 @@
         "Wenn alles gleichzeitig ruft: Schreibe 3 Aufgaben auf und starte nur mit der leichtesten fuer 5 Minuten.",
         "Mini-Fokus-Protokoll: Handy weg, ein klares Ziel, 15 Minuten konzentriert arbeiten, dann 2 Minuten Pause."
       ],
+      "components": {
+        "action": [
+          "Das ist absolut nachvollziehbar. Probier 10 Minuten Fokus ohne Perfektionsdruck: Timer stellen, nur eine kleine Aufgabe.",
+          "Wenn alles gleichzeitig ruft: Schreibe 3 Aufgaben auf und starte nur mit der leichtesten fuer 5 Minuten.",
+          "Mini-Fokus-Protokoll: Handy weg, ein klares Ziel, 15 Minuten konzentriert arbeiten, dann 2 Minuten Pause."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -181,6 +394,13 @@
         "Bei wenig Energie hilft sanfte Aktivierung: 2 Minuten Bewegung, 3 tiefe Atemzuege und eine machbare Aufgabe.",
         "Du musst heute nicht alles schaffen. Was waere ein realistischer naechster Schritt in den naechsten 10 Minuten?"
       ],
+      "components": {
+        "action": [
+          "Lass uns klein starten: Wasser trinken, kurz aufstehen und dann nur einen Mini-Schritt planen.",
+          "Bei wenig Energie hilft sanfte Aktivierung: 2 Minuten Bewegung, 3 tiefe Atemzuege und eine machbare Aufgabe.",
+          "Du musst heute nicht alles schaffen. Was waere ein realistischer naechster Schritt in den naechsten 10 Minuten?"
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -197,6 +417,13 @@
         "Sag dir freundlich: 'Ich darf das spaeter loesen.' Dann setz einen 10-Minuten-Zeitpunkt fuer's Nachdenken.",
         "Kurze Entlastung: Benenne den Hauptgedanken in einem Satz und den kleinsten naechsten Handlungsschritt."
       ],
+      "components": {
+        "action": [
+          "Wenn der Kopf rotiert, hilft Struktur: Schreibe deine Gedanken in zwei Spalten auf - beeinflussbar und nicht beeinflussbar.",
+          "Sag dir freundlich: 'Ich darf das spaeter loesen.' Dann setz einen 10-Minuten-Zeitpunkt fuer's Nachdenken.",
+          "Kurze Entlastung: Benenne den Hauptgedanken in einem Satz und den kleinsten naechsten Handlungsschritt."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -213,6 +440,13 @@
         "Okay, ich leite dich durch eine kurze Koerperwahrnehmung. Antworte mit 'weiter', wenn es fuer dich passt.",
         "Klar, wir starten mit einem 2-Minuten-Body-Scan. Schreib 'weiter' fuer den ersten Schritt."
       ],
+      "components": {
+        "action": [
+          "Wir machen einen kurzen Body-Scan. Wenn du bereit bist, schreibe 'weiter'.",
+          "Okay, ich leite dich durch eine kurze Koerperwahrnehmung. Antworte mit 'weiter', wenn es fuer dich passt.",
+          "Klar, wir starten mit einem 2-Minuten-Body-Scan. Schreib 'weiter' fuer den ersten Schritt."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -229,6 +463,13 @@
         "Laenger ausatmen als einatmen: 4 ein, 6 aus, 10 Runden. Das kann schnell beruhigen.",
         "Lege eine Hand auf den Bauch und atme so, dass sich vor allem die Bauchdecke hebt. Ruhig und langsam."
       ],
+      "components": {
+        "action": [
+          "Box-Breathing: 4 Sekunden einatmen, 4 halten, 4 ausatmen, 4 halten. Fuer 2 Minuten.",
+          "Laenger ausatmen als einatmen: 4 ein, 6 aus, 10 Runden. Das kann schnell beruhigen.",
+          "Lege eine Hand auf den Bauch und atme so, dass sich vor allem die Bauchdecke hebt. Ruhig und langsam."
+        ]
+      },
       "kontext": "mental"
     },
     {
@@ -245,6 +486,13 @@
         "Grounding hilft, wenn Gedanken rasen. Geh systematisch durch deine Sinne, langsam und konkret.",
         "Du kannst Grounding auch im Sitzen machen: Blick fixieren, Umgebung beschreiben, Atmung verlangsamen."
       ],
+      "components": {
+        "action": [
+          "5-4-3-2-1: Nenne 5 Dinge die du siehst, 4 die du fuehlst, 3 die du hoerst, 2 die du riechst, 1 die du schmeckst.",
+          "Grounding hilft, wenn Gedanken rasen. Geh systematisch durch deine Sinne, langsam und konkret.",
+          "Du kannst Grounding auch im Sitzen machen: Blick fixieren, Umgebung beschreiben, Atmung verlangsamen."
+        ]
+      },
       "kontext": "mental"
     },
     {

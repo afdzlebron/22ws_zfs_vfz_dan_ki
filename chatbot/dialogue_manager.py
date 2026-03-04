@@ -43,6 +43,8 @@ class DialogueManager:
         self.phrase_to_intents = {}
         self.greeting_stems = set()
         self.synonym_index: List[Tuple[str, str, Set[str]]] = []
+        self.response_components = {}
+        self.intent_to_components: Dict[str, Dict[str, Any]] = {}
         self.intent_labels = {
             "mental_stress_support": "Stress",
             "mental_anxiety_support": "Angst",
@@ -92,6 +94,12 @@ class DialogueManager:
                 "mental_body_scan",
             ],
         }
+        self.style_aliases = {
+            "warm": {"warm", "freundlich", "empathisch", "menschlich"},
+            "direct": {"direkt", "sachlich", "klar"},
+            "brief": {"kurz", "knapp", "kompakt"},
+            "detailed": {"detailliert", "ausfuehrlich", "tiefer"},
+        }
 
         self._load_dialogflow()
 
@@ -104,12 +112,17 @@ class DialogueManager:
             logger.exception("Failed to load chat.json: %s", e)
             return
 
+        self.response_components = self.dialogflow.get("response_components", {})
         for entry in self.dialogflow.get("dialogflow", []):
             intent = entry.get("intent")
             if not intent:
                 continue
 
             self.intent_to_responses[intent] = entry.get("antwort", [])
+            # Also store components per intent if present in the dialogflow entry
+            components = entry.get("components")
+            if isinstance(components, dict):
+                self.intent_to_components[intent] = components
 
             raw_context = (entry.get("kontext") or "").strip().lower()
             self.intent_to_context[intent] = raw_context
@@ -170,6 +183,220 @@ class DialogueManager:
             seen.add(value)
             unique.append(button)
         return unique
+
+    def _pick_non_repeating_option(
+        self,
+        options: List[str],
+        state: Dict[str, Any],
+        history_key: str,
+        window: int = 4,
+    ) -> str:
+        options = [
+            item.strip() for item in options if isinstance(item, str) and item.strip()
+        ]
+        if not options:
+            return ""
+
+        history = state.setdefault(history_key, [])
+        if not isinstance(history, list):
+            history = []
+            state[history_key] = history
+
+        recent = set(history[-window:])
+        candidates = [item for item in options if item not in recent]
+        choice = random.choice(candidates or options)
+
+        history.append(choice)
+        if len(history) > 20:
+            del history[:-20]
+        return choice
+
+    def _extract_style_preference(self, frage: str) -> Optional[str]:
+        normalized = normalize_phrase(frage)
+        if not normalized:
+            return None
+
+        tokens = set(normalized.split())
+        for style, aliases in self.style_aliases.items():
+            if normalized.startswith("/stil ") and aliases.intersection(tokens):
+                return style
+            if "sprechstil" in normalized and aliases.intersection(tokens):
+                return style
+            if "antworte" in normalized and aliases.intersection(tokens):
+                return style
+            if "sei" in normalized and aliases.intersection(tokens):
+                return style
+        return None
+
+    def _style_confirmation(self, style: str) -> str:
+        messages = {
+            "warm": "Alles klar, ich antworte jetzt waermer und empathischer.",
+            "direct": "Alles klar, ich antworte jetzt direkter und klarer.",
+            "brief": "Alles klar, ich halte mich jetzt kurz und fokussiert.",
+            "detailed": "Alles klar, ich antworte jetzt ausfuehrlicher und strukturierter.",
+        }
+        return messages.get(style, messages["warm"])
+
+    def _components_for_intent(self, intent: str) -> Dict[str, Any]:
+        components = self.intent_to_components.get(intent, {})
+        return components if isinstance(components, dict) else {}
+
+    def _next_question_kind(self, state: Dict[str, Any]) -> str:
+        previous_kind = state.get("last_question_kind", "closed")
+        next_kind = "open" if previous_kind == "closed" else "closed"
+        state["last_question_kind"] = next_kind
+        return next_kind
+
+    def _strip_question_marks(self, text: str) -> str:
+        return re.sub(r"\s*\?+\s*", ". ", text).strip()
+
+    def _style_validation_defaults(self, style: str) -> List[str]:
+        defaults = self.response_components.get("defaults", {}).get("validation", {})
+        options = defaults.get(style, [])
+        if not options:
+            return ["Verstanden.", "Okay, ich hab dich."]
+        return options
+
+    def _build_reflection(self, intent: str, state: Dict[str, Any], msg: str) -> str:
+        """Light mirroring using extracted slots or short snippets."""
+        # Slot-based rephrasing
+        if intent == "mental_sleep_support" and isinstance(
+            state.get("sleep_hours"), (int, float)
+        ):
+            return f"Du sagtest, dass dein Schlaf gerade bei etwa {state['sleep_hours']}h liegt."
+
+        if intent == "mental_stress_support" and isinstance(
+            state.get("stress_level"), int
+        ):
+            return f"Du hast deinen Stresslevel bei {state['stress_level']}/10 eingeordnet."
+
+        # Snippet-based rephrasing
+        cleaned = " ".join(msg.strip().split())
+        if len(cleaned) >= 15:
+            # Simple rephrasing logic: "You said X..."
+            snippet = cleaned[:80].rstrip(".,!?")
+            # Try to grab a more meaningful part if possible (after "weil", "dass", etc.)
+            match = re.search(r"\b(weil|dass|da|wenn)\b\s+(.*)", cleaned, re.IGNORECASE)
+            if match:
+                snippet = match.group(2)[:60].rstrip(".,!?")
+
+            templates = [
+                "Du meintest: '{snippet}'.",
+                "Ich habe verstanden, dass '{snippet}' dich gerade beschaeftigt.",
+                "Du hast erwaehnt: '{snippet}'.",
+            ]
+            template = random.choice(templates)
+            return template.format(snippet=snippet)
+
+        return ""
+
+    def _question_options_for_intent(
+        self, intent: str, question_kind: str
+    ) -> List[str]:
+        components = self._components_for_intent(intent)
+        questions = components.get("question", {})
+        if isinstance(questions, dict):
+            options = questions.get(question_kind, [])
+            if isinstance(options, list):
+                clean = [
+                    item for item in options if isinstance(item, str) and item.strip()
+                ]
+                if clean:
+                    return clean
+
+        fallback = self.response_components.get(intent, {}).get("question", {})
+        options = fallback.get(question_kind, [])
+        return [item for item in options if isinstance(item, str) and item.strip()]
+
+    def _compose_planned_response(
+        self,
+        intent: str,
+        state: Dict[str, Any],
+        base_response: str,
+        msg: str,
+        follow_up: bool,
+    ) -> str:
+        if not self._is_mental_intent(intent) or intent == "mental_crisis_support":
+            return base_response
+
+        style = state.get("conversation_style", "warm")
+        components = self._components_for_intent(intent)
+
+        # 1. Acknowledge (Validation)
+        validation_options = components.get("validation", [])
+        if not isinstance(validation_options, list) or not validation_options:
+            validation_options = self._style_validation_defaults(style)
+
+        validation = self._pick_non_repeating_option(
+            validation_options,
+            state,
+            "recent_validation_phrases",
+            window=6,
+        )
+
+        # 2. Reflect (Light Mirroring)
+        reflection = ""
+        if style not in {"brief", "direct"}:
+            reflection = self._build_reflection(intent, state, msg)
+
+        # 3. Action (One concrete step)
+        action_text = base_response
+        if not action_text:
+            action_options = components.get("action", [])
+            if isinstance(action_options, list):
+                action_text = self._pick_non_repeating_option(
+                    action_options,
+                    state,
+                    "recent_action_phrases",
+                    window=6,
+                )
+
+        if not action_text:
+            return base_response
+
+        # Strong anti-repetition: block same transition/opening patterns
+        if action_text.strip() == state.get("last_action_text", "").strip():
+            action_options = components.get("action", [])
+            if isinstance(action_options, list) and len(action_options) > 1:
+                action_text = random.choice(
+                    [a for a in action_options if a.strip() != action_text.strip()]
+                )
+
+        state["last_action_text"] = action_text
+
+        # Enforce "one question per turn": strip questions from action part
+        if "?" in action_text:
+            action_text = self._strip_question_marks(action_text)
+
+        # 4. Better follow-up strategy: alternate open vs closed question
+        question_text = ""
+        question_kind = self._next_question_kind(state)
+
+        # If it's a follow-up turn (the user said things like "more", "next"),
+        # we might want to guide them more directly with a closed question?
+        # Or just stick to the alternation. Let's stick to alternation for variety.
+
+        question_options = self._question_options_for_intent(intent, question_kind)
+        if question_options:
+            question_text = self._pick_non_repeating_option(
+                question_options,
+                state,
+                "recent_question_phrases",
+                window=6,
+            )
+            question_text = question_text.strip().rstrip(".! ")
+            if not question_text.endswith("?"):
+                question_text += "?"
+
+        parts = [validation]
+        if reflection:
+            parts.append(reflection)
+        parts.append(action_text.strip())
+        if question_text:
+            parts.append(question_text)
+
+        planned = " ".join(part for part in parts if part).strip()
+        return planned
 
     def _extract_response_mode(self, frage: str) -> Optional[str]:
         normalized = normalize_phrase(frage)
@@ -259,33 +486,59 @@ class DialogueManager:
         margin = top_score - float(results[1][1])
         return margin <= LOW_CONFIDENCE_MARGIN_THRESHOLD
 
-    def _clarification_buttons(self, results: List[Tuple[str, float]]) -> List[Dict[str, str]]:
+    def _clarification_buttons(
+        self, results: List[Tuple[str, float]]
+    ) -> List[Dict[str, str]]:
+        """Richer repair flow: show 2-3 specific options instead of generic fallback."""
         suggestions = {
-            "mental_stress_support": {"label": "Stress", "value": "Ich bin gestresst"},
-            "mental_anxiety_support": {"label": "Angst", "value": "Ich habe Angst"},
-            "mental_sleep_support": {
-                "label": "Schlaf",
-                "value": "Ich kann nicht schlafen",
+            "mental_stress_support": {"label": "Stress", "value": "Stress bewaeltigen"},
+            "mental_anxiety_support": {"label": "Angst", "value": "Umgang mit Angst"},
+            "mental_sleep_support": {"label": "Schlaf", "value": "Schlaf verbessern"},
+            "mental_focus_support": {"label": "Fokus", "value": "Besser konzentrieren"},
+            "mental_energy_support": {
+                "label": "Antrieb",
+                "value": "Mehr Energie finden",
+            },
+            "mental_overthinking_support": {
+                "label": "Gedankenstopp",
+                "value": "Gedankenkreisen stoppen",
             },
             "mental_breathing_exercise": {
                 "label": "Atemuebung",
-                "value": "Atemuebung",
+                "value": "Atemuebung starten",
             },
-            "mental_grounding": {
-                "label": "Grounding",
-                "value": "Grounding Uebung",
-            },
+            "mental_grounding": {"label": "Grounding", "value": "Grounding Uebung"},
+            "mental_body_scan": {"label": "Body Scan", "value": "Body Scan starten"},
         }
 
         buttons = []
-        for intent, _score in results[:4]:
+        # Take up to 3 high-confidence intents for specific 'Did you mean...?' options
+        for intent, score in results[:3]:
             if intent in suggestions:
                 buttons.append(suggestions[intent])
 
-        if not buttons:
+        if len(buttons) < 2:
             buttons = self._default_quick_buttons()[:3]
 
         return self._dedupe_buttons(buttons)
+
+    def _clarification_text(self, results: List[Tuple[str, float]]) -> str:
+        """Richer repair text for low confidence."""
+        top_labels = [
+            self._topic_label(intent)
+            for intent, _score in results[:3]
+            if self._is_mental_intent(intent)
+        ]
+        top_labels = [label for label in top_labels if label]
+
+        if len(top_labels) >= 2:
+            joined = " oder ".join(top_labels[:3])
+            return (
+                f"Ich bin mir noch nicht ganz sicher. Meinst du eher {joined}? "
+                "Waehle einfach die passende Richtung:"
+            )
+
+        return "Ich habe dich noch nicht klar verstanden. Meinst du eine dieser Richtungen?"
 
     def _keyword_intent_match(self, frage: str) -> Optional[str]:
         normalized = normalize_phrase(frage)
@@ -321,9 +574,13 @@ class DialogueManager:
             {"antriebslos", "energielos", "kraftlos", "erschoepft", "leer"}
         ):
             return "mental_energy_support"
-        if tokens.intersection({"gruebeln", "grueble", "gedankenkarussell", "overthinke"}):
+        if tokens.intersection(
+            {"gruebeln", "grueble", "gedankenkarussell", "overthinke"}
+        ):
             return "mental_overthinking_support"
-        if "body scan" in normalized or tokens.intersection({"koerperreise", "bodyscan"}):
+        if "body scan" in normalized or tokens.intersection(
+            {"koerperreise", "bodyscan"}
+        ):
             return "mental_body_scan"
         return None
 
@@ -452,16 +709,39 @@ class DialogueManager:
         }
 
     def _pick_response(
-        self, intent: str, previous_response: Optional[str] = None
+        self,
+        intent: str,
+        previous_response: Optional[str] = None,
+        state: Optional[Dict[str, Any]] = None,
     ) -> Optional[str]:
         responses = self.intent_to_responses.get(intent, [])
         if not responses:
             return None
-        if previous_response and len(responses) > 1:
-            alternatives = [r for r in responses if r != previous_response]
-            if alternatives:
-                return random.choice(alternatives)
-        return random.choice(responses)
+
+        candidates = list(responses)
+        if previous_response and len(candidates) > 1:
+            no_prev = [r for r in candidates if r != previous_response]
+            if no_prev:
+                candidates = no_prev
+
+        if state is not None and len(candidates) > 1:
+            recent = state.setdefault("recent_raw_responses", [])
+            if not isinstance(recent, list):
+                recent = []
+                state["recent_raw_responses"] = recent
+            recent_set = set(recent[-4:])
+            non_repeating = [r for r in candidates if r not in recent_set]
+            if non_repeating:
+                candidates = non_repeating
+
+        choice = random.choice(candidates)
+        if state is not None:
+            recent = state.setdefault("recent_raw_responses", [])
+            if isinstance(recent, list):
+                recent.append(choice)
+                if len(recent) > 20:
+                    del recent[:-20]
+        return choice
 
     def _pick_follow_up_intent(
         self,
@@ -526,7 +806,8 @@ class DialogueManager:
             if self._is_generic_follow_up_message(msg):
                 return last_intent
             if (
-                self._context_for_intent(last_intent) == self._context_for_intent(top_intent)
+                self._context_for_intent(last_intent)
+                == self._context_for_intent(top_intent)
                 and top_intent != last_intent
                 and top_score < 0.75
             ):
@@ -536,7 +817,8 @@ class DialogueManager:
         if (
             topic_intent
             and top_intent != topic_intent
-            and self._context_for_intent(top_intent) == self._context_for_intent(topic_intent)
+            and self._context_for_intent(top_intent)
+            == self._context_for_intent(topic_intent)
             and top_score < 0.55
         ):
             return topic_intent
@@ -550,13 +832,27 @@ class DialogueManager:
         response: str,
         empathy_prefix: str,
         buttons: List[Dict[str, str]],
+        msg: str = "",
+        follow_up: bool = False,
+        use_planner: bool = True,
     ) -> Tuple[Dict[str, Any], Optional[str]]:
         state["fallback_count"] = 0
         if self._is_mental_intent(intent):
             state["topic_intent"] = intent
+
+        final_response = response
+        if use_planner:
+            final_response = self._compose_planned_response(
+                intent=intent,
+                state=state,
+                base_response=response,
+                msg=msg,
+                follow_up=follow_up,
+            )
+
         return (
             self._format_response(
-                response,
+                final_response,
                 state,
                 empathy_prefix,
                 buttons,
@@ -570,6 +866,17 @@ class DialogueManager:
     ) -> Tuple[Dict[str, Any], Optional[str]]:
         state["fallback_count"] = int(state.get("fallback_count", 0)) + 1
         fallback_count = state["fallback_count"]
+        candidate_intents = [
+            intent
+            for intent in state.get("last_candidate_intents", [])
+            if isinstance(intent, str)
+        ]
+        candidate_labels = [
+            self._topic_label(intent)
+            for intent in candidate_intents
+            if self._is_mental_intent(intent)
+        ]
+        candidate_labels = [label for label in candidate_labels if label]
 
         if fallback_count >= 2:
             last_topic = state.get("topic_intent") or state.get("last_intent", "")
@@ -588,12 +895,23 @@ class DialogueManager:
                     "Ich habe dich noch nicht klar verstanden. "
                     "Nimm gern eine der schnellen Optionen, dann antworte ich gezielter."
                 )
+
+            if candidate_labels:
+                repair_text += (
+                    " Soll ich eher bei "
+                    + ", ".join(candidate_labels[:3])
+                    + " einsteigen?"
+                )
+
+            candidate_buttons = self._clarification_buttons(
+                [(intent, 0.0) for intent in candidate_intents]
+            )
             return (
                 self._format_response(
                     repair_text,
                     state,
                     "",
-                    self._default_quick_buttons(),
+                    candidate_buttons + self._default_quick_buttons(),
                     intent="thema_auswahl",
                 ),
                 None,
@@ -661,6 +979,7 @@ class DialogueManager:
         if isinstance(prior_response, dict):
             prior_response = prior_response.get("text")
         state.setdefault("response_mode", DEFAULT_RESPONSE_MODE)
+        state.setdefault("conversation_style", "warm")
 
         requested_mode = self._extract_response_mode(msg)
         if requested_mode:
@@ -676,10 +995,25 @@ class DialogueManager:
                 mode_text.get(requested_mode, mode_text["normal"]),
                 "",
                 [],
+                msg=msg,
+                use_planner=False,
+            )
+
+        requested_style = self._extract_style_preference(msg)
+        if requested_style:
+            state["conversation_style"] = requested_style
+            return self._build_intent_response(
+                "thema_auswahl",
+                state,
+                self._style_confirmation(requested_style),
+                "",
+                [],
+                msg=msg,
+                use_planner=False,
             )
 
         if self._is_help_request(msg):
-            help_response = self._pick_response("thema_auswahl") or (
+            help_response = self._pick_response("thema_auswahl", state=state) or (
                 "Ich kann dir bei Stress, Angst, Schlaf, Fokus, Antrieb und "
                 "Entspannungsuebungen helfen."
             )
@@ -689,6 +1023,8 @@ class DialogueManager:
                 help_response,
                 "",
                 [],
+                msg=msg,
+                use_planner=False,
             )
 
         self._extract_slots(msg, state)
@@ -696,9 +1032,9 @@ class DialogueManager:
         generic_follow_up = follow_up and self._is_generic_follow_up_message(msg)
         if follow_up:
             if generic_follow_up:
-                state["generic_follow_up_count"] = int(
-                    state.get("generic_follow_up_count", 0)
-                ) + 1
+                state["generic_follow_up_count"] = (
+                    int(state.get("generic_follow_up_count", 0)) + 1
+                )
             else:
                 state["generic_follow_up_count"] = 0
         else:
@@ -766,7 +1102,9 @@ class DialogueManager:
                     float(results[0][1]),
                 )
                 remaining_results = [
-                    (intent, score) for intent, score in results if intent != primary_intent
+                    (intent, score)
+                    for intent, score in results
+                    if intent != primary_intent
                 ]
                 results = [(primary_intent, primary_score)] + remaining_results
 
@@ -865,9 +1203,7 @@ class DialogueManager:
                 rotate_for_progression=rotate_for_progression,
             )
             if follow_up_intent and (
-                not top_intent
-                or self._is_meta_intent(top_intent)
-                or generic_follow_up
+                not top_intent or self._is_meta_intent(top_intent) or generic_follow_up
             ):
                 response = self._pick_response(
                     follow_up_intent,
@@ -1025,9 +1361,14 @@ class DialogueManager:
             "Okay, wir richten den Blick von {from_topic} auf {to_topic}. ",
             "Wir nehmen jetzt den Schritt von {from_topic} zu {to_topic}. ",
         ]
-        last_template = state.get("last_transition_template", "")
-        candidates = [template for template in templates if template != last_template]
-        template = random.choice(candidates or templates)
+        template = self._pick_non_repeating_option(
+            templates,
+            state,
+            "recent_transition_templates",
+            window=3,
+        )
+        if not template:
+            template = templates[0]
 
         state["last_transition_turn"] = current_turn
         state["last_transition_key"] = transition_key
